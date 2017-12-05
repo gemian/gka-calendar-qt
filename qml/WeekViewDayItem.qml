@@ -234,8 +234,6 @@ FocusScope {
                         }
                     }
 
-
-
                     Text {
                         id: dayItemLabel
                         anchors {
@@ -246,28 +244,17 @@ FocusScope {
                         text: model.item.displayLabel
                     }
 
-//                    Dialog {
-//                        id: editDialog
-//                        title: "Title"
-//                        modality: Qt.WindowModal
-//                        standardButtons: Dialog.Ok | Dialog.Cancel
-
-//                        onAccepted: console.log("Ok clicked")
-//                        onRejected: console.log("Cancel clicked")
-
-//                        Label {
-//                            text: "Hello world!"
-//                        }
-//                    }
                     MouseArea {
                         anchors.fill: parent
                         onPressed: {
-                            //console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
+                            if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
+                                dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":model});
+                            }
+                            console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
                             daySelectedIndex = gridViewIndex
                             dayChildSelectedIndex = index
                             dayListView.currentIndex = index
                             dayListView.currentItem.forceActiveFocus()
-                            //editDialog.open()
 
                         }
                     }
@@ -303,6 +290,9 @@ FocusScope {
                 MouseArea {
                     anchors.fill: parent
                     onPressed: {
+                        if (daySelectedIndex == index) {
+                            dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate});
+                        }
                         //console.log("emptyitemclick i:"+index)
                         daySelectedIndex = index
                         dayChildSelectedIndex = -1
@@ -363,14 +353,18 @@ FocusScope {
     }
 
     Keys.onPressed: {
+        console.log("key:"+event.key)
         if (event.key === Qt.Key_Space) {
             updateGridViewToToday();
         }
-        if (event.key === Qt.Key_Enter) {
-            //edit or new
+        if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
+            if (dayChildSelectedIndex == -1) {
+                dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate});
+            } else {
+                dialogLoader.setSource("EditEventDialog.qml", {"event": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
+            }
         }
 
-        //console.log("key:"+event.key)
         if (event.key === Qt.Key_Left) {
             if (dateOnLeft) {
                 moveSelectionToPreviousWeek(index);

@@ -24,6 +24,24 @@ FocusScope {
             GradientStop { position: 1.0; color: Qt.darker("#193441") }
         }
 
+        Loader {
+            id: dialogLoader
+            visible: status == Loader.Ready
+            onStatusChanged: {
+                console.log("dialogLoader onStateChanged");
+                if (status == Loader.Ready) {
+                    //item.Open();
+                }
+            }
+            onLoaded: {
+                console.log("dialogLoader onLoaded");
+            }
+            State {
+                name: 'loaded';
+                when: loader.status === Loader.Ready
+            }
+        }
+
         GridView {
             id: gridView
             anchors.fill: parent
