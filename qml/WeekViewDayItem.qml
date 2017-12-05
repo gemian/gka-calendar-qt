@@ -276,8 +276,6 @@ FocusScope {
                         //console.log("itemcell.onCompleted: "+gridViewIndex+" i:"+index)
                     }
                 }
-
-
             }
 
             Rectangle {
@@ -347,7 +345,31 @@ FocusScope {
         setDateToRightColumn(index);
     }
 
+    function updateGridViewWithDaySelection() {
+        dayContainer.GridView.view.currentIndex = daySelectedIndex
+        dayContainer.GridView.view.currentItem.forceActiveFocus()
+        //console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
+    }
+
+    function updateGridViewToToday() {
+        var today = new Date();
+        var offset = new Date().weekStartOffset(1);
+        weekStartDate = today.addDays(-offset);
+        if (daySelectedIndex !== offset+1) {
+            daySelectedIndex = offset+1;
+            dayChildSelectedIndex = 0;
+            updateGridViewWithDaySelection();
+        }
+    }
+
     Keys.onPressed: {
+        if (event.key === Qt.Key_Space) {
+            updateGridViewToToday();
+        }
+        if (event.key === Qt.Key_Enter) {
+            //edit or new
+        }
+
         //console.log("key:"+event.key)
         if (event.key === Qt.Key_Left) {
             if (dateOnLeft) {
@@ -446,9 +468,7 @@ FocusScope {
                 }
             }
 
-            dayContainer.GridView.view.currentIndex = daySelectedIndex
-            //console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
-            dayContainer.GridView.view.currentItem.forceActiveFocus()
+            updateGridViewWithDaySelection();
         }
     }
 
@@ -457,9 +477,7 @@ FocusScope {
         repeat: false
         interval: 1000
         onTriggered: {
-            dayContainer.GridView.view.currentIndex = daySelectedIndex
-            //console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
-            dayContainer.GridView.view.currentItem.forceActiveFocus()
+            updateGridViewToToday();
         }
     }
 

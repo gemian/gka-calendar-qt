@@ -85,13 +85,18 @@ Date.prototype.addMonths = function(months) {
 
 Date.prototype.weekStart = function(weekStartDay) {
     var date = this.midnight()
+    return date.addDays(-this.weekStartOffset(weekStartDay))
+}
+
+Date.prototype.weekStartOffset = function(weekStartDay) {
+    var date = this.midnight()
     var day = date.getDay(), n = 0
-    while (day != weekStartDay) {
-        if (day == 0) day = 6
+    while (day !== weekStartDay) {
+        if (day === 0) day = 6
         else day = day - 1
         n = n + 1
     }
-    return date.addDays(-n)
+    return n
 }
 
 Date.prototype.monthStart = function() {
