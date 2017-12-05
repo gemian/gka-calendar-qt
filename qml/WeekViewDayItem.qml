@@ -349,9 +349,6 @@ FocusScope {
 
     Keys.onPressed: {
         //console.log("key:"+event.key)
-        if (event.key === Qt.Key_Alt) {
-            menuHidden = !menuHidden
-        }
         if (event.key === Qt.Key_Left) {
             if (dateOnLeft) {
                 moveSelectionToPreviousWeek(index);
