@@ -3,6 +3,7 @@ import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import "dateExt.js" as DateExt
 import "lunar.js" as Lunar
 
@@ -10,7 +11,7 @@ Dialog {
     id: eventDialog
     visible: true
     modality: Qt.ApplicationModal
-    title: startDate?qsTr("New event"):qsTr("Edit event")
+    title: qsTr("Enter event details")
 
     property var startDate:null;
     property var endDate:null;
@@ -22,7 +23,7 @@ Dialog {
 
 //    property alias startDate: startDateTimeInput.dateTime
 //    property alias endDate: endDateTimeInput.dateTime
-    property alias reminderValue: eventReminder.reminderValue
+    property int reminderValue: -1
 
     standardButtons: StandardButton.Save | StandardButton.Cancel
 
@@ -56,7 +57,7 @@ Dialog {
         if (e.allDay) {
             allDayEventCheckbox.checked = true
             endDate = new Date(eventEndDate).addDays(-1);
-            eventSize = DateExt.daysBetween(startDate, eventEndDate) * root.millisecsInADay
+            eventSize = DateExt.daysBetween(startDate, eventEndDate) * eventDialog.millisecsInADay
         } else {
             endDate = eventEndDate
             eventSize = (eventEndDate.getTime() - startDate.getTime())
@@ -87,9 +88,9 @@ Dialog {
             reminder = e.detail(Detail.AudibleReminder)
 
         if (reminder) {
-            root.reminderValue = reminder.secondsBeforeStart
+            eventDialog.reminderValue = reminder.secondsBeforeStart
         } else {
-            root.reminderValue = -1
+            eventDialog.reminderValue = -1
         }
         selectCalendar(e.collectionId);
     }
@@ -100,101 +101,308 @@ Dialog {
             return;
         } else if (event === null) {
             addEvent();
-            event.startDateTime = startDate;
+            event.startDateTime = event.endDateTime = endDate = startDate;
         } else {
             editEvent(event);
         }
+        eventNameField.forceActiveFocus();
     }
 
-    Column {
+    Row {
         spacing: 1//units.gu(1)
 
-        TextField {
-            id: eventNameField
-            anchors {
-                left: parent.left
-                right: parent.right
-                margins: 2//units.gu(2)
-            }
-            focus: true
-            placeholderText: qsTr("Event name")
-        }
-        TextField {
-            id: locationField
-            anchors {
-                left: parent.left
-                right: parent.right
-                margins: 2//units.gu(2)
-            }
-            placeholderText: qsTr("Location")
-        }
-
-        Row {
+        Column {
             spacing: 1//units.gu(1)
-            Label {
-                text: qsTr("All Day Event:")
+
+            TextField {
+                id: eventNameField
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 2//units.gu(2)
+                }
+                placeholderText: qsTr("Event name")
+                KeyNavigation.down: locationField
+            }
+            TextField {
+                id: locationField
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    margins: 2//units.gu(2)
+                }
+                placeholderText: qsTr("Location")
+                KeyNavigation.down: allDayEventCheckbox
             }
 
             CheckBox {
-                objectName: "allDayEventCheckbox"
+                text: qsTr("All Day Event")
                 id: allDayEventCheckbox
                 checked: false
                 onCheckedChanged: {
                     if (checked)
-                        root.eventSize = Math.max(endDate.midnight().getTime() - startDate.midnight().getTime(), 0)
+                        eventDialog.eventSize = Math.max(endDate.midnight().getTime() - startDate.midnight().getTime(), 0)
                     else
-                        root.eventSize = Math.max(endDate.getTime() - startDate.getTime(), root.millisecsInAnHour)
+                        eventDialog.eventSize = Math.max(endDate.getTime() - startDate.getTime(), eventDialog.millisecsInAnHour)
+                }
+                KeyNavigation.down: !checked ? startTimeField : startDateField
+            }
+
+            Row {
+                spacing: 1//units.gu(1)
+                anchors.right: parent.right
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("Start:")
+                }
+                TextField {
+                    id: startTimeField
+                    enabled: !allDayEventCheckbox.checked
+                    text: event?event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                    KeyNavigation.down: endTimeField
+                    KeyNavigation.right: startDateField
+                }
+                TextField {
+                    id: startDateField
+                    text: event?event.startDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                    KeyNavigation.up: allDayEventCheckbox
+                    KeyNavigation.right: descriptionTab
+                }
+            }
+
+            Row {
+                spacing: 1//units.gu(1)
+                anchors.right: parent.right
+
+                Label {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: qsTr("End:")
+                }
+                TextField {
+                    id: endTimeField
+                    enabled: !allDayEventCheckbox.checked
+                    text: event?event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                    KeyNavigation.right: endDateField
+                }
+                TextField {
+                    id: endDateField
+                    text: event?event.endDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                    KeyNavigation.right: descriptionTab
                 }
             }
         }
 
-        Row {
-            spacing: 1//units.gu(1)
+        TabView {
+            implicitWidth: 320
+            implicitHeight: 206
+            anchors.margins: 4
 
-            Label {
-                text: qsTr("Start:")
+            Tab {
+                activeFocusOnTab: true
+                id: descriptionTab
+                title: qsTr("Description:")
+                TextArea {
+                    id: descriptionField
+                    wrapMode: Text.WordWrap
+                }
+
             }
-            TextField {
-                horizontalAlignment: right
-                text: event?event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+            Tab {
+                activeFocusOnTab: true
+                title: qsTr("Alarm")
+
+                ListView {
+                    clip: true
+                    id: eventReminder
+
+                    model: RemindersModel {
+                        id: reminderModel
+                    }
+
+                    ExclusiveGroup {
+                        id: tabReminderGroup
+                    }
+
+                    delegate: RadioButton {
+                        id: topButton
+                        text: label
+                        exclusiveGroup: tabReminderGroup
+                        activeFocusOnPress: true
+                        activeFocusOnTab: true
+                    }
+                }
             }
-        }
+            Tab {
+                activeFocusOnTab: true
+                title: qsTr("Repeat")
 
-        Row {
-            spacing: 1//units.gu(1)
+                Column {
+                    spacing: 2
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.topMargin: 8
+                    TabView {
+                        id: repeatFrequencyTabView
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        implicitWidth: 316
+                        implicitHeight: currentIndex == 2 ? 74 : 28
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Once")
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Daily")
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 4
+                            title: qsTr("Weekly")
+                            Grid {
+                                columns: 5
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.margins: 4
+                                CheckBox {
+                                    id: weeklyRepeatMon
+                                    text: qsTr("Mon")
+                                    activeFocusOnPress: true
+                                    activeFocusOnTab: true
+                                    KeyNavigation.right: weeklyRepeatTue
+                                    KeyNavigation.up: repeatFrequencyTabView
+                                    KeyNavigation.down: weeklyRepeatSat
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatTue
+                                    text: qsTr("Tue")
+                                    activeFocusOnPress: true
+                                    KeyNavigation.right: weeklyRepeatWed
+                                    KeyNavigation.up: repeatFrequencyTabView
+                                    KeyNavigation.down: weeklyRepeatSun
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatWed
+                                    text: qsTr("Wed")
+                                    activeFocusOnPress: true
+                                    KeyNavigation.right: weeklyRepeatThr
+                                    KeyNavigation.up: repeatFrequencyTabView
+                                    KeyNavigation.down: weeklyRepeatSun
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatThr
+                                    text: qsTr("Thr")
+                                    activeFocusOnPress: true
+                                    KeyNavigation.right: weeklyRepeatFri
+                                    KeyNavigation.up: repeatFrequencyTabView
+                                    KeyNavigation.down: weeklyRepeatSun
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatFri
+                                    text: qsTr("Fri")
+                                    activeFocusOnPress: true
+                                    KeyNavigation.up: repeatFrequencyTabView
+                                    KeyNavigation.down: weeklyRepeatSun
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatSat
+                                    text: qsTr("Sat")
+                                    activeFocusOnPress: true
+                                    activeFocusOnTab: true
+                                    KeyNavigation.right: weeklyRepeatSun
+                                    KeyNavigation.down: repeatDurationTabView
+                                }
+                                CheckBox {
+                                    id: weeklyRepeatSun
+                                    text: qsTr("Sun")
+                                    activeFocusOnPress: true
+                                    KeyNavigation.down: repeatDurationTabView
+                                }
+                            }
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Monthly")
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Yearly")
+                        }
+                    }
 
-            Label {
-                text: qsTr("End:")
+                    TabView {
+                        id: repeatDurationTabView
+                        visible: repeatFrequencyTabView.currentIndex > 0
+                        implicitWidth: 300
+                        implicitHeight: currentIndex == 0 ? 28 : 60
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Forever")
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Count Occurences")
+                            TextField {
+                                id: repeatCountField
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    margins: 2//units.gu(2)
+                                }
+                                placeholderText: qsTr("Occurences")
+                            }
+                        }
+                        Tab {
+                            activeFocusOnTab: true
+                            title: qsTr("Until Date")
+                            TextField {
+                                id: repeatUntilDateField
+                                anchors {
+                                    left: parent.left
+                                    right: parent.right
+                                    margins: 2//units.gu(2)
+                                }
+                                placeholderText: qsTr("End Date")
+                            }
+
+                        }
+                    }
+                }
             }
-            TextField {
-                text: event?event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
-            }
-        }
+            Tab {
+                activeFocusOnTab: true
+                title: qsTr("Calendar")
+                ListView {
+                    id: calendarsOption
+                    model: eventDialog.model.getWritableAndSelectedCollections()
 
-        Label {
-            text: qsTr("Description:")
-        }
-        TextArea {
-            id: descriptionField
-            wrapMode: Text.WordWrap
-        }
+                    Connections {
+                        target: eventDialog.model
+                        onModelChanged: {
+                            calendarsOption.model = eventDialog.model.getWritableAndSelectedCollections()
+                        }
+                        onCollectionsChanged: {
+                            calendarsOption.model = eventDialog.model.getWritableAndSelectedCollections()
+                        }
+                    }
 
-        RemindersModel {
-            id: reminderModel
-        }
+                    ExclusiveGroup {
+                        id: tabCalendarGroup
+                    }
 
-        Row {
-            id: eventReminder
-            spacing: 1//units.gu(1)
-            objectName: "eventReminder"
-
-            property int reminderValue: -1
-
-            Label {
-                text: qsTr("Reminder")
-            }
-            Label {
-                text: reminderModel.intervalToString(eventReminder.reminderValue)
+                    delegate: RadioButton {
+                        id: calendarButton
+                        text: modelData.name
+                        exclusiveGroup: tabCalendarGroup
+                        activeFocusOnTab: true
+                        activeFocusOnPress: true
+                    }
+                }
             }
         }
     }

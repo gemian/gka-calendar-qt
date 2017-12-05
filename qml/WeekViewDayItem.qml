@@ -291,7 +291,7 @@ FocusScope {
                     anchors.fill: parent
                     onPressed: {
                         if (daySelectedIndex == index) {
-                            dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate});
+                            dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
                         }
                         //console.log("emptyitemclick i:"+index)
                         daySelectedIndex = index
@@ -359,7 +359,7 @@ FocusScope {
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
             if (dayChildSelectedIndex == -1) {
-                dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate});
+                dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
             } else {
                 dialogLoader.setSource("EditEventDialog.qml", {"event": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
             }

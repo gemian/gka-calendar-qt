@@ -78,7 +78,7 @@ ListModel {
     function indexFromInterval(interval)
     {
         for (var i=0; i<reminderModel.count; ++i) {
-            if (reminderModel.get(i).value == interval)
+            if (reminderModel.get(i).value === interval)
                 return i
         }
 
