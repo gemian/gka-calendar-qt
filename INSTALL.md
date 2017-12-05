@@ -48,12 +48,13 @@ sudo make install
 You need to install the eds backend (or another backend used by your system). If you 
 use another backend then update manager:"eds" to reference your chosen backend.
 
-git clone [...]
-cd qorganizer5-eds
-mkdir 
+```
+git clone https://github.com/adamboardman/qt-organizer5-eds.git
+cd qt-organizer5-eds
+mkdir build
 cd build
 cmake ..
 make
 sudo make install
-
+```
 
