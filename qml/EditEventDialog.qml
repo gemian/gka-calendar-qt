@@ -22,6 +22,8 @@ Window {
     property var model:null;
 
     property int activeExtrasIndex: 0;
+    property var localeTimeInputMask: makeLocaleTimeInputMask();
+    property var localeDateInputMask: makeLocaleDateInputMask();
 
     function addEvent() {
         event = Qt.createQmlObject("import QtOrganizer 5.0; Event { }", Qt.application, "EditEventDialog.qml");
@@ -161,6 +163,61 @@ Window {
         }
     }
 
+    function makeLocaleMaskForSample(sample) {
+        var mask = "";
+        var lastWasDigit = false;
+        for (var i=0; i<sample.length; i++) {
+            var c = sample.substr(i,1);
+            console.log("i: "+i+", c: "+c+", text:"+sample);
+            if (c === ':' || c === ',' || c === '/') {
+                mask += c;
+            } else if (c < '0' || c > '9' || c === '\\') {
+                mask += 'x';
+            } else {
+                if (lastWasDigit) {
+                    mask += '0';
+                } else {
+                    mask += '9';
+                }
+                lastWasDigit = true;
+            }
+        }
+        return mask;
+    }
+
+    function makeLocaleTimeInputMask() {
+        var sample = new Date().toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+        return makeLocaleMaskForSample(sample);
+    }
+
+    function makeLocaleDateInputMask() {
+        var sample = new Date().toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+        return makeLocaleMaskForSample(sample);
+    }
+
+    function updateDateTimeWithTimeText(dateTime, text) {
+        var newDate = Date.fromLocaleTimeString(Qt.locale(), text, Locale.ShortFormat);
+        if (!isNaN(newDate)) {
+            var oldDate = new Date(dateTime);
+            oldDate.setMinutes(newDate.getMinutes());
+            oldDate.setHours(newDate.getHours());
+            dateTime = oldDate;
+        }
+        return dateTime;
+    }
+
+    function updateDateTimeWithDateText(dateTime, text) {
+        var newDate = Date.fromLocaleDateString(Qt.locale(), text, Locale.ShortFormat);
+        if (!isNaN(newDate)) {
+            var oldDate = new Date(dateTime);
+            oldDate.setDate(newDate.getDate());
+            oldDate.setMonth(newDate.getMonth());
+            oldDate.setFullYear(newDate.getFullYear());
+            dateTime = oldDate;
+        }
+        return dateTime;
+    }
+
     Component.onCompleted: {
         if (event === undefined) {
             console.log("Attempted to edit an undefined event");
@@ -233,12 +290,26 @@ Window {
                         enabled: !allDayEventCheckbox.checked
                         text: event?event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: endTimeField
+                        inputMask: localeTimeInputMask
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                event.startDateTime = updateDateTimeWithTimeText(event.startDateTime, text);
+                                text = event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
                     }
                     TextField {
                         id: startDateField
                         text: event?event.startDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.up: allDayEventCheckbox
                         KeyNavigation.down: endDateField
+                        inputMask: localeDateInputMask
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                event.startDateTime = updateDateTimeWithDateText(event.startDateTime, text);
+                                text = event.startDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
                     }
                 }
 
@@ -255,11 +326,25 @@ Window {
                         enabled: !allDayEventCheckbox.checked
                         text: event?event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: okButton
+                        inputMask: localeTimeInputMask
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                event.endDateTime = updateDateTimeWithTimeText(event.endDateTime, text);
+                                text = event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
                     }
                     TextField {
                         id: endDateField
                         text: event?event.endDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: okButton
+                        inputMask: localeDateInputMask
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                event.endDateTime = updateDateTimeWithDateText(event.endDateTime, text);
+                                text = event.endDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
                     }
                 }
 
