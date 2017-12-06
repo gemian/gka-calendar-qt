@@ -21,7 +21,7 @@ Window {
     property var event:null;
     property var model:null;
 
-    property alias allDay: allDayEventCheckbox.checked
+    property int activeExtrasIndex: 0;
 
     function addEvent() {
         event = Qt.createQmlObject("import QtOrganizer 5.0; Event { }", Qt.application, "EditEventDialog.qml");
@@ -85,6 +85,80 @@ Window {
             internal.reminderValue = -1
         }
         internal.collectionId = e.collectionId;
+    }
+
+    function setCheckedButton(index) {
+        activeExtrasIndex = index;
+        descriptionButton.checked = false
+        reminderButton.checked = false
+        repeatButton.checked = false
+        calendarsButton.checked = false
+        switch (index) {
+        case 0:
+            descriptionButton.checked = true
+            break;
+        case 1:
+            reminderButton.checked = true
+            break;
+        case 2:
+            repeatButton.checked = true
+            break;
+        case 3:
+            calendarsButton.checked = true
+            break;
+        }
+    }
+
+    function setRepeatButton(index, setFocus) {
+        internal.repeatIndex = index;
+        repeatOnceButton.checked = false
+        repeatDailyButton.checked = false
+        repeatWeeklyButton.checked = false
+        repeatMonthlyButton.checked = false
+        repeatYearlyButton.checked = false
+        switch (index) {
+        case 0:
+            repeatOnceButton.checked = true
+            if (setFocus) repeatOnceButton.forceActiveFocus()
+            break;
+        case 1:
+            repeatDailyButton.checked = true
+            if (setFocus) repeatDailyButton.forceActiveFocus()
+            break;
+        case 2:
+            repeatWeeklyButton.checked = true
+            if (setFocus) repeatWeeklyButton.forceActiveFocus()
+            break;
+        case 3:
+            repeatMonthlyButton.checked = true
+            if (setFocus) repeatMonthlyButton.forceActiveFocus()
+            break;
+        case 4:
+            repeatYearlyButton.checked = true
+            if (setFocus) repeatYearlyButton.forceActiveFocus()
+            break;
+        }
+    }
+
+    function setRepeatUntilButton(index, setFocus) {
+        internal.repeatUntilIndex = index;
+        repeatUntilForeverButton.checked = false
+        repeatUntilCountButton.checked = false
+        repeatUntilDateButton.checked = false
+        switch (index) {
+        case 0:
+            repeatUntilForeverButton.checked = true
+            if (setFocus) repeatUntilForeverButton.forceActiveFocus()
+            break;
+        case 1:
+            repeatUntilCountButton.checked = true
+            if (setFocus) repeatUntilCountButton.forceActiveFocus()
+            break;
+        case 2:
+            repeatUntilDateButton.checked = true
+            if (setFocus) repeatUntilDateButton.forceActiveFocus()
+            break;
+        }
     }
 
     Component.onCompleted: {
@@ -191,29 +265,104 @@ Window {
 
             }
 
-            TabView {
-                id: extrasTabView
+            Rectangle {
+                id: extrasRectangle
                 width: 300
                 height: 206
 
-                Tab {
-                    activeFocusOnTab: true
-                    id: descriptionTab
-                    title: qsTr("Description:")
+                Column {
+                    spacing: 4
+                    width: parent.width
+
+                    Row {
+                        spacing: 4
+
+                        Button {
+                            id: descriptionButton
+                            width: 94
+                            activeFocusOnTab: true
+                            activeFocusOnPress: true
+                            checkable: true
+                            text: qsTr("Description")
+                            onClicked: {
+                                setCheckedButton(0);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setCheckedButton(0);
+                                }
+                            }
+                            KeyNavigation.right: reminderButton
+                            KeyNavigation.down: descriptionField
+                        }
+                        Button {
+                            id: reminderButton
+                            width: 50
+                            activeFocusOnTab: true
+                            activeFocusOnPress: true
+                            checkable: true
+                            text: qsTr("Alarm")
+                            onClicked: {
+                                setCheckedButton(1);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setCheckedButton(1);
+                                }
+                            }
+                            KeyNavigation.right: repeatButton
+                            KeyNavigation.down: reminderListView
+                        }
+                        Button {
+                            id: repeatButton
+                            width: 60
+                            checkable: true
+                            activeFocusOnTab: true
+                            activeFocusOnPress: true
+                            text: qsTr("Repeat")
+                            onClicked: {
+                                setCheckedButton(2);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setCheckedButton(2);
+                                }
+                            }
+                            KeyNavigation.right: calendarsButton
+                        }
+                        Button {
+                            id: calendarsButton
+                            width: 76
+                            activeFocusOnTab: true
+                            activeFocusOnPress: true
+                            checkable: true
+                            text: qsTr("Calendar")
+                            onClicked: {
+                                setCheckedButton(3);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setCheckedButton(3);
+                                }
+                            }
+                            KeyNavigation.down: calendarsListView
+                        }
+                    }
+
                     TextArea {
                         id: descriptionField
                         wrapMode: Text.Wrap
+                        visible: activeExtrasIndex == 0
+                        width: 300
+                        height: 160
                     }
 
-                }
-                Tab {
-                    activeFocusOnTab: true
-                    title: qsTr("Alarm")
-
                     ListView {
+                        id: reminderListView
                         clip: true
-                        id: eventReminder
-
+                        visible: activeExtrasIndex == 1
+                        width: 300
+                        height: 160
 
                         model: RemindersModel {
                             id: reminderModel
@@ -237,154 +386,249 @@ Window {
                                 }
                             }
                         }
+
                     }
-                }
-                Tab {
-                    activeFocusOnTab: true
-                    title: qsTr("Repeat")
 
                     Column {
-                        spacing: 2
+                        spacing: 4
+                        width: 300
+                        visible: activeExtrasIndex == 2
                         anchors.left: parent.left
                         anchors.right: parent.right
                         topPadding: 4
-                        TabView {
-                            id: repeatFrequencyTabView
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            width: 316
-                            height: currentIndex == 2 ? 76 : 58
-                            Tab {
+                        Row {
+                            spacing: 4
+                            Button {
+                                id: repeatOnceButton
+                                text: qsTr("Once")
+                                width: 40
                                 activeFocusOnTab: true
-                                title: qsTr("Once")
-                            }
-                            Tab {
-                                activeFocusOnTab: true
-                                title: qsTr("Daily")
-                            }
-                            Tab {
-                                activeFocusOnTab: true
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.margins: 4
-                                title: qsTr("Weekly")
-                                Grid {
-                                    columns: 5
-                                    anchors.left: parent.left
-                                    anchors.right: parent.right
-                                    anchors.margins: 4
-                                    CheckBox {
-                                        id: weeklyRepeatMon
-                                        text: qsTr("Mon")
-                                        activeFocusOnPress: true
-                                        activeFocusOnTab: true
-                                        KeyNavigation.right: weeklyRepeatTue
-                                        KeyNavigation.up: repeatFrequencyTabView
-                                        KeyNavigation.down: weeklyRepeatSat
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatTue
-                                        text: qsTr("Tue")
-                                        activeFocusOnPress: true
-                                        KeyNavigation.right: weeklyRepeatWed
-                                        KeyNavigation.up: repeatFrequencyTabView
-                                        KeyNavigation.down: weeklyRepeatSun
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatWed
-                                        text: qsTr("Wed")
-                                        activeFocusOnPress: true
-                                        KeyNavigation.right: weeklyRepeatThr
-                                        KeyNavigation.up: repeatFrequencyTabView
-                                        KeyNavigation.down: weeklyRepeatSun
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatThr
-                                        text: qsTr("Thr")
-                                        activeFocusOnPress: true
-                                        KeyNavigation.right: weeklyRepeatFri
-                                        KeyNavigation.up: repeatFrequencyTabView
-                                        KeyNavigation.down: weeklyRepeatSun
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatFri
-                                        text: qsTr("Fri")
-                                        activeFocusOnPress: true
-                                        KeyNavigation.up: repeatFrequencyTabView
-                                        KeyNavigation.down: weeklyRepeatSun
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatSat
-                                        text: qsTr("Sat")
-                                        activeFocusOnPress: true
-                                        activeFocusOnTab: true
-                                        KeyNavigation.right: weeklyRepeatSun
-                                        KeyNavigation.down: repeatDurationTabView
-                                    }
-                                    CheckBox {
-                                        id: weeklyRepeatSun
-                                        text: qsTr("Sun")
-                                        activeFocusOnPress: true
-                                        KeyNavigation.down: repeatDurationTabView
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatButton(0,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatButton(0,false);
                                     }
                                 }
+                                KeyNavigation.right: repeatDailyButton
                             }
-                            Tab {
+                            Button {
+                                id: repeatDailyButton
+                                text: qsTr("Daily")
+                                width: 42
                                 activeFocusOnTab: true
-                                title: qsTr("Monthly")
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatButton(1,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatButton(1,false);
+                                    }
+                                }
+                                KeyNavigation.right: repeatWeeklyButton
                             }
-                            Tab {
+                            Button {
+                                id: repeatWeeklyButton
+                                text: qsTr("Weekly")
+                                width: 54
                                 activeFocusOnTab: true
-                                title: qsTr("Yearly")
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatButton(2,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatButton(2,false);
+                                    }
+                                }
+                                KeyNavigation.right: repeatMonthlyButton
+                                KeyNavigation.down: weeklyRepeatMon
+                            }
+                            Button {
+                                id: repeatMonthlyButton
+                                text: qsTr("Monthly")
+                                width: 54
+                                activeFocusOnTab: true
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatButton(3,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatButton(3,false);
+                                    }
+                                }
+                                KeyNavigation.right: repeatYearlyButton
+                            }
+                            Button {
+                                id: repeatYearlyButton
+                                text: qsTr("Yearly")
+                                width: 48
+                                activeFocusOnTab: true
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatButton(4,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatButton(4,false);
+                                    }
+                                }
                             }
                         }
 
-                        TabView {
-                            id: repeatDurationTabView
-                            visible: repeatFrequencyTabView.currentIndex > 0
-                            width: 300
-                            height: 58
+                        Grid {
+                            visible: internal.repeatIndex == 2
+                            columns: 5
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            Tab {
+                            CheckBox {
+                                id: weeklyRepeatMon
+                                text: qsTr("Mon")
+                                activeFocusOnPress: true
                                 activeFocusOnTab: true
-                                title: qsTr("Forever")
+                                KeyNavigation.right: weeklyRepeatTue
+                                KeyNavigation.up: repeatWeeklyButton
+                                KeyNavigation.down: weeklyRepeatSat
                             }
-                            Tab {
-                                activeFocusOnTab: true
-                                title: qsTr("Count Occurences")
-                                TextField {
-                                    id: repeatCountField
-                                    anchors {
-                                        left: parent.left
-                                        right: parent.right
-                                        margins: 2//units.gu(2)
-                                    }
-                                    placeholderText: qsTr("Occurences")
-                                }
+                            CheckBox {
+                                id: weeklyRepeatTue
+                                text: qsTr("Tue")
+                                activeFocusOnPress: true
+                                KeyNavigation.right: weeklyRepeatWed
+                                KeyNavigation.up: repeatWeeklyButton
+                                KeyNavigation.down: weeklyRepeatSun
                             }
-                            Tab {
+                            CheckBox {
+                                id: weeklyRepeatWed
+                                text: qsTr("Wed")
+                                activeFocusOnPress: true
+                                KeyNavigation.right: weeklyRepeatThr
+                                KeyNavigation.up: repeatWeeklyButton
+                                KeyNavigation.down: weeklyRepeatSun
+                            }
+                            CheckBox {
+                                id: weeklyRepeatThr
+                                text: qsTr("Thr")
+                                activeFocusOnPress: true
+                                KeyNavigation.right: weeklyRepeatFri
+                                KeyNavigation.up: repeatWeeklyButton
+                                KeyNavigation.down: weeklyRepeatSun
+                            }
+                            CheckBox {
+                                id: weeklyRepeatFri
+                                text: qsTr("Fri")
+                                activeFocusOnPress: true
+                                KeyNavigation.up: repeatWeeklyButton
+                                KeyNavigation.down: weeklyRepeatSun
+                            }
+                            CheckBox {
+                                id: weeklyRepeatSat
+                                text: qsTr("Sat")
+                                activeFocusOnPress: true
                                 activeFocusOnTab: true
-                                title: qsTr("Until Date")
-                                TextField {
-                                    id: repeatUntilDateField
-                                    anchors {
-                                        left: parent.left
-                                        right: parent.right
-                                        margins: 2//units.gu(2)
-                                    }
-                                    placeholderText: qsTr("End Date")
-                                }
+                                KeyNavigation.right: weeklyRepeatSun
+                            }
+                            CheckBox {
+                                id: weeklyRepeatSun
+                                text: qsTr("Sun")
+                                activeFocusOnPress: true
+                            }
+                        }
 
+                        Row {
+                            spacing: 4
+                            visible: internal.repeatIndex > 0
+                            width: 300
+                            Button {
+                                id: repeatUntilForeverButton
+                                text: qsTr("Forever")
+                                width: 60
+                                activeFocusOnTab: true
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatUntilButton(0,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatUntilButton(0,false);
+                                    }
+                                }
+                                KeyNavigation.right: repeatUntilCountButton
                             }
+                            Button {
+                                id: repeatUntilCountButton
+                                text: qsTr("Count Occurences")
+                                width: 126
+                                activeFocusOnTab: true
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatUntilButton(1,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatUntilButton(1,false);
+                                    }
+                                }
+                                KeyNavigation.right: repeatUntilDateButton
+                                KeyNavigation.down: repeatUntilCountField
+                            }
+                            Button {
+                                id: repeatUntilDateButton
+                                text: qsTr("Until Date")
+                                width: 70
+                                activeFocusOnTab: true
+                                activeFocusOnPress: true
+                                checkable: true
+                                onClicked: {
+                                    setRepeatUntilButton(2,false);
+                                }
+                                onFocusChanged: {
+                                    if (activeFocus) {
+                                        setRepeatUntilButton(2,false);
+                                    }
+                                }
+                                KeyNavigation.down: repeatUntilDateField
+                            }
+                        }
+
+                        TextField {
+                            id: repeatUntilCountField
+                            visible: internal.repeatIndex > 0 && internal.repeatUntilIndex == 1
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                margins: 2//units.gu(2)
+                            }
+                            placeholderText: qsTr("Occurences")
+                        }
+                        TextField {
+                            id: repeatUntilDateField
+                            visible: internal.repeatIndex > 0 && internal.repeatUntilIndex == 2
+                            anchors {
+                                left: parent.left
+                                right: parent.right
+                                margins: 2//units.gu(2)
+                            }
+                            placeholderText: qsTr("End Date")
                         }
                     }
-                }
-                Tab {
-                    activeFocusOnTab: true
-                    title: qsTr("Calendar")
+
                     ListView {
-                        id: calendarsOption
+                        id: calendarsListView
+                        visible: activeExtrasIndex == 3
+                        width: 300
+                        height: 160
                         model: eventDialog.model.getWritableAndSelectedCollections()
 
                         Connections {
@@ -417,6 +661,7 @@ Window {
                         }
                     }
                 }
+
             }
         }
 
@@ -436,6 +681,8 @@ Window {
                 Button {
                     id: okButton
                     text: qsTr("Ok")
+                    activeFocusOnTab: true
+                    activeFocusOnPress: true
                     KeyNavigation.right: cancelButton
                     onClicked: {
                         save(event);
@@ -453,6 +700,8 @@ Window {
                 Button {
                     id: cancelButton
                     text: qsTr("Cancel")
+                    activeFocusOnTab: true
+                    activeFocusOnPress: true
                     onClicked: {
                         eventDialog.close()
                     }
@@ -474,12 +723,6 @@ Window {
             if (event.key === Qt.Key_Space) {
                 //could be an options popup?
             }
-            if (event.key === Qt.Key_Up) {
-//                switch (activeFocusItem) {
-//                case descriptionField:
-//                    extrasTabView.forceActiveFocus();
-//                }
-            }
             if (event.key === Qt.Key_Right) {
                 switch (activeFocusItem.parent) {
                 case startTimeField:
@@ -496,7 +739,7 @@ Window {
                 case startDateField:
                 case endDateField:
                 case cancelButton:
-                    descriptionTab.forceActiveFocus()
+                    descriptionButton.forceActiveFocus()
                 }
             }
             if (event.key === Qt.Key_Left) {
@@ -508,8 +751,50 @@ Window {
                     endTimeField.forceActiveFocus()
                     endTimeField.cursorPosition = endTimeField.length
                 }
+                if (activeFocusItem == descriptionButton) {
+                    eventNameField.forceActiveFocus();
+                }
+                if (activeFocusItem == descriptionField) {
+                    locationField.forceActiveFocus();
+                }
             }
-
+            if (event.key === Qt.Key_Down) {
+                switch (activeFocusItem) {
+                case repeatButton:
+                    setRepeatButton(internal.repeatIndex, true);
+                    break;
+                case repeatDailyButton:
+                case repeatMonthlyButton:
+                case repeatYearlyButton:
+                    setRepeatUntilButton(internal.repeatUntilIndex, true);
+                    break;
+                }
+                switch (activeFocusItem.parent) {
+                case weeklyRepeatSat:
+                case weeklyRepeatSun:
+                    setRepeatUntilButton(internal.repeatUntilIndex, true);
+                }
+            }
+            if (event.key === Qt.Key_Up) {
+                switch (activeFocusItem) {
+                case repeatOnceButton:
+                case repeatDailyButton:
+                case repeatWeeklyButton:
+                case repeatMonthlyButton:
+                case repeatYearlyButton:
+                    repeatButton.forceActiveFocus();
+                    break;
+                case repeatUntilForeverButton:
+                case repeatUntilCountButton:
+                case repeatUntilDateButton:
+                    if (internal.repeatIndex == 2) {
+                        weeklyRepeatSat.forceActiveFocus();
+                    } else {
+                        setRepeatButton(internal.repeatIndex, true);
+                    }
+                    break;
+                }
+            }
         }
     }
 
@@ -519,7 +804,8 @@ Window {
         property var collectionId;
         property int eventSize: -1
         property int reminderValue: -1
-        property var lastFocusItem: null
+        property int repeatIndex: 0
+        property int repeatUntilIndex: 0
 
         readonly property int millisecsInADay: 86400000
         readonly property int millisecsInAnHour: 3600000
