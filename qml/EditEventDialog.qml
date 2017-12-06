@@ -24,16 +24,51 @@ Window {
     property int activeExtrasIndex: 0;
     property var localeTimeInputMask: makeLocaleTimeInputMask();
     property var localeDateInputMask: makeLocaleDateInputMask();
+    property var recurrenceValue: [RecurrenceRule.Invalid, RecurrenceRule.Daily, RecurrenceRule.Weekly, RecurrenceRule.Monthly, RecurrenceRule.Yearly];
 
     function addEvent() {
         event = Qt.createQmlObject("import QtOrganizer 5.0; Event { }", Qt.application, "EditEventDialog.qml");
+        internal.collectionId = model.getDefaultCollection().collectionId;
     }
 
     function editEvent(e) {
         //If there is a RecurenceRule use that , else create fresh Recurence Object.
         var isOcurrence = ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence))
         if(!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
-            rule =  e.recurrence.recurrenceRules[0];
+            var rule = e.recurrence.recurrenceRules[0];
+            internal.repeatIndex = recurrenceValue[rule.frequency];
+            setRepeatButton(internal.repeatIndex, true);
+            if (rule.daysOfWeek.indexOf(Qt.Monday) !== -1) {
+                weeklyRepeatMon.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Tuesday) !== -1) {
+                weeklyRepeatTue.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Wednesday) !== -1) {
+                weeklyRepeatWed.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Thursday) !== -1) {
+                weeklyRepeatThu.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Friday) !== -1) {
+                weeklyRepeatFri.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Saturday) !== -1) {
+                weeklyRepeatSat.checked = true;
+            }
+            if (rule.daysOfWeek.indexOf(Qt.Sunday) !== -1) {
+                weeklyRepeatSun.checked = true;
+            }
+            if (rule.limit === undefined) {
+                internal.repeatUntilIndex = 0;
+            } else if (rule.limit instanceof Date) {
+                internal.repeatUntilIndex = 2;
+                repeatUntilDateField.text = rule.limit.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+            } else {
+                internal.repeatUntilIndex = 1;
+                repeatUntilCountField.text = rule.limit;
+            }
+            setRepeatUntilButton(internal.repeatUntilIndex, true);
         }
 
         startDate =new Date(e.startDateTime);
@@ -67,15 +102,6 @@ Window {
 
         var index = 0;
 
-        // Use details method to get attendees list instead of "attendees" property
-        // since a binding issue was returning an empty attendees list for some use cases
-        var attendees = e.details(Detail.EventAttendee);
-        if (attendees){
-            for( var j = 0 ; j < attendees.length ; ++j ) {
-                contactModel.append({"contact": attendees[j]});
-            }
-        }
-
         var reminder = e.detail(Detail.VisualReminder)
         // fallback to audible
         if (!reminder)
@@ -86,7 +112,104 @@ Window {
         } else {
             internal.reminderValue = -1
         }
-        internal.collectionId = e.collectionId;
+        internal.collectionId = internal.originalCollectionId = e.collectionId;
+    }
+
+    function saveEvent(event) {
+        if (event.startDateTime > event.endDateTime && !allDayEventCheckbox.checked) {
+            console.log("End time can't be before start time");
+        } else {
+            if (internal.collectionId !== internal.originalCollectionId) {
+                //collection change to event is not suported
+                //to change collection we create new event with same data with different collection
+                //and remove old event
+                var eventId = event.itemId;
+                model.removeItem(event.itemId)
+                event = Qt.createQmlObject("import QtOrganizer 5.0; Event {}", Qt.application,"EditEventDialog.qml");
+            }
+
+            event.allDay = allDayEventCheckbox.checked;
+            if (event.allDay) {
+                event.startDateTime = new Date(event.startDateTime).midnight()
+                event.endDateTime = new Date(event.endDateTime).addDays(1).midnight()
+            }
+
+            event.displayLabel = eventNameField.text;
+            event.description = descriptionField.text;
+            event.location = locationField.text;
+
+            //Set the Rule object to an event
+            var recurrenceRule = recurrenceValue[internal.repeatIndex];
+            if (recurrenceRule !== RecurrenceRule.Invalid) {
+                var rule = event.recurrence.recurrenceRules[0];
+                if (rule === null || rule === undefined ){
+                    rule = Qt.createQmlObject("import QtOrganizer 5.0; RecurrenceRule {}", event, "EventRepetition.qml");
+                }
+                rule.frequency = recurrenceRule;
+                if (internal.repeatIndex == 2) { //weekly
+                    var weekDays = [];
+                    if (weeklyRepeatMon.checked) weekDays.push(Qt.Monday);
+                    if (weeklyRepeatTue.checked) weekDays.push(Qt.Tuesday);
+                    if (weeklyRepeatWed.checked) weekDays.push(Qt.Wednesday);
+                    if (weeklyRepeatThu.checked) weekDays.push(Qt.Thursday);
+                    if (weeklyRepeatFri.checked) weekDays.push(Qt.Friday);
+                    if (weeklyRepeatSat.checked) weekDays.push(Qt.Saturday);
+                    if (weeklyRepeatSun.checked) weekDays.push(Qt.Sunday);
+                    rule.daysOfWeek = weekDays;
+                }
+
+                if (internal.repeatUntilIndex == 1 && internal.repeatIndex > 0 && repeatUntilCountField.text != "") {
+                    rule.limit = parseInt(repeatUntilCountField.text);
+                } else if (internal.repeatUntilIndex == 2 && internal.repeatIndex > 0) {
+                    rule.limit = updateDateTimeWithDateText(rule.limit, repeatUntilDateField.text);
+                } else {
+                    rule.limit = undefined;
+                }
+                event.recurrence.recurrenceRules = [rule]
+            }
+
+            var isOcurrence = ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence))
+            if (!isOcurrence) {
+                if (rule !== null && rule !== undefined) {
+                    // update monthly rule with final event day
+                    // we need to do it here to make sure that the day is the same day as the event startDate
+                    if (rule.frequency === RecurrenceRule.Monthly) {
+                        rule.daysOfMonth = [event.startDateTime.getDate()]
+                    }
+                    event.recurrence.recurrenceRules = [rule]
+                } else {
+                    event.recurrence.recurrenceRules = [];
+                }
+            }
+
+            // update the first reminder time if necessary
+            var reminder = event.detail(Detail.VisualReminder)
+            if (!reminder)
+                reminder = event.detail(Detail.AudibleReminder)
+
+            if (internal.reminderValue >= 0) {
+                if (!reminder) {
+                    reminder = Qt.createQmlObject("import QtOrganizer 5.0; VisualReminder {}", event, "")
+                    reminder.repetitionCount = 0
+                    reminder.repetitionDelay = 0
+                }
+                reminder.message = eventNameField.text
+                reminder.secondsBeforeStart = internal.reminderValue
+                event.setDetail(reminder)
+            } else if (reminder) {
+                event.removeDetail(reminder)
+            }
+
+            event.collectionId = internal.collectionId;
+
+            var comment = event.detail(Detail.Comment);
+            if (comment && comment.comment === "X-CAL-DEFAULT-EVENT") {
+                event.removeDetail(comment);
+            }
+
+            model.saveItem(event)
+            model.updateIfNecessary()
+        }
     }
 
     function setCheckedButton(index) {
@@ -168,7 +291,7 @@ Window {
         var lastWasDigit = false;
         for (var i=0; i<sample.length; i++) {
             var c = sample.substr(i,1);
-            console.log("i: "+i+", c: "+c+", text:"+sample);
+            //console.log("i: "+i+", c: "+c+", text:"+sample);
             if (c === ':' || c === ',' || c === '/') {
                 mask += c;
             } else if (c < '0' || c > '9' || c === '\\') {
@@ -596,12 +719,12 @@ Window {
                                 id: weeklyRepeatWed
                                 text: qsTr("Wed")
                                 activeFocusOnPress: true
-                                KeyNavigation.right: weeklyRepeatThr
+                                KeyNavigation.right: weeklyRepeatThu
                                 KeyNavigation.up: repeatWeeklyButton
                                 KeyNavigation.down: weeklyRepeatSun
                             }
                             CheckBox {
-                                id: weeklyRepeatThr
+                                id: weeklyRepeatThu
                                 text: qsTr("Thr")
                                 activeFocusOnPress: true
                                 KeyNavigation.right: weeklyRepeatFri
@@ -624,7 +747,7 @@ Window {
                             }
                             CheckBox {
                                 id: weeklyRepeatSun
-                                text: qsTr("Sun")
+                                text: qsTr("Sun") //Qt.locale().dayName(7,Locale.NarrowFormat)
                                 activeFocusOnPress: true
                             }
                         }
@@ -719,10 +842,10 @@ Window {
                         Connections {
                             target: eventDialog.model
                             onModelChanged: {
-                                calendarsOption.model = eventDialog.model.getWritableAndSelectedCollections()
+                                calendarsListView.model = eventDialog.model.getWritableAndSelectedCollections()
                             }
                             onCollectionsChanged: {
-                                calendarsOption.model = eventDialog.model.getWritableAndSelectedCollections()
+                                calendarsListView.model = eventDialog.model.getWritableAndSelectedCollections()
                             }
                         }
 
@@ -770,15 +893,15 @@ Window {
                     activeFocusOnPress: true
                     KeyNavigation.right: cancelButton
                     onClicked: {
-                        save(event);
+                        saveEvent(event);
                         eventDialog.close()
                     }
                     Keys.onEnterPressed: {
-                        save(event);
+                        saveEvent(event);
                         eventDialog.close()
                     }
                     Keys.onReturnPressed: {
-                        save(event);
+                        saveEvent(event);
                         eventDialog.close()
                     }
                 }
@@ -887,6 +1010,7 @@ Window {
         id: internal
 
         property var collectionId;
+        property var originalCollectionId;
         property int eventSize: -1
         property int reminderValue: -1
         property int repeatIndex: 0

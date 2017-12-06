@@ -51,8 +51,8 @@ OrganizerModel {
     }
 
     function getDefaultCollection() {
-        var defaultCol = defaultCollection();
-        if (defaultCol.extendedMetaData("collection-selected") === true) {
+        var defaultCol = eventModel.defaultCollection;
+        if (defaultCol && defaultCol.extendedMetaData("collection-selected") === true) {
             return defaultCol
         }
 
