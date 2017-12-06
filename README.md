@@ -17,3 +17,6 @@ See INSTALL.md for how to build.
 * **Alt+F** open the file menu, use arrow keys to navigate or further Alt+Q etc to select other items
 * **Ctrl+Q** quit the app
 
+### New/Edit Event dialog
+
+* **Tab/Arrow** the UI can be fully navigated by combining the tab and arrow keys

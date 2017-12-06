@@ -26,7 +26,7 @@ ListModel {
 
     function intervalToString(interval) {
         if (interval < 0)
-            return qsTr("No Reminder")
+            return qsTr("No Alarm")
 
         if (interval === 0)
             return qsTr("On Event")
@@ -94,7 +94,7 @@ ListModel {
     function reset()
     {
         clear()
-        reminderModel.append({ "label": qsTr("No Reminder"), "value": -1 })
+        reminderModel.append({ "label": qsTr("No Alarm"), "value": -1 })
         // TRANSLATORS: this refers to when a reminder should be shown as a notification
         // in the indicators. "On Event" means that it will be shown right at the time
         // the event starts, not any time before
@@ -107,9 +107,9 @@ ListModel {
         reminderModel.append({ "label": qsTr("2 hours"), "value": 7200 })
         reminderModel.append({ "label": qsTr("1 day"), "value": 86400 })
         reminderModel.append({ "label": qsTr("2 days"), "value": 172800 })
+        reminderModel.append({ "label": qsTr("3 days"), "value": 259200 })
         reminderModel.append({ "label": qsTr("1 week"), "value": 604800 })
         reminderModel.append({ "label": qsTr("2 weeks"), "value": 1209600 })
-        reminderModel.append({ "label": qsTr("Custom"), "value": -2 })
     }
 
     Component.onCompleted: {

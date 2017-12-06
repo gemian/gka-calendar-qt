@@ -7,7 +7,6 @@ import "dateExt.js" as DateExt
 import "lunar.js" as Lunar
 
 FocusScope {
-//    clip: true
     property alias color: dayRectangle.color
     focus: !showHeader
     id: dayContainer
@@ -104,7 +103,7 @@ FocusScope {
                 height: dayRectangle.height
                 width: dayRectangle.width/10
                 padding: 2
-                wrapMode: Text.WordWrap
+                wrapMode: Text.Wrap
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
@@ -240,7 +239,7 @@ FocusScope {
                             left: calendarIndicator.right;
                             leftMargin: 5//units.gu(1)
                         }
-                        wrapMode: Text.WordWrap
+                        wrapMode: Text.Wrap
                         text: model.item.displayLabel
                     }
 
@@ -248,7 +247,7 @@ FocusScope {
                         anchors.fill: parent
                         onPressed: {
                             if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
-                                dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":model});
+                                dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":organizerModel});
                             }
                             console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
                             daySelectedIndex = gridViewIndex
