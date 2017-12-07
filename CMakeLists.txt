@@ -3,7 +3,7 @@ project(gka_calendar_qt)
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets WebEngine QuickControls2)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets QuickControls2 Organizer)
 
 add_subdirectory(calendar-list)
 add_subdirectory(qml)
@@ -15,6 +15,6 @@ target_link_libraries(${PROJECT_NAME}
         Qt5::Quick
         Qt5::QuickControls2
         Qt5::Widgets
-        Qt5::WebEngine
+        Qt5::Organizer
         ${CMAKE_DL_LIBS}
         )

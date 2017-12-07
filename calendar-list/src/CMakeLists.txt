@@ -1,7 +1,7 @@
 
 set(CMAKE_CXX_STANDARD 14)
 
-find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets WebEngine Organizer)
+find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets Organizer)
 
 include_directories(
         ${QT5_INCLUDE_DIRS}
@@ -16,7 +16,6 @@ target_link_libraries(calendar_list
         Qt5::Gui
         Qt5::Quick
         Qt5::Widgets
-        Qt5::WebEngine
         Qt5::Organizer
         ${CMAKE_DL_LIBS}
         )
