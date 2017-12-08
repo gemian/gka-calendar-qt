@@ -14,6 +14,8 @@ Window {
     title: qsTr("Enter event details")
     height: 214
     width: 576
+    x: Screen.width / 2 - width / 2
+    y: Screen.height / 2 - height / 2
 
     property var startDate:null;
     property var endDate:null;
@@ -26,7 +28,6 @@ Window {
     property var recurrenceValue: [RecurrenceRule.Invalid, RecurrenceRule.Daily, RecurrenceRule.Weekly, RecurrenceRule.Monthly, RecurrenceRule.Yearly];
 
     function addEvent() {
-        event = Qt.createQmlObject("import QtOrganizer 5.0; Event { }", Qt.application, "EditEventDialog.qml");
         internal.collectionId = model.getDefaultCollection().collectionId;
     }
 
@@ -70,7 +71,7 @@ Window {
             setRepeatUntilButton(internal.repeatUntilIndex, true);
         }
 
-        startDate =new Date(e.startDateTime);
+        eventDialog.startDate =new Date(e.startDateTime);
 
         if(e.displayLabel) {
             eventNameField.text = e.displayLabel;
@@ -84,11 +85,11 @@ Window {
 
         if (e.allDay) {
             allDayEventCheckbox.checked = true
-            endDate = new Date(eventEndDate).addDays(-1);
-            internal.eventSize = DateExt.daysBetween(startDate, eventEndDate) * internal.millisecsInADay
+            eventDialog.endDate = new Date(eventEndDate).addDays(-1);
+            internal.eventSize = DateExt.daysBetween(eventDialog.startDate, eventEndDate) * internal.millisecsInADay
         } else {
-            endDate = eventEndDate
-            internal.eventSize = (eventEndDate.getTime() - startDate.getTime())
+            eventDialog.endDate = eventEndDate
+            internal.eventSize = (eventEndDate.getTime() - eventDialog.startDate.getTime())
         }
 
         if(e.location) {
@@ -115,22 +116,29 @@ Window {
     }
 
     function saveEvent(event) {
-        if (event.startDateTime > event.endDateTime && !allDayEventCheckbox.checked) {
+        console.log("startDateTime: "+eventDialog.startDate);
+
+        if (eventDialog.startDate > eventDialog.endDate && !allDayEventCheckbox.checked) {
             console.log("End time can't be before start time");
         } else {
             if (internal.collectionId !== internal.originalCollectionId) {
-                //collection change to event is not suported
+                //collection change to event is not supported
                 //to change collection we create new event with same data with different collection
                 //and remove old event
-                var eventId = event.itemId;
-                model.removeItem(event.itemId)
-                event = Qt.createQmlObject("import QtOrganizer 5.0; Event {}", Qt.application,"EditEventDialog.qml");
+                if (event && event.itemId) {
+                    model.removeItem(event.itemId);
+                }
+                event = Qt.createQmlObject("import QtOrganizer 5.0; Event {}", Qt.application, "EditEventDialog.qml");
             }
 
             event.allDay = allDayEventCheckbox.checked;
             if (event.allDay) {
-                event.startDateTime = new Date(event.startDateTime).midnight()
-                event.endDateTime = new Date(event.endDateTime).addDays(1).midnight()
+                event.startDateTime = new Date(eventDialog.startDate).midnight()
+                event.endDateTime = new Date(eventDialog.startDate).addDays(1).midnight()
+                console.log("startDateTime: "+event.startDateTime);
+            } else {
+                event.startDateTime = eventDialog.startDate;
+                event.endDateTime = eventDialog.endDate;
             }
 
             event.displayLabel = eventNameField.text;
@@ -346,7 +354,9 @@ Window {
             return;
         } else if (event === null) {
             addEvent();
-            event.startDateTime = event.endDateTime = endDate = startDate;
+            if (!eventDialog.endDate) {
+                eventDialog.endDate = eventDialog.startDate;
+            }
         } else {
             editEvent(event);
         }
@@ -410,26 +420,26 @@ Window {
                     TextField {
                         id: startTimeField
                         enabled: !allDayEventCheckbox.checked
-                        text: event?event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                        text: eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                         KeyNavigation.down: endTimeField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
-                                event.startDateTime = updateDateTimeWithTimeText(event.startDateTime, text);
-                                text = event.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+                                eventDialog.startDate = updateDateTimeWithTimeText(eventDialog.startDate, text);
+                                text = eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
                     }
                     TextField {
                         id: startDateField
-                        text: event?event.startDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                        text: eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
                         KeyNavigation.up: allDayEventCheckbox
                         KeyNavigation.down: endDateField
                         inputMask: localeDateInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
-                                event.startDateTime = updateDateTimeWithDateText(event.startDateTime, text);
-                                text = event.startDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, text);
+                                text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
                     }
@@ -446,25 +456,25 @@ Window {
                     TextField {
                         id: endTimeField
                         enabled: !allDayEventCheckbox.checked
-                        text: event?event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                        text: eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                         KeyNavigation.down: okButton
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
-                                event.endDateTime = updateDateTimeWithTimeText(event.endDateTime, text);
-                                text = event.endDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
+                                eventDialog.endDate = updateDateTimeWithTimeText(eventDialog.endDate, text);
+                                text = eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
                     }
                     TextField {
                         id: endDateField
-                        text: event?event.endDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                        text: eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
                         KeyNavigation.down: okButton
                         inputMask: localeDateInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
-                                event.endDateTime = updateDateTimeWithDateText(event.endDateTime, text);
-                                text = event.endDateTime.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                eventDialog.endDate = updateDateTimeWithDateText(eventDialog.endDate, text);
+                                text = eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
                     }
@@ -922,6 +932,7 @@ Window {
                 }
             }
         }
+
         Keys.onPressed: {
             console.log("key:"+event.key + ", aFIp:"+activeFocusItem.parent + ", aFI: "+activeFocusItem)
             if (event.key === Qt.Key_Escape) {
@@ -1019,11 +1030,5 @@ Window {
         readonly property int millisecsInAnHour: 3600000
 
     }
-
-    //onAccepted: {
-    //    saveEvent(event)
-    //    console.log("Saving the event")
-    //}
-    //onRejected: console.log("Cancel clicked")
 
 }
