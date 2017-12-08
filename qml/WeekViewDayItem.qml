@@ -356,6 +356,11 @@ FocusScope {
         if (event.key === Qt.Key_Space) {
             updateGridViewToToday();
         }
+        if (event.key === Qt.Key_Delete) {
+            if (dayChildSelectedIndex >= 0) {
+                dialogLoader.setSource("DeleteDialog.qml", {"event": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
+            }
+        }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
             if (dayChildSelectedIndex == -1) {
                 dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
