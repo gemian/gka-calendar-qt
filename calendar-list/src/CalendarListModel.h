@@ -5,8 +5,6 @@
 #include <QtOrganizer>
 #include <QtQml>
 #include <deque>
-#include <QtWidgets>
-#include "CalendarListModel.h"
 #include "CalendarItem.h"
 
 #define CALENDARLISTMODELSHARED_EXPORT Q_DECL_EXPORT

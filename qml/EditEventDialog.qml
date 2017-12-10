@@ -35,11 +35,13 @@ Window {
     }
 
     function editEvent(e) {
+        console.log("e.itemType:"+e.itemType);
         //If there is a RecurenceRule use that , else create fresh Recurence Object.
-        var isOcurrence = ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence))
+        var isOcurrence = ((e.itemType === Type.EventOccurrence) || (e.itemType === Type.TodoOccurrence))
         if(!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
             var rule = e.recurrence.recurrenceRules[0];
             internal.repeatIndex = recurrenceValue[rule.frequency];
+            console.log("repeatIndex:"+internal.repeatIndex);
             setRepeatButton(internal.repeatIndex, true);
             if (rule.daysOfWeek.indexOf(Qt.Monday) !== -1) {
                 weeklyRepeatMon.checked = true;
@@ -217,7 +219,7 @@ Window {
                 event.removeDetail(comment);
             }
 
-            model.saveItem(event)
+            model.saveItem(event) //need to specify single/all etc
             model.updateIfNecessary()
         }
     }
@@ -360,10 +362,28 @@ Window {
             if (!eventDialog.endDate) {
                 eventDialog.endDate = eventDialog.startDate;
             }
+        } else if ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence)) {
+            internal.fetchParentRequestId = model.fetchItems([event.parentId]);
         } else {
             editEvent(event);
         }
         eventNameField.forceActiveFocus();
+    }
+
+    Connections{
+        target: model
+        onItemsFetched: {
+            if (internal.fetchParentRequestId === requestId) {
+                if (fetchedItems.length > 0) {
+                    event = fetchedItems[0];
+                    editEvent(event);
+                    eventNameField.forceActiveFocus();
+                } else {
+                    console.warn("Fail to fetch parent event")
+                }
+                internal.fetchParentRequestId = -1
+            }
+        }
     }
 
     FocusScope {
@@ -1026,6 +1046,8 @@ Window {
         property int reminderValue: -1
         property int repeatIndex: 0
         property int repeatUntilIndex: 0
+
+        property int fetchParentRequestId: -1;
 
         readonly property int millisecsInADay: 86400000
         readonly property int millisecsInAnHour: 3600000

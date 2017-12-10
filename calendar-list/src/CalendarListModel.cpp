@@ -99,12 +99,24 @@ void CalendarListModel::addItemsToEventsList(QList<QtOrganizer::QOrganizerItem> 
     foreach (const QtOrganizer::QOrganizerItem &item, items)
     {
         QtOrganizer::QOrganizerEventTime eventTime = item.detail(QtOrganizer::QOrganizerItemDetail::TypeEventTime);
-        if (!eventTime.isEmpty()) {
+        if (!eventTime.isEmpty() && eventTime.startDateTime().isValid()) {
             CalendarEvent *event = new CalendarEvent();
             event->setAllDay(eventTime.isAllDay());
             event->setStartDateTime(eventTime.startDateTime());
             event->setEndDateTime(eventTime.endDateTime());
-            event->setDisplayLabel(item.displayLabel());
+            auto recur = item.detail(QtOrganizer::QOrganizerItemDetail::TypeRecurrence);
+            if (recur.isEmpty()) {
+                event->setDisplayLabel(item.displayLabel() + " - rec empty");
+            } else {
+                event->setDisplayLabel(item.displayLabel() + " - has rec");
+            }
+            qWarning() << recur;
+            for (auto ruleSet : recur.values()) {
+                qWarning() << ruleSet;
+                for (auto rule : ruleSet.value<QSet<QtOrganizer::QOrganizerRecurrenceRule>>()) {
+                    qWarning() << "interval" << rule.interval() << ", frequency: "<< rule.frequency();
+                }
+            }
             event->setItemId(item.id().toString());
             event->setCollectionId(item.collectionId().toString());
             QtOrganizer::QOrganizerItemLocation location = item.detail(QtOrganizer::QOrganizerItemDetail::TypeLocation);
@@ -113,7 +125,7 @@ void CalendarListModel::addItemsToEventsList(QList<QtOrganizer::QOrganizerItem> 
             }
             _events.insert(std::make_pair(event->itemId(), event));
 
-            if (event->startDateTime() > startDateTime && event->endDateTime() < endDateTime) {
+            if (eventTime.endDateTime().isValid() && event->startDateTime() > startDateTime && event->endDateTime() < endDateTime) {
                 QDateTime date = event->startDateTime();
                 do {
                     _items.insert(std::make_pair(date, event));

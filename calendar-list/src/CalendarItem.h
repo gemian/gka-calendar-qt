@@ -5,7 +5,6 @@
 #include <QtOrganizer>
 #include <QtQml>
 #include <deque>
-#include <QtWidgets>
 
 typedef enum {
     CalendarItemTypeUnknown,
@@ -19,7 +18,7 @@ class CalendarItem : public QObject
 
 public:
     explicit CalendarItem(QObject *parent = Q_NULLPTR, CalendarItemType type=CalendarItemTypeUnknown);
-    ~CalendarItem();
+    ~CalendarItem() override;
 
     CalendarItemType itemType();
 
@@ -34,7 +33,7 @@ class CalendarDay : public CalendarItem
 
 public:
     explicit CalendarDay(QObject *parent = Q_NULLPTR);
-    ~CalendarDay();
+    ~CalendarDay() override;
 
     void setDate(const QDateTime &date);
     QDateTime date() const;
@@ -61,7 +60,7 @@ class CalendarEvent : public CalendarItem
 
 public:
     explicit CalendarEvent(QObject *parent = Q_NULLPTR);
-    ~CalendarEvent();
+    ~CalendarEvent() override;
 
     void setAllDay(bool isAllDay);
     bool isAllDay() const;
@@ -83,8 +82,6 @@ public:
 
     QString collectionId() const;
     void setCollectionId(const QString& collectionId);
-
-//    QDeclarativeOrganizerItemRecurrence *recurrence();
 
     Q_SIGNALS:
     void valueChanged();

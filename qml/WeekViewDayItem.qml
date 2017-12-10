@@ -86,8 +86,8 @@ FocusScope {
         objectName: "WeekViewDayItem"
         anchors.fill: parent
         visible: !showHeader
-        color: index > 5 ? "#edeeef" : "#f8f9fa"
-        opacity: 0.8
+        color: index > 5 ? "#edeeef" : "#fdfeff"
+        opacity: 0.9
 
         //side with date
         Rectangle {
@@ -192,7 +192,7 @@ FocusScope {
                 id: dayListView
                 width: parent.width
                 height: Math.min(dayRectangle.height - dayListNoItems.height, dayListView.contentHeight)
-                visible: count > 0
+                visible: count > 0 && !organizerModel.isLoading
                 model: organizerModel
                 interactive: dayListView.contentHeight > height
 
@@ -239,6 +239,7 @@ FocusScope {
                             left: calendarIndicator.right;
                             leftMargin: 5//units.gu(1)
                         }
+                        width: parent.width - calendarIndicator.width
                         wrapMode: Text.Wrap
                         text: model.item.displayLabel
                     }
@@ -337,7 +338,7 @@ FocusScope {
     function updateGridViewWithDaySelection() {
         dayContainer.GridView.view.currentIndex = daySelectedIndex
         dayContainer.GridView.view.currentItem.forceActiveFocus()
-        //console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
+        console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
     }
 
     function updateGridViewToToday() {
@@ -480,7 +481,7 @@ FocusScope {
     }
 
     onActiveFocusChanged: {
-        //console.log("focus changed aF: " + dayContainer.activeFocus + ", dSI: " + daySelectedIndex + ", i: " + index + ", dLVc: " + dayListView.count + ", dLVcI: " + dayListView.currentIndex + ", dCSI: " + dayChildSelectedIndex);
+        console.log("focus changed aF: " + dayContainer.activeFocus + ", dSI: " + daySelectedIndex + ", i: " + index + ", dLVc: " + dayListView.count + ", dLVcI: " + dayListView.currentIndex + ", dCSI: " + dayChildSelectedIndex);
         if (dayContainer.activeFocus) {
             if (index == 0) {
                 dayContainer.GridView.view.currentIndex = daySelectedIndex
@@ -488,7 +489,7 @@ FocusScope {
             }
 
             if (daySelectedIndex === index) {
-                if (dayListView.count === 0 || dayChildSelectedIndex === -1) {
+                if (dayChildSelectedIndex >= dayListView.count || dayChildSelectedIndex === -1) {
                     if (!noItemIndicator.activeFocus) {
                         noItemIndicator.forceActiveFocus()
                         dayChildSelectedIndex = -1;

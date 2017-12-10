@@ -29,7 +29,7 @@ Date.daysInMonth = function(year, month) {
     return [
         31/*Jan*/, 28/*Feb*/, 31/*Mar*/, 30/*Apr*/, 31/*May*/, 30/*Jun*/,
         31/*Jul*/, 31/*Aug*/, 30/*Sep*/, 31/*Oct*/, 30/*Nov*/, 31/*Dec*/
-    ][month] + (month == 1) * Date.leapYear(year)
+    ][month] + (month === 1) * Date.leapYear(year)
 }
 
 Date.weeksInMonth = function(year, month, weekday) {
@@ -40,7 +40,7 @@ Date.weeksInMonth = function(year, month, weekday) {
     var m = (date1.getTime() - date0.getTime()) / Date.msPerDay
     var n = 0
     while (m > 0) {
-        if (day == weekday) n = n + 1
+        if (day === weekday) n = n + 1
         day = day < 6 ? day + 1 : 0
         m = m - 1
     }

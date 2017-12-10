@@ -78,7 +78,8 @@ ApplicationWindow {
         //Could use 'states' to switch between day/week/month/year views?
         //Will need to use loader to avoid bad startup experience
 
-        WeekViewGrid {
+//        WeekViewGrid {
+        YearViewGrid {
             id: weekViewGrid
             anchors.fill: parent
         }
