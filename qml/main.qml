@@ -39,7 +39,7 @@ ApplicationWindow {
 
     FocusScope {
         id: mainView
-        width: parent.width; height: parent.height
+        anchors.fill: parent
 
         UnionFilter {
             id: itemTypeFilter

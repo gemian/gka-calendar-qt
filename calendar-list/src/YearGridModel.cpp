@@ -23,16 +23,17 @@ YearGridModel::YearGridModel(QObject *parent) : QAbstractListModel(parent) {
     _gridCells.fill(nullptr);
 
     QDate date(1,1,1);
-//    qWarning() << date.dayOfWeek();
     date = date.addDays(1+DAYS_IN_WEEK-date.dayOfWeek());
-//    qWarning() << date.dayOfWeek();
     for (int d = 0; d < DAYS_IN_WEEK; d++) {
-        for (int g = 0; g < WEEK_BLOCKS_SHOWN; g++) {
+        int extra = 0;
+        if (d <= 1) extra = 1;
+        for (int g = 0; g < WEEK_BLOCKS_SHOWN+extra; g++) {
             auto cellIndex = d * GRID_HEIGHT + g * GRID_HEIGHT * DAYS_IN_WEEK;
             auto cell = _gridCells[cellIndex] = new YearDay();
             const QString &dayOfWeek = date.toString("ddd").left(1);
             qWarning() << cellIndex << dayOfWeek;
             cell->setDisplayLabel(dayOfWeek);
+            cell->setType(DayTypeHeading);
         }
         date = date.addDays(1);
     }
@@ -46,6 +47,9 @@ YearGridModel::~YearGridModel() {
     delete _manager;
 }
 
+void YearGridModel::setCurrentDate(QDate date) {
+    _currentDate = date;
+}
 
 QtOrganizer::QOrganizerItemIntersectionFilter YearGridModel::filter() {
     QSet<QtOrganizer::QOrganizerCollectionId> collectionIds;
@@ -87,38 +91,66 @@ int YearGridModel::cellIndexForMonthAndColumn(int month, int c) {
     return month + (c * GRID_HEIGHT);
 }
 
-void YearGridModel::setYear(const int year)
-{
-    _year = year;
+void YearGridModel::setYear(const int year) {
+    if (_year != year) {
+        _year = year;
 
-    for (int m = 1; m <= MONTHS_IN_YEAR; m++) {
-        QDate date(year, m, 1);
-        _monthOffset[m-1] = date.dayOfWeek()-1;
-        qWarning() << "monthoffset: " << _monthOffset[m-1];
-
-        for (int c = 0; c < GRID_WIDTH; c++) {
-            auto cellIndex = cellIndexForMonthAndColumn(m,c);
-            qWarning() << "cellIndex: " << cellIndex;
-            auto cell = _gridCells[cellIndex];
-            if (cell) {
-                cell->clearEvents();
-            } else {
-                _gridCells[cellIndex] = cell = new YearDay();
-            }
-            QString label(" ");
-            if (c >= _monthOffset[m-1]) {
-                auto day = 1+c-_monthOffset[m-1];
-                date.setDate(year,m,day);
-                cell->setDate(date);
-                qWarning() << date;
-                if (day == 1 || date.dayOfWeek() == 1 && day < date.daysInMonth()) {
-                    label = QString::number(day);
-                }
-            }
-            cell->setDisplayLabel(label);
+        QDate today = QDate::currentDate();
+        if (_currentDate.isValid()) {
+            today = _currentDate;
         }
+
+        for (int m = 1; m <= MONTHS_IN_YEAR; m++) {
+            QDate date(year, m, 1);
+            _monthOffset[m - 1] = date.dayOfWeek() - 1;
+
+            for (int c = 0; c < GRID_WIDTH; c++) {
+                auto cellIndex = cellIndexForMonthAndColumn(m, c);
+                auto cell = _gridCells[cellIndex];
+                if (cell) {
+                    cell->clearEvents();
+                } else {
+                    _gridCells[cellIndex] = cell = new YearDay();
+                }
+                QString label(" ");
+                if (c >= _monthOffset[m - 1]) {
+                    auto day = 1 + c - _monthOffset[m - 1];
+                    date.setDate(year, m, day);
+                    qWarning() << date;
+                    if (date.isValid()) {
+                        cell->setDate(date);
+                    }
+                    if (!date.isValid()) {
+                        cell->setType(DayTypeInvalid);
+                    } else if (date < today) {
+                        cell->setType(DayTypePast);
+                    } else if (date == today) {
+                        cell->setType(DayTypeToday);
+                    } else {
+                        cell->setType(DayTypeFuture);
+                    }
+                    if (day == 1 || day == date.daysInMonth() || (date.dayOfWeek() == 1 && day <= date.daysInMonth())) {
+                        label = QString::number(day);
+                    }
+                } else {
+                    cell->setType(DayTypeInvalid);
+                }
+                cell->setDisplayLabel(label);
+            }
+        }
+
+        QDate yearBegin(year, 1, 1);
+        QDate yearEnd(year, 12, 31);
+        QDateTime startDateTime = QDateTime();
+        startDateTime.setDate(yearBegin);
+        QDateTime endDateTime = QDateTime();
+        endDateTime.setDate(yearEnd);
+
+        QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
+        addItemsToGrid(items);
+
+        emit modelChanged();
     }
-    emit modelChanged();
 }
 
 int YearGridModel::itemCount() const
@@ -190,37 +222,64 @@ void YearGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId
 }
 
 void YearGridModel::addEventToDate(YearEvent *event, QDate date) {
-    int gridIndex = GRID_WIDTH*(date.month()+1)+_monthOffset[date.month()]+date.day();
+    int gridIndex = date.month()+GRID_HEIGHT*(_monthOffset[date.month()-1]+(date.day()-1));
     _gridCells[gridIndex]->addEvent(event);
 }
 
 void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
-    QDate endOfYear(_year, 11, 1);
-    endOfYear.setDate(_year, 11, endOfYear.daysInMonth());
+    QDate endOfYear(_year, 12, 1);
+    endOfYear.setDate(_year, 12, endOfYear.daysInMonth());
     for (const auto &item : items) {
         QtOrganizer::QOrganizerEventTime eventTime = item.detail(QtOrganizer::QOrganizerItemDetail::TypeEventTime);
         if (!eventTime.isEmpty() && eventTime.startDateTime().isValid()) {
             auto *event = new YearEvent();
-            QDate eventDate = eventTime.startDateTime().date();
-            event->setDate(eventDate);
+            QDateTime startDateTime = eventTime.startDateTime();
+            startDateTime.setTime(QTime(12,0,0,0));
+            QDate startDate = startDateTime.date();
+            QDateTime endDateTime = eventTime.endDateTime();
+            endDateTime.setTime(QTime(12,0,0,0));
+            QDate endDate = endDateTime.date();
+            event->setDate(startDate);
             event->setDisplayLabel(item.displayLabel());
             event->setItemId(item.id().toString());
             event->setCollectionId(item.collectionId().toString());
-
             do {
-                addEventToDate(event, eventDate);
-                eventDate = eventDate.addDays(1);
-            } while (eventDate < eventTime.endDateTime().date() && eventDate < endOfYear);
+                addEventToDate(event, startDate);
+                startDate = startDate.addDays(1);
+            } while (startDate < endDate && startDate < endOfYear);
         }
     }
 }
 
-
 void YearGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-
+//    foreach (QtOrganizer::QOrganizerItemId itemId, itemIds) {
+//        qDebug("foreach");
+//        std::map<QString, CalendarEvent*>::iterator it;
+//        it = _events.find(itemId.toString());
+//        if (it != _events.end()) {
+//            qDebug("founditemidinevents");
+//            std::pair<std::multimap<QDateTime, CalendarItem*>::iterator, std::multimap<QDateTime, CalendarItem*>::iterator> possibles;
+//            possibles = _items.equal_range(it->second->startDateTime());
+//            std::multimap<QDateTime, CalendarItem*>::iterator ii=possibles.first;
+//            while (ii!=possibles.second) {
+//                qDebug("founddateinitems");
+//                if (qobject_cast<CalendarEvent*>(ii->second)->itemId() == itemId.toString()) {
+//                    qDebug("eraseitem++");
+//                    _items.erase(ii++);
+//                } else {
+//                    qDebug("++");
+//                    ++ii;
+//                }
+//            }
+//            qDebug("eraseevent");
+//            _events.erase(it);
+//        }
+//    }
 }
 
 void YearGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(itemIds);
+    qWarning() << "addItemsToModel" << items;
     addItemsToGrid(items);
 }
+

@@ -10,7 +10,7 @@
 static const int DAYS_IN_WEEK = 7;
 static const int MONTHS_IN_YEAR = 12;
 static const int WEEK_BLOCKS_SHOWN = 5;
-static const int GRID_WIDTH = WEEK_BLOCKS_SHOWN*DAYS_IN_WEEK;
+static const int GRID_WIDTH = WEEK_BLOCKS_SHOWN*DAYS_IN_WEEK+2;
 static const int MONTHS_PLUS_DOW = MONTHS_IN_YEAR+1;
 static const int GRID_HEIGHT = MONTHS_PLUS_DOW;
 static const int TOTAL_GRID_CELLS = GRID_WIDTH * GRID_HEIGHT;
@@ -29,6 +29,8 @@ public:
 
     int year() const;
     void setYear(const int year);
+    void setCurrentDate(QDate date);
+    void addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items);
 
     int itemCount() const;
 
@@ -51,11 +53,9 @@ private:
     static YearDay *item_at(QQmlListProperty<YearDay> *p, int idx);
 
     QtOrganizer::QOrganizerItemIntersectionFilter filter();
-    void addItemsToEventsList(QList<QtOrganizer::QOrganizerItem> items,  QDateTime startDateTime,  QDateTime endDateTime);
     void removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void addEventToDate(YearEvent *event, QDate date);
-    void addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items);
 
     int cellIndexForMonthAndColumn(int month, int c);
 
@@ -65,6 +65,7 @@ private:
 
     int _year;
     QtOrganizer::QOrganizerManager *_manager;
+    QDate _currentDate;
 };
 
 QML_DECLARE_TYPE(YearGridModel)

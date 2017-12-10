@@ -6,6 +6,8 @@
 #include <QtQml>
 #include <deque>
 
+enum DayType { DayTypeInvalid, DayTypePast, DayTypeToday, DayTypeFuture, DayTypeHeading };
+
 class YearEvent : public QObject
 {
     Q_OBJECT
@@ -50,6 +52,7 @@ class YearDay : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int type READ type WRITE setType NOTIFY dayChanged)
     Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dayChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY dayChanged)
     Q_PROPERTY(QQmlListProperty<YearEvent> items READ items NOTIFY dayChanged)
@@ -57,6 +60,9 @@ class YearDay : public QObject
 public:
     explicit YearDay(QObject *parent = Q_NULLPTR);
     ~YearDay() override;
+
+    void setType(const int type);
+    int type() const;
 
     void setDate(const QDate &date);
     QDate date() const;
@@ -77,6 +83,7 @@ private:
     static YearEvent * item_at(QQmlListProperty<YearEvent> *p, int idx);
 
 private:
+    int _type;
     QDate _date;
     QString _displayLabel;
     std::vector<YearEvent*> _events;

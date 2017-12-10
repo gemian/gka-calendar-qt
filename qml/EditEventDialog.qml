@@ -23,6 +23,8 @@ Window {
     property var startDate:null;
     property var endDate:null;
     property var event:null;
+    property var eventId:null;
+    property var allDay:null;
     property var model:null;
 
     property int activeExtrasIndex: 0;
@@ -357,10 +359,15 @@ Window {
         if (event === undefined) {
             console.log("Attempted to edit an undefined event");
             return;
+        } else if (eventId != null) {
+            internal.fetchParentRequestId = model.fetchItems([eventId]);
         } else if (event === null) {
             addEvent();
             if (!eventDialog.endDate) {
                 eventDialog.endDate = eventDialog.startDate;
+            }
+            if (allDay) {
+                allDayEventCheckbox.checked = true;
             }
         } else if ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence)) {
             internal.fetchParentRequestId = model.fetchItems([event.parentId]);

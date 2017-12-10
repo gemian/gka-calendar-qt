@@ -1,6 +1,6 @@
 #include "YearItem.h"
 
-YearEvent::YearEvent(QObject *parent) : QObject(parent) {
+YearEvent::YearEvent(QObject *parent) : QObject(parent), _date() {
 }
 
 YearEvent::~YearEvent() {
@@ -50,6 +50,14 @@ YearDay::YearDay(QObject *parent) : QObject(parent), _date() {
 }
 
 YearDay::~YearDay() {
+}
+
+void YearDay::setType(const int type) {
+    _type = type;
+}
+
+int YearDay::type() const {
+    return _type;
 }
 
 void YearDay::setDate(const QDate &date) {
