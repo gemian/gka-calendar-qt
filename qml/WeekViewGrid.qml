@@ -6,19 +6,44 @@ import QtQuick.Controls 2.0
 import "dateExt.js" as DateExt
 
 FocusScope {
+    id: weekViewContainer
+
     property int daySelectedIndex: 1
     property int dayChildSelectedIndex: 0
     property int childrenCompleted: 0
     focus: true
 
-    onActiveFocusChanged: {
-        if (activeFocus)
-            mainView.state = "showGridViews"
+    function updateGridViewWithDaySelection() {
+        gridView.currentIndex = daySelectedIndex
+        gridView.currentItem.forceActiveFocus()
+        console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
+    }
+
+    function updateGridViewToToday() {
+        console.log("updateGridViewToToday");
+        var today = new Date();
+        var offset = new Date().weekStartOffset(1);
+        weekStartDate = today.addDays(-offset);
+        if (daySelectedIndex !== offset+1 || !gridView.currentItem.activeFocus) {
+            daySelectedIndex = offset+1;
+            dayChildSelectedIndex = 0;
+            updateGridViewWithDaySelection();
+        }
+    }
+
+    Timer {
+        running: true
+        repeat: false
+        interval: 1000
+        onTriggered: {
+            updateGridViewToToday();
+        }
     }
 
     Rectangle {
-        anchors.fill: parent
         clip: true
+        width: mainView.width
+        height: mainView.height
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#193441" }
             GradientStop { position: 1.0; color: Qt.darker("#193441") }
@@ -54,7 +79,7 @@ FocusScope {
             cellHeight: gridView.height/4
             flow: GridView.FlowTopToBottom
             focus: true
-            interactive: false
+//            interactive: false
 
             model: 8
             delegate: WeekViewDayItem {

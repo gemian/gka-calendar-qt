@@ -138,8 +138,10 @@ FocusScope {
                 MouseArea {
                     anchors.fill: parent
                     onReleased: {
-                        gridView.currentIndex = index
-                        gridView.currentItem.forceActiveFocus()
+                        if (yearGridModel.items[index].type > 0 && yearGridModel.items[index].type < 4) {
+                            gridView.currentIndex = index
+                            gridView.currentItem.forceActiveFocus()
+                        }
                     }
                 }
             }
@@ -211,6 +213,7 @@ FocusScope {
             header: gridHeader
             highlight: gridHighlight
             visible: true
+//            interactive: false
             model: yearGridModel
             cellWidth: gridView.width/(5*7+2)
             cellHeight: gridView.height/13

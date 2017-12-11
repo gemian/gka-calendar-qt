@@ -75,22 +75,11 @@ ApplicationWindow {
             objectName: "invalidFilter"
         }
 
-        //Could use 'states' to switch between day/week/month/year views?
-        //Will need to use loader to avoid bad startup experience
-
-//        WeekViewGrid {
-        YearViewGrid {
-            id: weekViewGrid
-            anchors.fill: parent
+        Loader {
+            id: alternateViewLoader
+            source: "WeekViewGrid.qml"
+            visible: status == Loader.Ready
         }
 
-        states:  [
-            State {
-                name: "showWeekView"
-                PropertyChanges { target: weekViewGrid; visible: true }
-            }
-        ]
-
     }
-
 }

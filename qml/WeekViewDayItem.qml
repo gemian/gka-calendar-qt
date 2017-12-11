@@ -10,8 +10,8 @@ FocusScope {
     property alias color: dayRectangle.color
     focus: !showHeader
     id: dayContainer
-    width: GridView.view.cellWidth-2
-    height: GridView.view.cellHeight-2
+    width: gridView.cellWidth-2
+    height: gridView.cellHeight-2
 
     property bool showHeader: true
     property bool dateOnLeft: true
@@ -335,25 +335,8 @@ FocusScope {
         setDateToRightColumn(index);
     }
 
-    function updateGridViewWithDaySelection() {
-        dayContainer.GridView.view.currentIndex = daySelectedIndex
-        dayContainer.GridView.view.currentItem.forceActiveFocus()
-        console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
-    }
-
-    function updateGridViewToToday() {
-        var today = new Date();
-        var offset = new Date().weekStartOffset(1);
-        weekStartDate = today.addDays(-offset);
-        if (daySelectedIndex !== offset+1) {
-            daySelectedIndex = offset+1;
-            dayChildSelectedIndex = 0;
-            updateGridViewWithDaySelection();
-        }
-    }
-
     Keys.onPressed: {
-        console.log("key:"+event.key)
+        console.log("[WVDI]key:"+event.key)
         if (event.key === Qt.Key_Space) {
             updateGridViewToToday();
         }
@@ -468,15 +451,6 @@ FocusScope {
             }
 
             updateGridViewWithDaySelection();
-        }
-    }
-
-    Timer {
-        running: true
-        repeat: false
-        interval: 1000
-        onTriggered: {
-            updateGridViewToToday();
         }
     }
 
