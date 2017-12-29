@@ -447,31 +447,18 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Start:")
+                        text: qsTr("Start Time:")
                     }
                     TextField {
                         id: startTimeField
                         enabled: !allDayEventCheckbox.checked
                         text: eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
-                        KeyNavigation.down: endTimeField
+                        KeyNavigation.down: startDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
                                 eventDialog.startDate = updateDateTimeWithTimeText(eventDialog.startDate, text);
                                 text = eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
-                            }
-                        }
-                    }
-                    TextField {
-                        id: startDateField
-                        text: eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
-                        KeyNavigation.up: allDayEventCheckbox
-                        KeyNavigation.down: endDateField
-                        inputMask: localeDateInputMask
-                        onFocusChanged: {
-                            if (!activeFocus) {
-                                eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, text);
-                                text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
                     }
@@ -483,13 +470,52 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("End:")
+                        text: qsTr("Start Date:")
+                    }
+                    TextField {
+                        id: startDateField
+                        text: eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+                        KeyNavigation.down: endTimeField
+                        inputMask: localeDateInputMask
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, text);
+                                text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                datePicker.startDate = true;
+                                datePicker.selectedDate = eventDialog.startDate;
+                                datePicker.visible = true;
+                            }
+                        }
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Space) {
+                                console.log("key Tab");
+                                datePicker.startDate = true;
+                                datePicker.selectedDate = eventDialog.startDate;
+                                datePicker.visible = true;
+                                event.accepted = true;
+                            }
+                        }
+                    }
+                }
+
+                Row {
+                    spacing: eventDialog.spacing
+                    anchors.right: parent.right
+
+                    Label {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("End Time:")
                     }
                     TextField {
                         id: endTimeField
                         enabled: !allDayEventCheckbox.checked
                         text: eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
-                        KeyNavigation.down: okButton
+                        KeyNavigation.down: endDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
                             if (!activeFocus) {
@@ -497,6 +523,16 @@ Window {
                                 text = eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat);
                             }
                         }
+                    }
+                }
+
+                Row {
+                    spacing: eventDialog.spacing
+                    anchors.right: parent.right
+
+                    Label {
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: qsTr("End Date:")
                     }
                     TextField {
                         id: endDateField
@@ -507,6 +543,23 @@ Window {
                             if (!activeFocus) {
                                 eventDialog.endDate = updateDateTimeWithDateText(eventDialog.endDate, text);
                                 text = eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                datePicker.startDate = false;
+                                datePicker.selectedDate = eventDialog.endDate;
+                                datePicker.visible = true;
+                            }
+                        }
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Space) {
+                                console.log("key Tab");
+                                datePicker.startDate = false;
+                                datePicker.selectedDate = eventDialog.endDate;
+                                datePicker.visible = true;
+                                event.accepted = true;
                             }
                         }
                     }
@@ -961,6 +1014,66 @@ Window {
             }
         }
 
+        Rectangle {
+            id: focusShade
+            parent: window.contentItem
+            anchors.fill: parent
+            opacity: datePicker.visible ? 0.5 : 0
+            color: "black"
+
+            Behavior on opacity {
+                NumberAnimation {
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                enabled: parent.opacity > 0
+                onClicked: datePicker.visible = false
+            }
+        }
+
+        Calendar {
+            property bool startDate: true
+            id: datePicker
+            parent: window.contentItem
+            visible: false
+            z: focusShade.z + 1
+            width: height
+            height: parent.height * 0.9
+            anchors.centerIn: parent
+            focus: visible
+            onClicked: visible = false
+            Keys.onBackPressed: {
+                event.accepted = true;
+                visible = false;
+            }
+            Keys.onPressed: {
+                if ((event.key === Qt.Key_Space) || (event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                    event.accepted = true;
+                    visible = false;
+                } else if (event.key === Qt.Key_Escape) {
+                    selectedDate = eventDialog.startDate;
+                    event.accepted = true;
+                    visible = false;
+                }
+            }
+            onVisibleChanged: {
+                if (!visible) {
+                    if (startDate) {
+                        eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, selectedDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat));
+                        startDateField.text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                        startDateField.forceActiveFocus();
+                    } else {
+                        console.log("end selectedDate"+selectedDate);
+                        eventDialog.endDate = updateDateTimeWithDateText(eventDialog.endDate, selectedDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat));
+                        endDateField.text = eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                        endDateField.forceActiveFocus();
+                    }
+                }
+            }
+        }
+
         Keys.onPressed: {
             console.log("key:"+event.key + ", aFIp:"+activeFocusItem.parent + ", aFI: "+activeFocusItem)
             if (event.key === Qt.Key_Escape) {
@@ -969,16 +1082,15 @@ Window {
             if (event.key === Qt.Key_Space) {
                 //could be an options popup?
             }
+            if (event.key === Qt.Key_Tab) {
+                if (datePicker.visible) {
+                    event.accepted = true;
+                }
+            }
             if (event.key === Qt.Key_Right) {
                 switch (activeFocusItem.parent) {
                 case startTimeField:
-                    startDateField.forceActiveFocus();
-                    startDateField.cursorPosition = 0
-                    break;
                 case endTimeField:
-                    endDateField.forceActiveFocus()
-                    endDateField.cursorPosition = 0
-                    break;
                 case eventNameField:
                 case locationField:
                 case allDayEventCheckbox:
@@ -989,14 +1101,6 @@ Window {
                 }
             }
             if (event.key === Qt.Key_Left) {
-                if (activeFocusItem.parent == startDateField) {
-                    startTimeField.forceActiveFocus()
-                    startTimeField.cursorPosition = startTimeField.length
-                }
-                if (activeFocusItem.parent == endDateField) {
-                    endTimeField.forceActiveFocus()
-                    endTimeField.cursorPosition = endTimeField.length
-                }
                 if (activeFocusItem == descriptionButton) {
                     eventNameField.forceActiveFocus();
                 }
