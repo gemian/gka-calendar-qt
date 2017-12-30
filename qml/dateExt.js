@@ -126,6 +126,11 @@ Date.prototype.mergeDate = function (d) {
     this.setDate(d.getDate());
 }
 
+Date.prototype.isLastWeek = function () {
+    var days = Date.daysInMonth(this.getFullYear(), this.getMonth());
+    return (this.getDate() > days - 7);
+}
+
 function weekCount(year, month_number) {
     var firstOfMonth = new Date(year, month_number, 1);
     var lastOfMonth = new Date(year, month_number+1, 0);

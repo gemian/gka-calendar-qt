@@ -40,9 +40,24 @@ Window {
         console.log("e.itemType:"+e.itemType);
         //If there is a RecurenceRule use that , else create fresh Recurence Object.
         var isOcurrence = ((e.itemType === Type.EventOccurrence) || (e.itemType === Type.TodoOccurrence))
-        if(!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
+        if (!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
             var rule = e.recurrence.recurrenceRules[0];
             internal.repeatIndex = recurrenceValue[rule.frequency];
+            console.log("rule:"+rule);
+            console.log("rule.limit:"+rule.limit);
+            console.log("rule.frequency:"+rule.frequency);
+            console.log("rule.daysOfWeek:"+rule.daysOfWeek);
+            console.log("rule.daysOfMonth:"+rule.daysOfMonth);
+            console.log("rule.daysOfYear:"+rule.daysOfYear);
+            console.log("rule.weeksOfYear:"+rule.weeksOfYear);
+            console.log("rule.monthsOfYear:"+rule.monthsOfYear);
+            console.log("rule.firstDayOfWeek:"+rule.firstDayOfWeek);
+            console.log("rule.days:"+rule.days);
+            console.log("rule.positions:"+rule.positions);
+            console.log("recurrenceValue:"+recurrenceValue);
+            console.log("recurrenceValue0:"+recurrenceValue[0]);
+            console.log("recurrenceValue1:"+recurrenceValue[1]);
+            console.log("recurrenceValue2:"+recurrenceValue[2]);
             console.log("repeatIndex:"+internal.repeatIndex);
             setRepeatButton(internal.repeatIndex, true);
             if (rule.daysOfWeek.indexOf(Qt.Monday) !== -1) {
@@ -66,6 +81,19 @@ Window {
             if (rule.daysOfWeek.indexOf(Qt.Sunday) !== -1) {
                 weeklyRepeatSun.checked = true;
             }
+            if (internal.repeatIndex == 3) {
+                if (rule.daysOfMonth > 0) {
+                    setRepeatMonthlyButton(0, false);
+                }
+                for (var i=0; i < rule.positions.length; i++) {
+                    if (rule.positions[i] === -1) {
+                        setRepeatMonthlyButton(2, false);
+                    } else if (rule.positions[i] > 0) {
+                        setRepeatMonthlyButton(1, false);
+                    }
+                }
+            }
+
             if (rule.limit === undefined) {
                 internal.repeatUntilIndex = 0;
             } else if (rule.limit instanceof Date) {
@@ -75,7 +103,7 @@ Window {
                 internal.repeatUntilIndex = 1;
                 repeatUntilCountField.text = rule.limit;
             }
-            setRepeatUntilButton(internal.repeatUntilIndex, true);
+            setRepeatUntilButton(internal.repeatUntilIndex, false);
         }
 
         eventDialog.startDate =new Date(e.startDateTime);
@@ -162,7 +190,7 @@ Window {
                 rule.frequency = recurrenceRule;
                 if (internal.repeatIndex == 2) { //weekly
                     var weekDays = [];
-                    if (weeklyRepeatMon.checked) weekDays.push(Qt.Monday);
+                    if (weeklyRepeatMon.checked) weekDays.push(Qt.Moday);
                     if (weeklyRepeatTue.checked) weekDays.push(Qt.Tuesday);
                     if (weeklyRepeatWed.checked) weekDays.push(Qt.Wednesday);
                     if (weeklyRepeatThu.checked) weekDays.push(Qt.Thursday);
@@ -188,7 +216,50 @@ Window {
                     // update monthly rule with final event day
                     // we need to do it here to make sure that the day is the same day as the event startDate
                     if (rule.frequency === RecurrenceRule.Monthly) {
-                        rule.daysOfMonth = [event.startDateTime.getDate()]
+//                        rule.byYear = [];
+                        if (internal.repeatMonthlyIndex == 0) {
+                            rule.daysOfMonth = [event.startDateTime.getDate()]
+                            rule.positions = [];
+                            rule.daysOfWeek = [];
+                            console.log("monthly repeat days"+event.startDateTime.getDate());
+                        } else {
+                            var pos = 0;
+                            if (internal.repeatMonthlyIndex == 1) {
+                                pos = Math.ceil( event.startDateTime.getDate() / 7);
+                                console.log("monthly repeat position"+Math.ceil( startDate.getDate() / 7));
+                            } else if (internal.repeatMonthlyIndex == 2) {
+                                pos = -1;
+                                console.log("monthly repeat position -1");
+                            }
+                            rule.daysOfMonth = [];
+                            var dow=0;
+                            switch (event.startDateTime.getDay()) {
+                            case 0:
+                                dow = Qt.Sunday;
+                                break;
+                            case 1:
+                                dow = Qt.Monday;
+                                break;
+                            case 2:
+                                dow = Qt.Tuesday;
+                                break;
+                            case 3:
+                                dow = Qt.Wednesday;
+                                break;
+                            case 4:
+                                dow = Qt.Thursday;
+                                break;
+                            case 5:
+                                dow = Qt.Friday;
+                                break;
+                            case 6:
+                                dow = Qt.Saturday;
+                                break;
+
+                            }
+                            rule.daysOfWeek = [dow];
+                            rule.positions = [pos];
+                        }
                     }
                     event.recurrence.recurrenceRules = [rule]
                 } else {
@@ -266,6 +337,38 @@ Window {
             break;
         case 2:
             repeatWeeklyButton.checked = true
+            if (eventDialog.startDate &&
+                    !weeklyRepeatMon.checked &&
+                    !weeklyRepeatTue.checked &&
+                    !weeklyRepeatWed.checked &&
+                    !weeklyRepeatThu.checked &&
+                    !weeklyRepeatFri.checked &&
+                    !weeklyRepeatSat.checked &&
+                    !weeklyRepeatSun.checked) {
+                switch (eventDialog.startDate.getDay()) { //actually day of week 0-6
+                case 0:
+                    weeklyRepeatSun.checked = true;
+                    break;
+                case 1:
+                    weeklyRepeatMon.checked = true;
+                    break;
+                case 2:
+                    weeklyRepeatTue.checked = true;
+                    break;
+                case 3:
+                    weeklyRepeatWed.checked = true;
+                    break;
+                case 4:
+                    weeklyRepeatThu.checked = true;
+                    break;
+                case 5:
+                    weeklyRepeatFri.checked = true;
+                    break;
+                case 6:
+                    weeklyRepeatSun.checked = true;
+                    break;
+                }
+            }
             if (setFocus) repeatWeeklyButton.forceActiveFocus()
             break;
         case 3:
@@ -275,6 +378,28 @@ Window {
         case 4:
             repeatYearlyButton.checked = true
             if (setFocus) repeatYearlyButton.forceActiveFocus()
+            break;
+        }
+    }
+
+    function setRepeatMonthlyButton(index, setFocus) {
+        console.log("setRepeatMonthlyButton:"+index);
+        internal.repeatMonthlyIndex = index;
+        monthlyRepeatByDate.checked = false;
+        monthlyRepeatByWeek.checked = false;
+        monthlyRepeatByWeekLast.checked = false;
+        switch (index) {
+        case 0:
+            monthlyRepeatByDate.checked = true
+            if (setFocus) monthlyRepeatByDate.forceActiveFocus()
+            break;
+        case 1:
+            monthlyRepeatByWeek.checked = true
+            if (setFocus) monthlyRepeatByWeek.forceActiveFocus()
+            break;
+        case 2:
+            monthlyRepeatByWeekLast.checked = true
+            if (setFocus) monthlyRepeatByWeekLast.forceActiveFocus()
             break;
         }
     }
@@ -846,6 +971,74 @@ Window {
                     }
 
                     Row {
+                        id: monthlyRepeatRow
+                        spacing: eventDialog.padding
+                        visible: internal.repeatIndex == 3
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        Button {
+                            id: monthlyRepeatByDate
+                            text: qsTr("By Date")
+                            checkable: true
+                            activeFocusOnTab: true
+                            activeFocusOnPress: true
+                            onClicked: {
+                                setRepeatMonthlyButton(0,false);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setRepeatMonthlyButton(0,false);
+                                }
+                            }
+                            KeyNavigation.right: monthlyRepeatByWeek
+                        }
+                        Label {
+                            id: montlyRepeatByDateLabel
+                            text: startDate.getDate()
+                            visible: monthlyRepeatByDate.checked
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        Button {
+                            id: monthlyRepeatByWeek
+                            text: qsTr("By Week")
+                            checkable: true
+                            activeFocusOnPress: true
+                            activeFocusOnTab: true
+                            onClicked: {
+                                setRepeatMonthlyButton(1,false);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setRepeatMonthlyButton(1,false);
+                                }
+                            }
+                            KeyNavigation.right: monthlyRepeatByWeekLast
+                        }
+                        Label {
+                            id: montlyRepeatByWeekLabel
+                            text: Math.ceil( startDate.getDate() / 7)
+                            visible: monthlyRepeatByWeek.checked
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        Button {
+                            id: monthlyRepeatByWeekLast
+                            text: qsTr("By Week Last")
+                            checkable: true
+                            visible: startDate.isLastWeek()
+                            activeFocusOnPress: true
+                            activeFocusOnTab: true
+                            onClicked: {
+                                setRepeatMonthlyButton(2,false);
+                            }
+                            onFocusChanged: {
+                                if (activeFocus) {
+                                    setRepeatMonthlyButton(2,false);
+                                }
+                            }
+                        }
+                    }
+
+                    Row {
                         spacing: eventDialog.padding
                         visible: internal.repeatIndex > 0
                         width: parent.width
@@ -1109,13 +1302,20 @@ Window {
                 }
             }
             if (event.key === Qt.Key_Down) {
+                console.log("activeFocusItem"+activeFocusItem.id);
                 switch (activeFocusItem) {
                 case repeatButton:
                     setRepeatButton(internal.repeatIndex, true);
                     break;
-                case repeatDailyButton:
                 case repeatMonthlyButton:
+                    console.log("monthlydown index"+internal.repeatMonthlyIndex)
+                    setRepeatMonthlyButton(internal.repeatMonthlyIndex, true);
+                    break;
+                case repeatDailyButton:
                 case repeatYearlyButton:
+                case monthlyRepeatByDate:
+                case monthlyRepeatByWeek:
+                case monthlyRepeatByWeekLast:
                     setRepeatUntilButton(internal.repeatUntilIndex, true);
                     break;
                 }
@@ -1139,9 +1339,16 @@ Window {
                 case repeatUntilDateButton:
                     if (internal.repeatIndex == 2) {
                         weeklyRepeatSat.forceActiveFocus();
+                    } else if (internal.repeatIndex == 3) {
+                        setRepeatMonthlyButton(internal.repeatMonthlyIndex, true);
                     } else {
                         setRepeatButton(internal.repeatIndex, true);
                     }
+                    break;
+                case monthlyRepeatByDate:
+                case monthlyRepeatByWeek:
+                case monthlyRepeatByWeekLast:
+                    setRepeatButton(internal.repeatIndex, true);
                     break;
                 }
             }
@@ -1156,6 +1363,7 @@ Window {
         property int eventSize: -1
         property int reminderValue: -1
         property int repeatIndex: 0
+        property int repeatMonthlyIndex: 0
         property int repeatUntilIndex: 0
 
         property int fetchParentRequestId: -1;
