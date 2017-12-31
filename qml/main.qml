@@ -37,6 +37,21 @@ ApplicationWindow {
         onActivated: Qt.quit()
     }
 
+    Shortcut {
+        sequence: "Ctrl+Shift+d"
+        onActivated: alternateViewLoader.source = "DayViewGrid.qml"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+w"
+        onActivated: alternateViewLoader.source = "WeekViewGrid.qml"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+y"
+        onActivated: alternateViewLoader.source = "YearViewGrid.qml"
+    }
+
     FocusScope {
         id: mainView
         anchors.fill: parent
