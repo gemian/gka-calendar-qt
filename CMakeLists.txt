@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
 
-project(gka_calendar_qt)
+project(gka-calendar-qt)
 
 set (QT_MIN_VERSION "5.7.0")
 
