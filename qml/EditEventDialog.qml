@@ -17,20 +17,20 @@ Window {
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
 
-    property int padding: 4;
-    property int spacing: 1;
+    property int padding: 4
+    property int spacing: 1
 
-    property var startDate:null;
-    property var endDate:null;
-    property var event:null;
-    property var eventId:null;
-    property var allDay:null;
-    property var model:null;
+    property var startDate:null
+    property var endDate:null
+    property var event:null
+    property var eventId:null
+    property var allDay:null
+    property var model:null
 
-    property int activeExtrasIndex: 0;
-    property var localeTimeInputMask: makeLocaleTimeInputMask();
-    property var localeDateInputMask: makeLocaleDateInputMask();
-    property var recurrenceValue: [RecurrenceRule.Invalid, RecurrenceRule.Daily, RecurrenceRule.Weekly, RecurrenceRule.Monthly, RecurrenceRule.Yearly];
+    property int activeExtrasIndex: 0
+    property var localeTimeInputMask: makeLocaleTimeInputMask()
+    property var localeDateInputMask: makeLocaleDateInputMask()
+    property var recurrenceValue: [RecurrenceRule.Invalid, RecurrenceRule.Daily, RecurrenceRule.Weekly, RecurrenceRule.Monthly, RecurrenceRule.Yearly]
 
     function addEvent() {
         internal.collectionId = model.getDefaultCollection().collectionId;
@@ -39,7 +39,7 @@ Window {
     function editEvent(e) {
         console.log("e.itemType:"+e.itemType);
         //If there is a RecurenceRule use that , else create fresh Recurence Object.
-        var isOcurrence = ((e.itemType === Type.EventOccurrence) || (e.itemType === Type.TodoOccurrence))
+        var isOcurrence = ((e.itemType === Type.EventOccurrence) || (e.itemType === Type.TodoOccurrence));
         if (!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
             var rule = e.recurrence.recurrenceRules[0];
             internal.repeatIndex = recurrenceValue[rule.frequency];
@@ -216,7 +216,6 @@ Window {
                     // update monthly rule with final event day
                     // we need to do it here to make sure that the day is the same day as the event startDate
                     if (rule.frequency === RecurrenceRule.Monthly) {
-//                        rule.byYear = [];
                         if (internal.repeatMonthlyIndex == 0) {
                             rule.daysOfMonth = [event.startDateTime.getDate()]
                             rule.positions = [];
