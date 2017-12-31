@@ -115,22 +115,22 @@ FocusScope {
         }
     }
 
-    function moveAnchorAndGridLeftForEvent(event, gridY, indexDate) {
+    function moveAnchorAndGridLeftForEvent(event, indexDate) {
         event.accepted = true;
-        if (gridY < 2) {
+        if (indexDate.getMonth() === 0) {
             anchorDate = anchorDate.addMonths(-12);
-            gridView.currentIndex = index+11;
+            gridView.currentIndex = indexFor(indexDate.getFullYear()-1, 11, Date.daysInMonth(indexDate.getFullYear()-1,11));
         } else {
             gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()-1, Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth()-1));
         }
         gridView.currentItem.forceActiveFocus();
     }
 
-    function moveAnchorAndGridRightForEvent(event, gridY, indexDate) {
+    function moveAnchorAndGridRightForEvent(event,  indexDate) {
         event.accepted = true;
-        if (gridY > 11) {
+        if (indexDate.getMonth() === 11) {
             anchorDate = anchorDate.addMonths(12);
-            gridView.currentIndex = index-11;
+            gridView.currentIndex = indexFor(indexDate.getFullYear()+1, 0, 1);
         } else {
             gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()+1, 1);
         }
@@ -246,11 +246,11 @@ FocusScope {
                     }
                 } else if (event.key === Qt.Key_Left) {
                     if (yearGridModel.items[index].date.getDate() < 2) {
-                        moveAnchorAndGridLeftForEvent(event, gridY, indexDate)
+                        moveAnchorAndGridLeftForEvent(event, indexDate)
                     }
                 } else if (event.key === Qt.Key_Right) {
                     if (indexDate.getDate() > Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth())-1) {
-                        moveAnchorAndGridRightForEvent(event, gridY, indexDate)
+                        moveAnchorAndGridRightForEvent(event, indexDate)
                     }
                 }
             }
