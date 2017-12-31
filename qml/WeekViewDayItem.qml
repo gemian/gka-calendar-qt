@@ -68,7 +68,7 @@ FocusScope {
             verticalAlignment: Text.AlignBottom
             padding: 2
             font.pointSize: 10;
-            text: "Week "+weekStartDate.weekNumber(1);
+            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1));
         }
         Text {
             anchors.fill: parent
@@ -247,15 +247,21 @@ FocusScope {
                     MouseArea {
                         anchors.fill: parent
                         onPressed: {
-                            if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
-                                dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":organizerModel});
-                            }
-                            console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
-                            daySelectedIndex = gridViewIndex
-                            dayChildSelectedIndex = index
-                            dayListView.currentIndex = index
-                            dayListView.currentItem.forceActiveFocus()
+                            internal.pressedContentX = gridView.contentX
+                        }
 
+                        onReleased: {
+                            var diff = parent.width/10
+                            if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
+                                if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
+                                    dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":organizerModel});
+                                }
+//                                console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
+                                daySelectedIndex = gridViewIndex
+                                dayChildSelectedIndex = index
+                                dayListView.currentIndex = index
+                                dayListView.currentItem.forceActiveFocus()
+                            }
                         }
                     }
 
@@ -290,14 +296,21 @@ FocusScope {
                 MouseArea {
                     anchors.fill: parent
                     onPressed: {
-                        if (daySelectedIndex == index) {
-                            dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
+                        internal.pressedContentX = gridView.contentX
+                    }
+
+                    onReleased: {
+                        var diff = parent.width/10
+                        if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
+                            if (daySelectedIndex == index) {
+                                dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
+                            }
+                            //console.log("emptyitemclick i:"+index)
+                            daySelectedIndex = index
+                            dayChildSelectedIndex = -1
+                            dayListView.currentIndex = -1
+                            noItemIndicator.forceActiveFocus()
                         }
-                        //console.log("emptyitemclick i:"+index)
-                        daySelectedIndex = index
-                        dayChildSelectedIndex = -1
-                        dayListView.currentIndex = -1
-                        noItemIndicator.forceActiveFocus()
                     }
                 }
             }

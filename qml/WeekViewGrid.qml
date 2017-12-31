@@ -8,6 +8,8 @@ import "dateExt.js" as DateExt
 FocusScope {
     id: weekViewContainer
 
+    property var weekStartDate: new Date().weekStart(1)
+    property var weekEndDate: weekStartDate.addDays(6)
     property int daySelectedIndex: 1
     property int dayChildSelectedIndex: 0
     property int childrenCompleted: 0
@@ -41,7 +43,6 @@ FocusScope {
     }
 
     Rectangle {
-        clip: true
         width: mainView.width
         height: mainView.height
         gradient: Gradient {
@@ -67,6 +68,34 @@ FocusScope {
             }
         }
 
+        Label {
+            id: defaultLabel
+        }
+
+        Label {
+            id: lastWeek
+            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
+            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.bold: true
+            color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#bdc3c7"
+            rotation: -90
+            x: 0
+            y: (parent.height-lastWeek.height)/2
+            opacity: (internal.initialContentX - gridView.contentX) / internal.contentXactionOn
+        }
+
+        Label {
+            id: nextWeek
+            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
+            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.bold: true
+            color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#bdc3c7"
+            rotation: 90
+            x: parent.width-nextWeek.width
+            y: (parent.height-nextWeek.height)/2
+            opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
+        }
+
         GridView {
             id: gridView
             anchors.fill: parent
@@ -87,7 +116,39 @@ FocusScope {
                 showHeader: (index === 0)
                 dateOnLeft: (index < 4)
             }
+
+            Component.onCompleted: {
+                console.log("mainView.width"+mainView.width)
+                console.log("weekViewContainer.width"+weekViewContainer.width)
+                console.log("parent.width"+parent.width)
+                console.log("gridView.width"+gridView.width)
+                internal.initialContentX = gridView.contentX
+                console.log("initialcontentX"+internal.initialContentX)
+                console.log("contentXactionOn"+internal.contentXactionOn)
+            }
+            Keys.onPressed: {
+                console.log("[YGV]key:"+event.key)
+            }
+            onDragEnded: {
+                console.log("[DragEnd]contentX:"+contentX)
+                if (contentX > internal.initialContentX+internal.contentXactionOn) {
+                    weekStartDate = weekStartDate.addDays(7);
+                } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
+                    weekStartDate = weekStartDate.addDays(-7);
+                }
+            }
+            onContentXChanged: {
+                console.log("[YGV]contentX:"+contentX)
+            }
         }
+    }
+
+    QtObject {
+        id: internal
+
+        property int initialContentX;
+        property int contentXactionOn: mainView.width/10;
+        property int pressedContentX;
     }
 }
 

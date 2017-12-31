@@ -8,9 +8,6 @@ import "dateExt.js" as DateExt
 ApplicationWindow {
     id: app
 
-    property var weekStartDate: new Date().weekStart(1)
-    property var weekEndDate: weekStartDate.addDays(6)
-
     //Fullscreen on device
     height: {
         if (Screen.height === 1080 && Screen.width === 2160) {

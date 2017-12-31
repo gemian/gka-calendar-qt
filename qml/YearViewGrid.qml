@@ -295,7 +295,7 @@ FocusScope {
         color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#31363b"
         rotation: -90
         x: 0
-        y: (mainView.height-nextYear.height)/2
+        y: (mainView.height-lastYear.height)/2
         opacity: (internal.initialContentX - gridView.contentX) / internal.contentXactionOn
     }
 
@@ -417,7 +417,7 @@ FocusScope {
     QtObject {
         id: internal
 
-        property var initialContentX;
-        property var contentXactionOn;
+        property int initialContentX;
+        property int contentXactionOn;
     }
 }
