@@ -33,9 +33,9 @@ FocusScope {
         function enabledColections() {
             var collectionIds = [];
             var collections = getCollections()
-            for(var i=0; i < collections.length ; ++i) {
+            for (var i=0; i < collections.length ; ++i) {
                 var collection = collections[i]
-                if(collection.extendedMetaData("collection-selected") === true) {
+                if (collection.extendedMetaData("collection-selected") === true) {
                     collectionIds.push(collection.collectionId);
                 }
             }
@@ -84,10 +84,62 @@ FocusScope {
         }
     }
 
+    function indexFor(y,m,d) {
+        var firstOfMonth = new Date(y, m, 1);
+        var dayOfWeek = firstOfMonth.getDay()-1;
+        if (dayOfWeek < 0) {
+            dayOfWeek = 6; //Fix for start of week Mon/Sun confusion between Qt/JavaScript
+        }
+        var gridIndex = (m+1)+13*(dayOfWeek+(d-1));
+        console.log("indexFor y:"+y+", m:"+m+", d:"+d+", fOM"+firstOfMonth+", i:"+gridIndex)
+        return gridIndex;
+    }
 
+    function moveAnchorForEventDateByMonthsNext(event, indexDate, months, next) {
+        event.accepted = true;
+        anchorDate = anchorDate.addMonths(months);
+        gridView.currentIndex = indexFor(anchorDate.getFullYear(), next, indexDate.getDate());
+        gridView.currentItem.forceActiveFocus();
+    }
+
+    function moveGridForEventIndexBy(event, index, by) {
+        var indexDate = yearGridModel.items[index].date;
+        if (yearGridModel.items[index+by].type === 0) {
+            event.accepted = true;
+            if (indexDate.getDate() > 15) {
+                gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()+by, Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth()+by));
+            } else {
+                gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()+by, 1);
+            }
+            gridView.currentItem.forceActiveFocus();
+        }
+    }
+
+    function moveAnchorAndGridLeftForEvent(event, gridY, indexDate) {
+        event.accepted = true;
+        if (gridY < 2) {
+            anchorDate = anchorDate.addMonths(-12);
+            gridView.currentIndex = index+11;
+        } else {
+            gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()-1, Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth()-1));
+        }
+        gridView.currentItem.forceActiveFocus();
+    }
+
+    function moveAnchorAndGridRightForEvent(event, gridY, indexDate) {
+        event.accepted = true;
+        if (gridY > 11) {
+            anchorDate = anchorDate.addMonths(12);
+            gridView.currentIndex = index-11;
+        } else {
+            gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()+1, 1);
+        }
+        gridView.currentItem.forceActiveFocus();
+    }
 
     function shortMonth(m) {
         var date = new Date();
+        date.setDate(1);
         date.setMonth(m);
         return date.toLocaleDateString(Qt.locale(), "MMM");
     }
@@ -117,6 +169,11 @@ FocusScope {
         case 2:
             return "#33aaffaa";
         }
+    }
+
+    Component.onCompleted: {
+        gridView.currentIndex = indexFor(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+        gridView.currentItem.forceActiveFocus()
     }
 
     Component {
@@ -164,6 +221,34 @@ FocusScope {
                                 selectedItemsCountLabel.text = yearGridModel.items[index].items.length;
                             }
                         }
+                    }
+                }
+            }
+
+            Keys.onPressed: {
+                var gridY = index % 13;
+                var indexDate = yearGridModel.items[index].date
+                //var gridX = Math.floor(index / 13);
+                //console.log("[YGVD]key:"+event.key+", index: "+index+", gridX: "+gridX+", gridY: "+gridY+", type"+yearGridModel.items[index].type)
+                if (event.key === Qt.Key_Up) {
+                    if (gridY < 2) {
+                        moveAnchorForEventDateByMonthsNext(event, indexDate, -12, 11)
+                    } else {
+                        moveGridForEventIndexBy(event, index, -1)
+                    }
+                } else if (event.key === Qt.Key_Down) {
+                    if (gridY > 11) {
+                        moveAnchorForEventDateByMonthsNext(event, indexDate, 12, 0)
+                    } else {
+                        moveGridForEventIndexBy(event, index, 1)
+                    }
+                } else if (event.key === Qt.Key_Left) {
+                    if (yearGridModel.items[index].date.getDate() < 2) {
+                        moveAnchorAndGridLeftForEvent(event, gridY, indexDate)
+                    }
+                } else if (event.key === Qt.Key_Right) {
+                    if (indexDate.getDate() > Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth())-1) {
+                        moveAnchorAndGridRightForEvent(event, gridY, indexDate)
                     }
                 }
             }
@@ -215,7 +300,7 @@ FocusScope {
             visible: true
 //            interactive: false
             model: yearGridModel
-            cellWidth: gridView.width/(5*7+2)
+            cellWidth: gridView.width/(5*7+3)
             cellHeight: gridView.height/13
             flow: GridView.FlowTopToBottom
 
@@ -223,7 +308,10 @@ FocusScope {
                 print("onCompleted")
                 gridView.forceActiveFocus();
             }
+            Keys.onPressed: {
+                console.log("[YGV]key:"+event.key)
 
+            }
         }
         Row {
             leftPadding: 10
@@ -269,7 +357,10 @@ FocusScope {
     Keys.onPressed: {
         console.log("key:"+event.key)
         if (event.key === Qt.Key_Space) {
-            updateGridViewToToday();
+            var date = new Date();
+            anchorDate = date;
+            gridView.currentIndex = indexFor(date.getFullYear(), date.getMonth(), date.getDate());
+            gridView.currentItem.forceActiveFocus()
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
             console.log("dSI: "+daySelectedIndex+", l: "+yearGridModel.items[daySelectedIndex].items.length)
