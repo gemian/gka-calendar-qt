@@ -168,6 +168,8 @@ FocusScope {
                 colour = "#3334495e";//7f8c8d
             } else if (item.type === 1) {
                 colour = "#33aaaaaa";
+            } else {
+                colour = "#33ffffff";
             }
         }
         return colour;
@@ -285,6 +287,30 @@ FocusScope {
         }
     }
 
+    Label {
+        id: lastYear
+        text: anchorDate.getFullYear()-1
+        font.pixelSize: selectedYear.font.pixelSize * 2
+        font.bold: true
+        color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#31363b"
+        rotation: -90
+        x: 0
+        y: (mainView.height-nextYear.height)/2
+        opacity: (internal.initialContentX - gridView.contentX) / internal.contentXactionOn
+    }
+
+    Label {
+        id: nextYear
+        text: anchorDate.getFullYear()+1
+        font.pixelSize: selectedYear.font.pixelSize * 2
+        font.bold: true
+        color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#31363b"
+        rotation: 90
+        x: mainView.width-nextYear.width
+        y: (mainView.height-nextYear.height)/2
+        opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
+    }
+
     Column {
 
         Label {
@@ -306,19 +332,25 @@ FocusScope {
             header: gridHeader
             highlight: gridHighlight
             visible: true
-//            interactive: false
             model: yearGridModel
             cellWidth: gridView.width/(5*7+3)
             cellHeight: gridView.height/13
             flow: GridView.FlowTopToBottom
 
             Component.onCompleted: {
-                print("onCompleted")
+                internal.initialContentX = contentX
+                internal.contentXactionOn = gridView.width/10
                 gridView.forceActiveFocus();
             }
             Keys.onPressed: {
                 console.log("[YGV]key:"+event.key)
-
+            }
+            onDragEnded: {
+                if (contentX > internal.initialContentX+internal.contentXactionOn) {
+                    anchorDate = anchorDate.addMonths(12);
+                } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
+                    anchorDate = anchorDate.addMonths(-12);
+                }
             }
         }
         Row {
@@ -380,5 +412,12 @@ FocusScope {
                 }
             }
         }
+    }
+
+    QtObject {
+        id: internal
+
+        property var initialContentX;
+        property var contentXactionOn;
     }
 }
