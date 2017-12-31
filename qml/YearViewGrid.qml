@@ -158,17 +158,19 @@ FocusScope {
         }
     }
 
-    function colourForBackground(type) {
-        switch (type) {
-        case 4:
-        case 0:
-        case 3:
-            return "transparent";
-        case 1:
-            return "#33aaaaaa";
-        case 2:
-            return "#33aaffaa";
+    function colourForBackground(item) {
+        var colour = "transparent";
+        if (item.type === 2) {
+            colour = "#33aaffaa";
+        } else if (item.type === 1 || item.type === 3) {
+            var dayOfWeek = item.date.getDay();
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                colour = "#3334495e";//7f8c8d
+            } else if (item.type === 1) {
+                colour = "#33aaaaaa";
+            }
         }
+        return colour;
     }
 
     Component.onCompleted: {
@@ -184,7 +186,7 @@ FocusScope {
             height: 20
             border.color: yearGridModel.items[index]?colourForBorder(yearGridModel.items[index].type):"transparent"
             border.width: 1
-            color: yearGridModel.items[index]?colourForBackground(yearGridModel.items[index].type):"transparent"
+            color: yearGridModel.items[index]?colourForBackground(yearGridModel.items[index]):"transparent"
             Label {
                 width: 20
                 height: 20
@@ -268,6 +270,7 @@ FocusScope {
 
     Component {
         id: gridHeader
+
         Column {
             Repeater {
                 model: 13
@@ -284,6 +287,8 @@ FocusScope {
         Label {
             id: selectedYear
             text: qsTr("Year Planner ") + yearGridModel.year
+            font.bold: true
+            color: "#3498db"
         }
         GridView {
             id: gridView
