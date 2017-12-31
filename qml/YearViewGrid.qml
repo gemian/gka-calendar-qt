@@ -182,14 +182,14 @@ FocusScope {
         id: yearGridDelegate
 
         Rectangle {
-            width: 20
-            height: 20
+            width: gridView.cellWidth+1
+            height: gridView.cellHeight+1
             border.color: yearGridModel.items[index]?colourForBorder(yearGridModel.items[index].type):"transparent"
             border.width: 1
             color: yearGridModel.items[index]?colourForBackground(yearGridModel.items[index]):"transparent"
             Label {
-                width: 20
-                height: 20
+                width: gridView.cellWidth
+                height: gridView.cellHeight
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: yearGridModel.items[index]?yearGridModel.items[index].displayLabel:" "
@@ -275,8 +275,11 @@ FocusScope {
             Repeater {
                 model: 13
                 Label {
+                    width: gridView.cellWidth
                     height: gridView.cellHeight
                     text: index===0?" ":shortMonth(index-1)
+                    horizontalAlignment: Text.AlignRight
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
         }
