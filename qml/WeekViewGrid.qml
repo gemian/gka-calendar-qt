@@ -18,7 +18,6 @@ FocusScope {
     function updateGridViewWithDaySelection() {
         gridView.currentIndex = daySelectedIndex
         gridView.currentItem.forceActiveFocus()
-        console.log("setFocus dLVcI: "+dayListView.currentIndex+", dLVc: "+dayListView.count)
     }
 
     function updateGridViewToToday() {
@@ -52,24 +51,6 @@ FocusScope {
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#193441" }
             GradientStop { position: 1.0; color: Qt.darker("#193441") }
-        }
-
-        Loader {
-            id: dialogLoader
-            visible: status == Loader.Ready
-            onStatusChanged: {
-                console.log("dialogLoader onStateChanged");
-                if (status == Loader.Ready) {
-                    //item.Open();
-                }
-            }
-            onLoaded: {
-                console.log("dialogLoader onLoaded");
-            }
-            State {
-                name: 'loaded';
-                when: loader.status === Loader.Ready
-            }
         }
 
         GridView {

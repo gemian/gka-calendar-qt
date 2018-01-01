@@ -382,24 +382,6 @@ FocusScope {
         opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
     }
 
-    Loader {
-        id: dialogLoader
-        visible: status == Loader.Ready
-        onStatusChanged: {
-            console.log("dialogLoader onStateChanged");
-            if (status == Loader.Ready) {
-                //item.Open();
-            }
-        }
-        onLoaded: {
-            console.log("dialogLoader onLoaded");
-        }
-        State {
-            name: 'loaded';
-            when: loader.status === Loader.Ready
-        }
-    }
-
     Keys.onPressed: {
         console.log("key:"+event.key)
         if (event.key === Qt.Key_Space) {

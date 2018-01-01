@@ -499,6 +499,8 @@ Window {
             editEvent(event);
         }
         eventNameField.forceActiveFocus();
+        descriptionButton.checked = true;
+        dialogFocusScope.visible = true;
     }
 
     Connections{
@@ -519,6 +521,7 @@ Window {
 
     FocusScope {
         id: dialogFocusScope
+        visible: false
         width: detailsRow.width
         height: 8 * eventDialog.padding + mainDetailsColumn.height + okCancelButtons.height
 
@@ -557,10 +560,13 @@ Window {
                     id: allDayEventCheckbox
                     checked: false
                     onCheckedChanged: {
-                        if (checked)
-                            internal.eventSize = Math.max(endDate.midnight().getTime() - startDate.midnight().getTime(), 0)
-                        else
-                            internal.eventSize = Math.max(endDate.getTime() - startDate.getTime(), internal.millisecsInAnHour)
+                        if (startDate && endDate) {
+                            if (checked) {
+                                internal.eventSize = Math.max(endDate.midnight().getTime() - startDate.midnight().getTime(), 0)
+                            } else {
+                                internal.eventSize = Math.max(endDate.getTime() - startDate.getTime(), internal.millisecsInAnHour)
+                            }
+                        }
                     }
                     KeyNavigation.down: !checked ? startTimeField : startDateField
                 }
@@ -576,7 +582,7 @@ Window {
                     TextField {
                         id: startTimeField
                         enabled: !allDayEventCheckbox.checked
-                        text: eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+                        text: eventDialog.startDate?eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: startDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
@@ -598,7 +604,7 @@ Window {
                     }
                     TextField {
                         id: startDateField
-                        text: eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+                        text: eventDialog.startDate?eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: endTimeField
                         inputMask: localeDateInputMask
                         onFocusChanged: {
@@ -638,7 +644,7 @@ Window {
                     TextField {
                         id: endTimeField
                         enabled: !allDayEventCheckbox.checked
-                        text: eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+                        text: eventDialog.endDate?eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: endDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
@@ -660,7 +666,7 @@ Window {
                     }
                     TextField {
                         id: endDateField
-                        text: eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat)
+                        text: eventDialog.endDate?eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
                         KeyNavigation.down: okButton
                         inputMask: localeDateInputMask
                         onFocusChanged: {
@@ -993,7 +999,7 @@ Window {
                         }
                         Label {
                             id: montlyRepeatByDateLabel
-                            text: startDate.getDate()
+                            text: startDate?startDate.getDate():""
                             visible: monthlyRepeatByDate.checked
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -1015,7 +1021,7 @@ Window {
                         }
                         Label {
                             id: montlyRepeatByWeekLabel
-                            text: Math.ceil( startDate.getDate() / 7)
+                            text: startDate?Math.ceil( startDate.getDate() / 7):""
                             visible: monthlyRepeatByWeek.checked
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -1023,7 +1029,7 @@ Window {
                             id: monthlyRepeatByWeekLast
                             text: qsTr("By Week Last")
                             checkable: true
-                            visible: startDate.isLastWeek()
+                            visible: startDate?startDate.isLastWeek():false
                             activeFocusOnPress: true
                             activeFocusOnTab: true
                             onClicked: {
@@ -1208,7 +1214,6 @@ Window {
 
         Rectangle {
             id: focusShade
-            parent: window.contentItem
             anchors.fill: parent
             opacity: datePicker.visible ? 0.5 : 0
             color: "black"
@@ -1228,7 +1233,6 @@ Window {
         Calendar {
             property bool startDate: true
             id: datePicker
-            parent: window.contentItem
             visible: false
             z: focusShade.z + 1
             width: height
