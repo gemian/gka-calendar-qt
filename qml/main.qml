@@ -8,6 +8,8 @@ import "dateExt.js" as DateExt
 ApplicationWindow {
     id: app
 
+    property var selectedDate: new Date()
+
     //Fullscreen on device
     height: {
         if (Screen.height === 1080 && Screen.width === 2160) {

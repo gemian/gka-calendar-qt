@@ -8,9 +8,9 @@ import "dateExt.js" as DateExt
 FocusScope {
     id: weekViewContainer
 
-    property var weekStartDate: new Date().weekStart(1)
+    property var weekStartDate: app.selectedDate.weekStart(1)
     property var weekEndDate: weekStartDate.addDays(6)
-    property int daySelectedIndex: 1
+    property int daySelectedIndex: app.selectedDate.weekStartOffset(1)+1
     property int dayChildSelectedIndex: 0
     property int childrenCompleted: 0
     focus: true
@@ -24,8 +24,12 @@ FocusScope {
     function updateGridViewToToday() {
         console.log("updateGridViewToToday");
         var today = new Date();
-        var offset = new Date().weekStartOffset(1);
-        weekStartDate = today.addDays(-offset);
+        updateGridViewToDate(today);
+    }
+
+    function updateGridViewToDate(toDate) {
+        var offset = toDate.weekStartOffset(1);
+        weekStartDate = toDate.addDays(-offset);
         if (daySelectedIndex !== offset+1 || !gridView.currentItem.activeFocus) {
             daySelectedIndex = offset+1;
             dayChildSelectedIndex = 0;
@@ -38,7 +42,7 @@ FocusScope {
         repeat: false
         interval: 1000
         onTriggered: {
-            updateGridViewToToday();
+            updateGridViewToDate(app.selectedDate);
         }
     }
 
@@ -80,7 +84,6 @@ FocusScope {
             cellHeight: gridView.height/4
             flow: GridView.FlowTopToBottom
             focus: true
-//            interactive: false
 
             model: 8
             delegate: WeekViewDayItem {
@@ -90,13 +93,7 @@ FocusScope {
             }
 
             Component.onCompleted: {
-                console.log("mainView.width"+mainView.width)
-                console.log("weekViewContainer.width"+weekViewContainer.width)
-                console.log("parent.width"+parent.width)
-                console.log("gridView.width"+gridView.width)
                 internal.initialContentX = gridView.contentX
-                console.log("initialcontentX"+internal.initialContentX)
-                console.log("contentXactionOn"+internal.contentXactionOn)
             }
             Keys.onPressed: {
                 console.log("[YGV]key:"+event.key)

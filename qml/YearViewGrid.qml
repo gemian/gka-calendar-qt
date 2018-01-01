@@ -9,8 +9,7 @@ import "dateExt.js" as DateExt
 FocusScope {
     id: yearViewContainer
 
-    property var anchorDate: new Date()
-    property var selectedDate: new Date()
+    property var anchorDate: selectedDate
     property int daySelectedIndex: 1
 
     YearGridModel {

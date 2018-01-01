@@ -307,6 +307,7 @@ FocusScope {
                             }
                             //console.log("emptyitemclick i:"+index)
                             daySelectedIndex = index
+                            app.selectedDate = itemDate
                             dayChildSelectedIndex = -1
                             dayListView.currentIndex = -1
                             noItemIndicator.forceActiveFocus()
@@ -476,6 +477,8 @@ FocusScope {
             }
 
             if (daySelectedIndex === index) {
+                app.selectedDate = itemDate
+
                 if (dayChildSelectedIndex >= dayListView.count || dayChildSelectedIndex === -1) {
                     if (!noItemIndicator.activeFocus) {
                         noItemIndicator.forceActiveFocus()
