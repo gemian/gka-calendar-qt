@@ -55,7 +55,7 @@ Window {
 
             Button {
                 id: deleteSeriesButton
-                text: qsTr("Delete series")
+                text: qsTr("Delete series (ctrl-s)")
                 visible: event.parentId !== undefined
                 activeFocusOnTab: true
                 activeFocusOnPress: true
@@ -73,7 +73,7 @@ Window {
 
             Button {
                 id: deleteIndividualButton
-                text: event.parentId ? qsTr("Delete this") : qsTr("Delete")
+                text: event.parentId ? qsTr("Delete this (ctrl-d)") : qsTr("Delete (ctrl-d)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.right: cancelButton
@@ -107,6 +107,18 @@ Window {
         }
         Keys.onEscapePressed: {
             deleteDialog.close()
+        }
+        Shortcut {
+            sequence: "Ctrl+s"
+            onActivated: {
+                deleteAndClose(deleteDialog.event.parentId);
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+d"
+            onActivated: {
+                deleteAndClose(deleteDialog.event.itemId);
+            }
         }
     }
 }

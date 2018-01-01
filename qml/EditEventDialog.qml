@@ -526,7 +526,7 @@ Window {
         id: dialogFocusScope
         visible: false
         width: detailsRow.width
-        height: 8 * eventDialog.padding + mainDetailsColumn.height + okCancelButtons.height
+        height: 8 * eventDialog.padding + mainDetailsColumn.height
 
         Row {
             id: detailsRow
@@ -698,6 +698,48 @@ Window {
                     }
                 }
 
+                Row {
+                    id: okCancelButtonsRow
+                    spacing: eventDialog.padding*2
+                    topPadding: eventDialog.padding*2
+
+                    Button {
+                        id: okButton
+                        text: qsTr("Ok (ctrl-s)")
+                        enabled: internal.collectionId !== null && model.collectionIdIsWritable(internal.collectionId)
+                        activeFocusOnTab: true
+                        activeFocusOnPress: true
+                        KeyNavigation.right: cancelButton
+                        onClicked: {
+                            saveEvent(eventObject);
+                            eventDialog.close()
+                        }
+                        Keys.onEnterPressed: {
+                            saveEvent(eventObject);
+                            eventDialog.close()
+                        }
+                        Keys.onReturnPressed: {
+                            saveEvent(eventObject);
+                            eventDialog.close()
+                        }
+                    }
+                    Button {
+                        id: cancelButton
+                        text: qsTr("Cancel (esc)")
+                        activeFocusOnTab: true
+                        activeFocusOnPress: true
+                        onClicked: {
+                            eventDialog.close()
+                        }
+                        Keys.onEnterPressed: {
+                            eventDialog.close()
+                        }
+                        Keys.onReturnPressed: {
+                            eventDialog.close()
+                        }
+                        KeyNavigation.up: endDateField
+                    }
+                }
             }
 
             Column {
@@ -711,11 +753,11 @@ Window {
 
                     Button {
                         id: descriptionButton
-                        width: 94
+//                        width: 94
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Description")
+                        text: qsTr("Description (ctrl-d)")
                         onClicked: {
                             setCheckedButton(0);
                         }
@@ -729,11 +771,11 @@ Window {
                     }
                     Button {
                         id: reminderButton
-                        width: 50
+//                        width: 50
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Alarm")
+                        text: qsTr("Alarm (ctrl-shift-A)")
                         onClicked: {
                             setCheckedButton(1);
                         }
@@ -747,11 +789,11 @@ Window {
                     }
                     Button {
                         id: repeatButton
-                        width: 60
+//                        width: 60
                         checkable: true
                         activeFocusOnTab: true
                         activeFocusOnPress: true
-                        text: qsTr("Repeat")
+                        text: qsTr("Repeat (ctrl-r)")
                         onClicked: {
                             setCheckedButton(2);
                         }
@@ -764,11 +806,11 @@ Window {
                     }
                     Button {
                         id: calendarsButton
-                        width: 76
+//                        width: 76
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Calendar")
+                        text: qsTr("Calendar (ctrl-g)")
                         onClicked: {
                             setCheckedButton(3);
                         }
@@ -1174,56 +1216,6 @@ Window {
         }
 
         Rectangle {
-            id: okCancelButtons
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            height: okCancelButtonsRow.height
-            anchors.margins: 2*eventDialog.padding
-
-            Row {
-                id: okCancelButtonsRow
-                spacing: eventDialog.padding*2
-
-                Button {
-                    id: okButton
-                    text: qsTr("Ok")
-                    enabled: internal.collectionId !== null && model.collectionIdIsWritable(internal.collectionId)
-                    activeFocusOnTab: true
-                    activeFocusOnPress: true
-                    KeyNavigation.right: cancelButton
-                    onClicked: {
-                        saveEvent(eventObject);
-                        eventDialog.close()
-                    }
-                    Keys.onEnterPressed: {
-                        saveEvent(eventObject);
-                        eventDialog.close()
-                    }
-                    Keys.onReturnPressed: {
-                        saveEvent(eventObject);
-                        eventDialog.close()
-                    }
-                }
-                Button {
-                    id: cancelButton
-                    text: qsTr("Cancel")
-                    activeFocusOnTab: true
-                    activeFocusOnPress: true
-                    onClicked: {
-                        eventDialog.close()
-                    }
-                    Keys.onEnterPressed: {
-                        eventDialog.close()
-                    }
-                    Keys.onReturnPressed: {
-                        eventDialog.close()
-                    }
-                    KeyNavigation.up: endDateField
-                }
-            }
-        }
-
-        Rectangle {
             id: focusShade
             anchors.fill: parent
             opacity: datePicker.visible ? 0.5 : 0
@@ -1280,6 +1272,43 @@ Window {
                 }
             }
         }
+
+        Shortcut {
+            sequence: "Ctrl+s"
+            onActivated: {
+                saveEvent(eventObject);
+                eventDialog.close()
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+d"
+            onActivated: {
+                setCheckedButton(0);
+                descriptionField.forceActiveFocus();
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+Shift+A"
+            onActivated: {
+                setCheckedButton(1);
+                reminderListView.forceActiveFocus();
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+r"
+            onActivated: {
+                setCheckedButton(2);
+                setRepeatButton(internal.repeatIndex, true);
+            }
+        }
+        Shortcut {
+            sequence: "Ctrl+g"
+            onActivated: {
+                setCheckedButton(3);
+                calendarsListView.forceActiveFocus();
+            }
+        }
+
 
         Keys.onPressed: {
             console.log("key:"+event.key + ", aFIp:"+activeFocusItem.parent + ", aFI: "+activeFocusItem)
