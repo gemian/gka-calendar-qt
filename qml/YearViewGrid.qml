@@ -21,68 +21,6 @@ FocusScope {
         }
     }
 
-    EventListModel {
-        id: organizerModel
-        objectName: "dayEventListModel"
-        active: true
-        property bool isReady: false
-        property var itemIdToLoad: null
-        property bool editItem: false
-
-        function enabledColections() {
-            var collectionIds = [];
-            var collections = getCollections()
-            for (var i=0; i < collections.length ; ++i) {
-                var collection = collections[i]
-                if (collection.extendedMetaData("collection-selected") === true) {
-                    collectionIds.push(collection.collectionId);
-                }
-            }
-            return collectionIds
-        }
-
-        function applyFilterFinal() {
-            var collectionIds = enabledColections()
-            collectionFilter.ids = collectionIds
-            filter = Qt.binding(function() { return mainFilter; })
-            isReady = true
-        }
-
-        sortOrders: [
-            SortOrder{
-                blankPolicy: SortOrder.BlanksFirst
-                detail: Detail.EventTime
-                field: EventTime.FieldStartDateTime
-                direction: Qt.AscendingOrder
-            }
-        ]
-        onCollectionsChanged: {
-            var collectionIds = enabledColections()
-            var oldCollections = collectionFilter.ids
-            var needsUpdate = false
-            if (collectionIds.length !== oldCollections.length) {
-                needsUpdate = true
-            } else {
-                for(var i=oldCollections.length - 1; i >=0 ; i--) {
-                    if (collectionIds.indexOf(oldCollections[i]) === -1) {
-                        needsUpdate = true
-                        break;
-                    }
-                }
-            }
-
-            if (needsUpdate) {
-                collectionFilter.ids = collectionIds
-                updateIfNecessary()
-            }
-        }
-
-        Component.onCompleted: {
-            //print("CalendarView.OrganiserModel.onCompleted");
-            applyFilterFinal()
-        }
-    }
-
     function indexFor(y,m,d) {
         var firstOfMonth = new Date(y, m, 1);
         var dayOfWeek = firstOfMonth.getDay()-1;

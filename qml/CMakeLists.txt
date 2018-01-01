@@ -9,3 +9,5 @@ configure_file(EditEventDialog.qml EditEventDialog.qml COPYONLY)
 configure_file(DeleteDialog.qml DeleteDialog.qml COPYONLY)
 configure_file(RemindersModel.qml RemindersModel.qml COPYONLY)
 configure_file(YearViewGrid.qml YearViewGrid.qml COPYONLY)
+configure_file(CollectionsDialog.qml CollectionsDialog.qml COPYONLY)
+

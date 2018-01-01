@@ -22,7 +22,7 @@ Window {
 
     property var startDate:null
     property var endDate:null
-    property var event:null
+    property var eventObject:null
     property var eventId:null
     property var allDay:null
     property var model:null
@@ -34,6 +34,7 @@ Window {
 
     function addEvent() {
         internal.collectionId = model.getDefaultCollection().collectionId;
+        console.log("Add Event Setting default collection:"+internal.collectionId);
     }
 
     function editEvent(e) {
@@ -164,6 +165,8 @@ Window {
                     model.removeItem(event.itemId);
                 }
                 event = Qt.createQmlObject("import QtOrganizer 5.0; Event {}", Qt.application, "EditEventDialog.qml");
+            } else {
+                console.log("saving event: "+event);
             }
 
             event.allDay = allDayEventCheckbox.checked;
@@ -480,12 +483,12 @@ Window {
     }
 
     Component.onCompleted: {
-        if (event === undefined) {
+        if (eventObject === undefined) {
             console.log("Attempted to edit an undefined event");
             return;
         } else if (eventId != null) {
             internal.fetchParentRequestId = model.fetchItems([eventId]);
-        } else if (event === null) {
+        } else if (eventObject === null) {
             addEvent();
             if (!eventDialog.endDate) {
                 eventDialog.endDate = eventDialog.startDate;
@@ -493,10 +496,10 @@ Window {
             if (allDay) {
                 allDayEventCheckbox.checked = true;
             }
-        } else if ((event.itemType === Type.EventOccurrence) || (event.itemType === Type.TodoOccurrence)) {
-            internal.fetchParentRequestId = model.fetchItems([event.parentId]);
+        } else if ((eventObject.itemType === Type.EventOccurrence) || (eventObject.itemType === Type.TodoOccurrence)) {
+            internal.fetchParentRequestId = model.fetchItems([eventObject.parentId]);
         } else {
-            editEvent(event);
+            editEvent(eventObject);
         }
         eventNameField.forceActiveFocus();
         descriptionButton.checked = true;
@@ -508,8 +511,8 @@ Window {
         onItemsFetched: {
             if (internal.fetchParentRequestId === requestId) {
                 if (fetchedItems.length > 0) {
-                    event = fetchedItems[0];
-                    editEvent(event);
+                    eventObject = fetchedItems[0];
+                    editEvent(eventObject);
                     eventNameField.forceActiveFocus();
                 } else {
                     console.warn("Fail to fetch parent event")
@@ -1153,10 +1156,17 @@ Window {
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         onCheckedChanged: {
-//                            console.log("RadioButton checked: "+checked+", mDcI: "+modelData.collectionId+", icI: "+internal.collectionId)
                             if (checked) {
                                 internal.collectionId = modelData.collectionId;
+                            } else if (internal.collectionId === modelData.collectionId) {
+                                internal.collectionId = null
                             }
+                        }
+                        Keys.onEnterPressed: {
+                            checked = !checked
+                        }
+                        Keys.onReturnPressed: {
+                            checked = !checked
                         }
                     }
                 }
@@ -1177,19 +1187,20 @@ Window {
                 Button {
                     id: okButton
                     text: qsTr("Ok")
+                    enabled: internal.collectionId !== null && model.collectionIdIsWritable(internal.collectionId)
                     activeFocusOnTab: true
                     activeFocusOnPress: true
                     KeyNavigation.right: cancelButton
                     onClicked: {
-                        saveEvent(event);
+                        saveEvent(eventObject);
                         eventDialog.close()
                     }
                     Keys.onEnterPressed: {
-                        saveEvent(event);
+                        saveEvent(eventObject);
                         eventDialog.close()
                     }
                     Keys.onReturnPressed: {
-                        saveEvent(event);
+                        saveEvent(eventObject);
                         eventDialog.close()
                     }
                 }
@@ -1361,7 +1372,7 @@ Window {
     QtObject {
         id: internal
 
-        property var collectionId;
+        property var collectionId: null;
         property var originalCollectionId;
         property int eventSize: -1
         property int reminderValue: -1

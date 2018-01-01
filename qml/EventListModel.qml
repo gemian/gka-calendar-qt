@@ -12,13 +12,25 @@ OrganizerModel {
     property bool active: false
     property bool isLoading: false
 
-    function collectionIsReadOnly(collection)
-    {
+    function collectionIsReadOnly(collection) {
         if (!collection)
             return false
 
         return collection.extendedMetaData("collection-readonly") === true ||
                collection.extendedMetaData("collection-sync-readonly") === true
+    }
+
+    function collectionIdIsWritable(collectionId) {
+        console.log("isWritable:"+collectionId)
+        var collections = eventModel.collections;
+        for(var i = 0 ; i < collections.length ; ++i) {
+            var cal = collections[i];
+            if (cal.collectionId === collectionId) {
+                return !collectionIsReadOnly(cal);
+            }
+        }
+        console.log("isWritable: false")
+        return false
     }
 
     function getCollections() {

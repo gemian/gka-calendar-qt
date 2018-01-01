@@ -4,6 +4,8 @@ import QtQuick.Controls 1.4
 MenuBar {
     id: menuBar
 
+    property var model;
+
     Menu {
         title: qsTr("&File")
         id: fileMenu
@@ -14,9 +16,17 @@ MenuBar {
         }
     }
 
-//    Menu {
-//        title: qsTr("&Edit")
-//        id: editMenu
+    Menu {
+        title: qsTr("&Edit")
+        id: editMenu
+        MenuItem {
+            id: editMenuCollections
+            text: qsTr("&Calender Collections")
+            onTriggered: {
+                dialogLoader.setSource("CollectionsDialog.qml", {"model": menuBar.model});
+            }
+        }
+
 //        MenuItem {
 //            id: editMenuCut
 //            text: qsTr("C&ut")
@@ -29,7 +39,7 @@ MenuBar {
 //            id: editMenuPaste
 //            text: qsTr("&Paste")
 //        }
-//    }
+    }
 
     Menu {
         title: qsTr("&View")

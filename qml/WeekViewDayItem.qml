@@ -254,7 +254,7 @@ FocusScope {
                             var diff = parent.width/10
                             if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
                                 if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
-                                    dialogLoader.setSource("EditEventDialog.qml", {"event": model.item, "model":organizerModel});
+                                    dialogLoader.setSource("EditEventDialog.qml", {"eventObject": model.item, "model":organizerModel});
                                 }
 //                                console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
                                 daySelectedIndex = gridViewIndex
@@ -363,7 +363,7 @@ FocusScope {
             if (dayChildSelectedIndex == -1) {
                 dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
             } else {
-                dialogLoader.setSource("EditEventDialog.qml", {"event": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
+                dialogLoader.setSource("EditEventDialog.qml", {"eventObject": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
             }
         }
 
