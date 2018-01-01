@@ -68,34 +68,6 @@ FocusScope {
             }
         }
 
-        Label {
-            id: defaultLabel
-        }
-
-        Label {
-            id: lastWeek
-            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
-            font.pixelSize: defaultLabel.font.pixelSize * 2
-            font.bold: true
-            color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#bdc3c7"
-            rotation: -90
-            x: 0
-            y: (parent.height-lastWeek.height)/2
-            opacity: (internal.initialContentX - gridView.contentX) / internal.contentXactionOn
-        }
-
-        Label {
-            id: nextWeek
-            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
-            font.pixelSize: defaultLabel.font.pixelSize * 2
-            font.bold: true
-            color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#bdc3c7"
-            rotation: 90
-            x: parent.width-nextWeek.width
-            y: (parent.height-nextWeek.height)/2
-            opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
-        }
-
         GridView {
             id: gridView
             anchors.fill: parent
@@ -141,6 +113,36 @@ FocusScope {
                 console.log("[YGV]contentX:"+contentX)
             }
         }
+
+        Label {
+            id: defaultLabel
+            visible: false
+        }
+
+        Label {
+            id: lastWeek
+            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
+            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.bold: true
+            color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#bdc3c7"
+            rotation: -90
+            x: 0
+            y: (parent.height-lastWeek.height)/2
+            opacity: (internal.initialContentX - gridView.contentX) / internal.contentXactionOn
+        }
+
+        Label {
+            id: nextWeek
+            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
+            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.bold: true
+            color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#bdc3c7"
+            rotation: 90
+            x: parent.width-nextWeek.width
+            y: (parent.height-nextWeek.height)/2
+            opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
+        }
+
     }
 
     QtObject {

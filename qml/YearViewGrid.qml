@@ -273,17 +273,89 @@ FocusScope {
     Component {
         id: gridHeader
 
-        Column {
+        ColumnLayout {
+            spacing: 0
             Repeater {
                 model: 13
                 Label {
-                    width: gridView.cellWidth
-                    height: gridView.cellHeight
+                    Layout.alignment: Qt.AlignRight
+                    Layout.preferredHeight: gridView.cellHeight
+                    leftPadding: 4
+                    rightPadding: 4
                     text: index===0?" ":shortMonth(index-1)
-                    horizontalAlignment: Text.AlignRight
                     verticalAlignment: Text.AlignVCenter
                 }
             }
+        }
+    }
+
+    Column {
+
+        Label {
+            id: selectedYear
+            leftPadding: 10
+            text: qsTr("Year Planner ") + yearGridModel.year
+            font.bold: true
+            color: "#3498db"
+        }
+        GridView {
+            id: gridView
+            width: mainView.width
+            height: mainView.height-(selectedYear.height+selectedDateRow.height)
+            anchors.leftMargin: 5
+            anchors.rightMargin: 5
+            anchors.topMargin: 5
+            anchors.bottomMargin: 5
+
+            delegate: yearGridDelegate
+            header: gridHeader
+            highlight: gridHighlight
+            visible: true
+            model: yearGridModel
+            cellWidth: Math.floor(gridView.width/(5*7+3))
+            cellHeight: gridView.height/13
+            flow: GridView.FlowTopToBottom
+
+            Component.onCompleted: {
+                internal.initialContentX = contentX
+                internal.contentXactionOn = gridView.width/10
+                gridView.forceActiveFocus();
+            }
+            Keys.onPressed: {
+                console.log("[YGV]key:"+event.key)
+            }
+            onDragEnded: {
+                if (contentX > internal.initialContentX+internal.contentXactionOn) {
+                    anchorDate = anchorDate.addMonths(12);
+                } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
+                    anchorDate = anchorDate.addMonths(-12);
+                }
+                gridView.currentIndex = indexFor(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+            }
+        }
+        Row {
+            id: selectedDateRow
+            leftPadding: 10
+            topPadding: 10
+            bottomPadding: 10
+            spacing: 10
+            Label {
+                id:selectedDateLabel
+                text: " "
+            }
+            Label {
+                id:selectedItemsLabel
+                text: " "
+            }
+            Label {
+                id:selectedItemsCountLabel
+            }
+//            Re-enable once implmented
+//            Button {
+//                id:otherItemsButton
+//                visible: selectedItemsCount.text.length > 0
+//                text: qsTr("More")
+//            }
         }
     }
 
@@ -309,71 +381,6 @@ FocusScope {
         x: mainView.width-nextYear.width
         y: (mainView.height-nextYear.height)/2
         opacity: (gridView.contentX - internal.initialContentX) / internal.contentXactionOn
-    }
-
-    Column {
-
-        Label {
-            id: selectedYear
-            text: qsTr("Year Planner ") + yearGridModel.year
-            font.bold: true
-            color: "#3498db"
-        }
-        GridView {
-            id: gridView
-            width: mainView.width
-            height: mainView.height-(selectedYear.height+selectedDateLabel.height)
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
-
-            delegate: yearGridDelegate
-            header: gridHeader
-            highlight: gridHighlight
-            visible: true
-            model: yearGridModel
-            cellWidth: gridView.width/(5*7+3)
-            cellHeight: gridView.height/13
-            flow: GridView.FlowTopToBottom
-
-            Component.onCompleted: {
-                internal.initialContentX = contentX
-                internal.contentXactionOn = gridView.width/10
-                gridView.forceActiveFocus();
-            }
-            Keys.onPressed: {
-                console.log("[YGV]key:"+event.key)
-            }
-            onDragEnded: {
-                if (contentX > internal.initialContentX+internal.contentXactionOn) {
-                    anchorDate = anchorDate.addMonths(12);
-                } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
-                    anchorDate = anchorDate.addMonths(-12);
-                }
-            }
-        }
-        Row {
-            leftPadding: 10
-            spacing: 10
-            Label {
-                id:selectedDateLabel
-                text: " "
-            }
-            Label {
-                id:selectedItemsLabel
-                text: " "
-            }
-            Label {
-                id:selectedItemsCountLabel
-            }
-//            Re-enable once implmented
-//            Button {
-//                id:otherItemsButton
-//                visible: selectedItemsCount.text.length > 0
-//                text: qsTr("More")
-//            }
-        }
     }
 
     Loader {
