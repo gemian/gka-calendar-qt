@@ -4,49 +4,39 @@
 
 #include <YearGridModel.h>
 #include <QtWidgets/QApplication>
-#include "gtest/gtest.h"
 #include "YearItem.h"
+#include "catch.hpp"
 
-class YearGridTests : public testing::Test {
-protected:
-    void SetUp() override {
-
-    }
-
-    void TearDown() override {
-    }
-};
-
-TEST_F(YearGridTests, YearEventTest) {
-    YearEvent *event = new YearEvent();
+TEST_CASE("YearEventTest") {
+    auto *event = new YearEvent();
     event->setDisplayLabel("Event Name");
-    EXPECT_EQ(event->displayLabel(), "Event Name");
+    REQUIRE(event->displayLabel() == "Event Name");
     delete event;
 }
 
-TEST_F(YearGridTests, YearDayAddEventTest) {
-    YearEvent *event = new YearEvent();
+TEST_CASE("YearDayAddEventTest") {
+    auto *event = new YearEvent();
     event->setDisplayLabel("Event Name");
-    YearDay *day = new YearDay();
+    auto *day = new YearDay();
     day->setDisplayLabel("1");
     day->addEvent(event);
     delete event;
-    EXPECT_EQ(day->displayLabel(), "E");
+    REQUIRE(day->displayLabel() == "E");
     delete day;
 }
 
-TEST_F(YearGridTests, YearDayAdd2EventsTest) {
-    YearEvent *event1 = new YearEvent();
+TEST_CASE("YearDayAdd2EventsTest") {
+    auto *event1 = new YearEvent();
     event1->setDisplayLabel("Event Name");
-    YearEvent *event2 = new YearEvent();
+    auto *event2 = new YearEvent();
     event2->setDisplayLabel("Other Event");
-    YearDay *day = new YearDay();
+    auto *day = new YearDay();
     day->setDisplayLabel("1");
     day->addEvent(event1);
     day->addEvent(event2);
     delete event1;
     delete event2;
-    EXPECT_EQ(day->displayLabel(), "EO");
+    REQUIRE(day->displayLabel() == "EO");
     delete day;
 }
 
@@ -57,13 +47,13 @@ struct smersh {
 bool smersh::KillAppAfterTimeout(int secs) const {
     QScopedPointer<QTimer> timer(new QTimer);
     timer->setSingleShot(true);
-    bool ok = timer->connect(timer.data(),SIGNAL(timeout()),qApp,SLOT(quit()),Qt::QueuedConnection);
+    bool ok = timer->connect(timer.data(), SIGNAL(timeout()), qApp, SLOT(quit()), Qt::QueuedConnection) != nullptr;
     timer->start(secs * 1000); // N seconds timeout
     timer.take()->setParent(qApp);
     return ok;
 }
 
-TEST_F(YearGridTests, YearGridSetYearTest) {
+TEST_CASE("YearGridSetYearTest") {
     int argc = 0;
     char **argv = nullptr;
     QApplication a(argc, argv);
@@ -71,7 +61,7 @@ TEST_F(YearGridTests, YearGridSetYearTest) {
     //prevent hanging if QMenu.exec() got called
     smersh().KillAppAfterTimeout(300);
 
-    YearGridModel *yearGridModel = new YearGridModel();
+    auto *yearGridModel = new YearGridModel();
     yearGridModel->setCurrentDate(QDate(2017,6,14));
     yearGridModel->setYear(2017);
 
@@ -81,32 +71,32 @@ TEST_F(YearGridTests, YearGridSetYearTest) {
         auto cellIndex = i*GRID_HEIGHT*DAYS_IN_WEEK;
         YearDay *pDay = dayProperty.at(&dayProperty, cellIndex);
         qWarning() << cellIndex << pDay->displayLabel();
-        EXPECT_EQ(pDay->displayLabel(), "M");
+        REQUIRE(pDay->displayLabel() == "M");
     }
 
     for (int i=0; i<WEEK_BLOCKS_SHOWN; i++) {
         auto cellIndex = GRID_HEIGHT+i*GRID_HEIGHT*DAYS_IN_WEEK;
         YearDay *pDay = dayProperty.at(&dayProperty, cellIndex);
         qWarning() << cellIndex << pDay->displayLabel();
-        EXPECT_EQ(pDay->displayLabel(), "T");
-        EXPECT_EQ(pDay->type(), DayTypeHeading);
+        REQUIRE(pDay->displayLabel() == "T");
+        REQUIRE(pDay->type() == DayTypeHeading);
     }
 
     YearDay *pDay = dayProperty.at(&dayProperty, 2);
-    EXPECT_EQ(pDay->type(), DayTypeInvalid);
+    REQUIRE(pDay->type() == DayTypeInvalid);
 
     pDay = dayProperty.at(&dayProperty, 10*GRID_HEIGHT+1);
-    EXPECT_EQ(pDay->type(), DayTypePast);
+    REQUIRE(pDay->type() == DayTypePast);
 
     //QDate(2017,6,14)
     pDay = dayProperty.at(&dayProperty, 6 + (16 * GRID_HEIGHT));
-    EXPECT_EQ(pDay->type(), DayTypeToday);
+    REQUIRE(pDay->type() == DayTypeToday);
 
     pDay = dayProperty.at(&dayProperty, 10*GRID_HEIGHT+10);
-    EXPECT_EQ(pDay->type(), DayTypeFuture);
+    REQUIRE(pDay->type() == DayTypeFuture);
 
     pDay = dayProperty.at(&dayProperty, GRID_HEIGHT*GRID_WIDTH-1);
-    EXPECT_EQ(pDay->type(), DayTypeInvalid);
+    REQUIRE(pDay->type() == DayTypeInvalid);
 
     delete yearGridModel;
 
@@ -114,9 +104,7 @@ TEST_F(YearGridTests, YearGridSetYearTest) {
     a.exec();
 }
 
-
-
-TEST_F(YearGridTests, YearGridAddEventTest) {
+TEST_CASE("YearGridAddEventTest") {
     int argc = 0;
     char **argv = nullptr;
     QApplication a(argc, argv);
@@ -124,7 +112,7 @@ TEST_F(YearGridTests, YearGridAddEventTest) {
     //prevent hanging if QMenu.exec() got called
     smersh().KillAppAfterTimeout(300);
 
-    YearGridModel *yearGridModel = new YearGridModel();
+    auto *yearGridModel = new YearGridModel();
     const QDate &date = QDate(2017, 6, 14);
     yearGridModel->setCurrentDate(date);
     yearGridModel->setYear(2017);
@@ -157,24 +145,22 @@ TEST_F(YearGridTests, YearGridAddEventTest) {
     QQmlListProperty<YearEvent> yearProperty = pDay->items();
 
     int count = yearProperty.count(&yearProperty);
-    EXPECT_EQ(count, 2);
+    REQUIRE(count == 2);
     YearEvent *pYear = yearProperty.at(&yearProperty, 0);
-    EXPECT_EQ(pYear->displayLabel(), "Event Name");
+    REQUIRE(pYear->displayLabel() == "Event Name");
 
     pDay = dayProperty.at(&dayProperty, 6 + ((31+3) * GRID_HEIGHT));
     yearProperty = pDay->items();
     count = yearProperty.count(&yearProperty);
-    EXPECT_EQ(count, 0);
+    REQUIRE(count == 0);
 
     pDay = dayProperty.at(&dayProperty, 7 + ((1+5) * GRID_HEIGHT));
     yearProperty = pDay->items();
     count = yearProperty.count(&yearProperty);
-    EXPECT_EQ(count, 1);
+    REQUIRE(count == 1);
 
     delete yearGridModel;
 
     smersh().KillAppAfterTimeout(1);
     a.exec();
-
-
 }
