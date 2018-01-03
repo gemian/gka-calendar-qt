@@ -32,9 +32,16 @@ FocusScope {
     }
 
     onFocusChanged: {
-        console.log("detailsListitem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index)
+        console.log("detailsListitem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index+", time:"+dayGridModel.items[index].time)
         if (activeFocus) {
-            if (hourSelectedIndex != index) {
+            if (!dayGridModel.items[index].time.isValid()) {
+                if (index < 8) {
+                    gridView.currentIndex = index+1
+                } else {
+                    gridView.currentIndex = index-1
+                }
+                gridView.currentItem.forceActiveFocus()
+            } else if (hourSelectedIndex != index) {
                 hourSelectedIndex = index;
             }
         }

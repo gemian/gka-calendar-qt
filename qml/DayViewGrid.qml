@@ -23,6 +23,8 @@ FocusScope {
             var gVHeight = mainView.height - 10
             internal.dayGridCellHeight = Math.floor(gVHeight/Math.round(itemCount/2))
             print("DayGridModel.onItemsLoaded gvh: "+gVHeight+", ic: "+itemCount+", ch: "+internal.dayGridCellHeight)
+            gridView.currentIndex = hourSelectedIndex
+            gridView.currentItem.forceActiveFocus()
         }
     }
 

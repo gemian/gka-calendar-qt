@@ -131,6 +131,12 @@ Date.prototype.isLastWeek = function () {
     return (this.getDate() > days - 7);
 }
 
+Date.prototype.isValid = function () {
+    // An invalid date object returns NaN for getTime() and NaN is the only
+    // object not strictly equal to itself.
+    return this.getTime() === this.getTime();
+};
+
 function weekCount(year, month_number) {
     var firstOfMonth = new Date(year, month_number, 1);
     var lastOfMonth = new Date(year, month_number+1, 0);

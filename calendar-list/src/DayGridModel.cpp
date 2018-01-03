@@ -59,6 +59,9 @@ void DayGridModel::setDate(QDateTime date) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
 
     addItemsToGrid(items);
+    if (_gridCells.size() % 2 == 1) {
+        _gridCells.push_back(new DayItem());
+    }
 
     if (oldSize > _gridCells.size()) {
         beginRemoveRows(QModelIndex(), static_cast<int>(_gridCells.size() - 1), static_cast<int>(oldSize - 2));
