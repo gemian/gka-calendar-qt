@@ -45,6 +45,13 @@ MenuBar {
         title: qsTr("&View")
         id: viewMenu
         MenuItem {
+            id: viewMenuDay
+            text: qsTr("&Day")
+            onTriggered: {
+                alternateViewLoader.source = "DayViewGrid.qml"
+            }
+        }
+        MenuItem {
             id: viewMenuWeek
             text: qsTr("&Week")
             onTriggered: {

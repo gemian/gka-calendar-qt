@@ -20,8 +20,8 @@ class Q_DECL_EXPORT DayGridModel : public QAbstractListModel {
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
 
 public:
-    explicit DayGridModel(QObject *parent = 0);
-    ~DayGridModel();
+    explicit DayGridModel(QObject *parent = nullptr);
+    ~DayGridModel() override;
 
     void setDate(QDate date);
     QDate date();
@@ -37,12 +37,16 @@ public:
 
 signals:
     void modelChanged();
+    void itemsLoaded();
 
 public slots:
     void manageDataChanged();
     void manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
+    void manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
+    void manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
+    void manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
 
 private:
     static int item_count(QQmlListProperty<DayItem> *p);
@@ -58,7 +62,7 @@ private:
     QtOrganizer::QOrganizerManager *_manager;
     QDate _date;
 
-    bool sameHour(QTime val);
+    QTimer modelChangedTimer;
 };
 
 QML_DECLARE_TYPE(DayGridModel)

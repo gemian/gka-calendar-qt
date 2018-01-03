@@ -14,10 +14,18 @@ DayGridModel::DayGridModel(QObject *parent) : QAbstractListModel(parent) {
         _manager = newManager;
     }
 
+    modelChangedTimer.setSingleShot(true);
+    modelChangedTimer.setInterval(1);
+    connect(&modelChangedTimer, &QTimer::timeout, this, &DayGridModel::modelChanged);
+
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::dataChanged, this, &DayGridModel::manageDataChanged);
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsAdded, this, &DayGridModel::manageItemsAdded);
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsChanged, this, &DayGridModel::manageItemsChanged);
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsRemoved, this, &DayGridModel::manageItemsRemoved);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsAdded, this, &DayGridModel::manageCollectionsAdded);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsChanged, this, &DayGridModel::manageCollectionsChanged);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsRemoved, this, &DayGridModel::manageCollectionsRemoved);
+
 }
 
 DayGridModel::~DayGridModel() {
@@ -30,10 +38,13 @@ DayGridModel::~DayGridModel() {
 
 void DayGridModel::setDate(QDate date) {
     _date = date;
+    auto oldSize = _gridCells.size();
     for (auto cell : _gridCells) {
         delete cell;
     }
     _gridCells.clear();
+
+    _gridCells.push_back(new DayItem());
     for (int s = 0; s < DAY_TIME_SLOTS; s++) {
         auto time = QTime(DAY_TIME_SLOTS_START + s, 0);
         auto item = new DayItem();
@@ -45,7 +56,19 @@ void DayGridModel::setDate(QDate date) {
     QDateTime endDateTime(date, QTime(23, 59, 59, 0));
 
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
+
     addItemsToGrid(items);
+
+    if (oldSize > _gridCells.size()) {
+        beginRemoveRows(QModelIndex(), static_cast<int>(_gridCells.size() - 1), static_cast<int>(oldSize - 2));
+        endRemoveRows();
+    } else if (oldSize < _gridCells.size()) {
+        beginInsertRows(QModelIndex(), static_cast<int>(oldSize - 1), static_cast<int>(_gridCells.size()) - 2);
+        endInsertRows();
+    }
+
+    emit itemsLoaded();
+    modelChangedTimer.start();
 }
 
 struct TimeFirstNotBefore: public std::binary_function<DayItem*, QTime, bool> {
@@ -183,6 +206,21 @@ void DayGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId>
     removeItemsFromModel(itemIds);
     qDebug("modelChanged");
     emit modelChanged();
+}
+
+void DayGridModel::manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setDate(date());
+}
+
+void DayGridModel::manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setDate(date());
+}
+
+void DayGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setDate(date());
 }
 
 void DayGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {

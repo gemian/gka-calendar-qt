@@ -22,10 +22,11 @@ TEST_CASE("DayGridTest") {
     auto *dayGridModel = new DayGridModel();
     dayGridModel->setDate(QDate(2017,6,14));
 
-    QQmlListProperty<DayItem> dayProperty = dayGridModel->items();
+    QQmlListProperty<DayItem> dayList = dayGridModel->items();
 
-    for (int i=0; i<DAY_TIME_SLOTS; i++) {
-        DayItem *pDay = dayProperty.at(&dayProperty, i);
+    REQUIRE(!dayList.at(&dayList, 0)->time().isValid());
+    for (int i=1; i<DAY_TIME_SLOTS; i++) {
+        DayItem *pDay = dayList.at(&dayList, i);
         qWarning() << i << pDay->displayLabel() << pDay->time();
         REQUIRE(pDay->time().msecsSinceStartOfDay() > 0);
     }
@@ -78,20 +79,21 @@ TEST_CASE("PopulatedDayGridTest") {
 
     QQmlListProperty<DayItem> dayList = dayGridModel->items();
 
-    for (int i=0; i<dayGridModel->itemCount(); i++) {
+    REQUIRE(!dayList.at(&dayList, 0)->time().isValid());
+    for (int i=1; i<dayGridModel->itemCount(); i++) {
         DayItem *pDay = dayList.at(&dayList, i);
         qWarning() << i << pDay->displayLabel() << pDay->time();
         REQUIRE(pDay->time().msecsSinceStartOfDay() > 0);
     }
 
-    REQUIRE(dayList.at(&dayList,3)->time().hour() == 9);
-    REQUIRE(dayList.at(&dayList,3)->time().minute() == 0);
-    REQUIRE(dayList.at(&dayList,7)->time().hour() == 13);
-    REQUIRE(dayList.at(&dayList,7)->time().minute() == 30);
-    REQUIRE(dayList.at(&dayList,8)->time().hour() == 14);
-    REQUIRE(dayList.at(&dayList,8)->time().minute() == 0);
-    REQUIRE(dayList.at(&dayList,10)->time().hour() == 15);
-    REQUIRE(dayList.at(&dayList,10)->time().minute() == 40);
+    REQUIRE(dayList.at(&dayList,4)->time().hour() == 9);
+    REQUIRE(dayList.at(&dayList,4)->time().minute() == 0);
+    REQUIRE(dayList.at(&dayList,8)->time().hour() == 13);
+    REQUIRE(dayList.at(&dayList,8)->time().minute() == 30);
+    REQUIRE(dayList.at(&dayList,9)->time().hour() == 14);
+    REQUIRE(dayList.at(&dayList,9)->time().minute() == 0);
+    REQUIRE(dayList.at(&dayList,11)->time().hour() == 15);
+    REQUIRE(dayList.at(&dayList,11)->time().minute() == 40);
 
     delete dayGridModel;
 

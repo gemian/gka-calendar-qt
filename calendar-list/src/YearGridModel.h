@@ -47,6 +47,9 @@ public slots:
     void manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
+    void manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
+    void manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
+    void manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds);
 
 private:
     static int item_count(QQmlListProperty<YearDay> *p);

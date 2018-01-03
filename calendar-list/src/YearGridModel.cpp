@@ -19,6 +19,9 @@ YearGridModel::YearGridModel(QObject *parent) : QAbstractListModel(parent) {
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsAdded, this, &YearGridModel::manageItemsAdded);
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsChanged, this, &YearGridModel::manageItemsChanged);
     QObject::connect(_manager, &QtOrganizer::QOrganizerManager::itemsRemoved, this, &YearGridModel::manageItemsRemoved);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsAdded, this, &YearGridModel::manageCollectionsAdded);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsChanged, this, &YearGridModel::manageCollectionsChanged);
+    QObject::connect(_manager, &QtOrganizer::QOrganizerManager::collectionsRemoved, this, &YearGridModel::manageCollectionsRemoved);
 
     _gridCells.fill(nullptr);
 
@@ -196,7 +199,7 @@ YearDay* YearGridModel::item_at(QQmlListProperty<YearDay> *p, int idx)
 void YearGridModel::manageDataChanged() {
     //this one means big changes clear and rebuild data
     qDebug("manageDataChanged");
-    setYear(_year);
+    setYear(year());
 }
 
 void YearGridModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
@@ -219,6 +222,21 @@ void YearGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId
     removeItemsFromModel(itemIds);
     qDebug("modelChanged");
     emit modelChanged();
+}
+
+void YearGridModel::manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setYear(year());
+}
+
+void YearGridModel::manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setYear(year());
+}
+
+void YearGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
+    qDebug("manageCollectionsAdded");
+    setYear(year());
 }
 
 void YearGridModel::addEventToDate(YearEvent *event, QDate date) {
