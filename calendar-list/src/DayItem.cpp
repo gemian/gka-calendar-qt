@@ -18,11 +18,11 @@ void DayItem::setItemId(const QString &itemId) {
     _itemId=itemId;
 }
 
-QTime DayItem::time() const {
+QDateTime DayItem::time() const {
     return _time;
 }
 
-void DayItem::setTime(const QTime &time) {
+void DayItem::setTime(const QDateTime &time) {
     _time=time;
 }
 

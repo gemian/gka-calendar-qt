@@ -50,7 +50,7 @@ YearGridModel::~YearGridModel() {
     delete _manager;
 }
 
-void YearGridModel::setCurrentDate(QDate date) {
+void YearGridModel::setCurrentDate(QDateTime date) {
     _currentDate = date;
 }
 
@@ -98,14 +98,14 @@ void YearGridModel::setYear(const int year) {
     if (_year != year) {
         _year = year;
 
-        QDate today = QDate::currentDate();
+        QDateTime today = QDateTime::currentDateTime();
         if (_currentDate.isValid()) {
             today = _currentDate;
         }
 
         for (int m = 1; m <= MONTHS_IN_YEAR; m++) {
-            QDate date(year, m, 1);
-            _monthOffset[m - 1] = date.dayOfWeek() - 1;
+            QDateTime date(QDate(year, m, 1), today.time());
+            _monthOffset[m - 1] = date.date().dayOfWeek() - 1;
 
             for (int c = 0; c < GRID_WIDTH; c++) {
                 auto cellIndex = cellIndexForMonthAndColumn(m, c);
@@ -118,7 +118,7 @@ void YearGridModel::setYear(const int year) {
                 QString label(" ");
                 if (c >= _monthOffset[m - 1]) {
                     auto day = 1 + c - _monthOffset[m - 1];
-                    date.setDate(year, m, day);
+                    date.setDate(QDate(year, m, day));
                     qWarning() << date;
                     if (date.isValid()) {
                         cell->setDate(date);
@@ -132,7 +132,7 @@ void YearGridModel::setYear(const int year) {
                     } else {
                         cell->setType(DayTypeFuture);
                     }
-                    if (day == 1 || day == date.daysInMonth() || (date.dayOfWeek() == 1 && day <= date.daysInMonth())) {
+                    if (day == 1 || day == date.date().daysInMonth() || (date.date().dayOfWeek() == 1 && day <= date.date().daysInMonth())) {
                         label = QString::number(day);
                     }
                 } else {
@@ -257,7 +257,7 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             QDateTime endDateTime = eventTime.endDateTime();
             endDateTime.setTime(QTime(12,0,0,0));
             QDate endDate = endDateTime.date();
-            event->setDate(startDate);
+            event->setDate(startDateTime);
             event->setDisplayLabel(item.displayLabel());
             event->setItemId(item.id());
             event->setCollectionId(item.collectionId().toString());

@@ -33,11 +33,11 @@ QChar YearEvent::symbol() const {
     return _symbol;
 }
 
-void YearEvent::setDate(const QDate &date) {
+void YearEvent::setDate(const QDateTime &date) {
     _date = date;
 }
 
-QDate YearEvent::date() const {
+QDateTime YearEvent::date() const {
     return _date;
 }
 
@@ -62,11 +62,11 @@ int YearDay::type() const {
     return _type;
 }
 
-void YearDay::setDate(const QDate &date) {
+void YearDay::setDate(const QDateTime &date) {
     _date = date;
 }
 
-QDate YearDay::date() const {
+QDateTime YearDay::date() const {
     return _date;
 }
 

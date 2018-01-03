@@ -32,7 +32,7 @@ FocusScope {
     }
 
     onFocusChanged: {
-        //console.log("detailsListitem focusChanged aF: "+activeFocus+", dSI: " + daySelectedIndex + ", dCSI: " + dayChildSelectedIndex + ", i: " + index)
+        console.log("detailsListitem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index)
         if (activeFocus) {
             if (hourSelectedIndex != index) {
                 hourSelectedIndex = index;

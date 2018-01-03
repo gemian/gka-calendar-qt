@@ -147,14 +147,15 @@ FocusScope {
             event.accepted = true;
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
-//            console.log("dSI: "+daySelectedIndex+", l: "+yearGridModel.items[daySelectedIndex].items.length)
-//            if (yearGridModel.items[daySelectedIndex].type > 0 && yearGridModel.items[daySelectedIndex].type < 4) {
-//                if (yearGridModel.items[daySelectedIndex].items.length === 0) {
-//                    dialogLoader.setSource("EditEventDialog.qml", {"startDate":selectedDate, "allDay":true, "model":organizerModel});
-//                } else {
-//                    dialogLoader.setSource("EditEventDialog.qml", {"eventId": yearGridModel.items[daySelectedIndex].items[0].itemId, "model":organizerModel});
-//                }
-//            }
+            console.log("hSI: "+hourSelectedIndex+", l: "+dayGridModel.items[hourSelectedIndex]+", sd:"+selectedDate+", hsTime:"+dayGridModel.items[hourSelectedIndex].time+", h:"+dayGridModel.items[hourSelectedIndex].time.getUTCHours())
+            if (dayGridModel.items[hourSelectedIndex].itemId.length === 0) {
+                var dateTime = selectedDate
+                dateTime.setHours(dayGridModel.items[hourSelectedIndex].time.getHours())
+                dateTime.setMinutes(dayGridModel.items[hourSelectedIndex].time.getMinutes())
+                dialogLoader.setSource("EditEventDialog.qml", {"startDate":dateTime, "model":organizerModel});
+            } else {
+                dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[hourSelectedIndex].itemId, "model":organizerModel});
+            }
         }
     }
 

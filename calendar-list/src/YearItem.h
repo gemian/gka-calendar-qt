@@ -12,7 +12,7 @@ class YearEvent : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY itemChanged)
+    Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY itemChanged)
     Q_PROPERTY(QString itemId READ itemIdString NOTIFY itemChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY itemChanged)
     Q_PROPERTY(QChar symbol READ symbol WRITE setSymbol NOTIFY itemChanged)
@@ -22,8 +22,8 @@ public:
     explicit YearEvent(QObject *parent = Q_NULLPTR);
     ~YearEvent() override;
 
-    void setDate(const QDate &date);
-    QDate date() const;
+    void setDate(const QDateTime &date);
+    QDateTime date() const;
 
     QString itemIdString() const;
     QtOrganizer::QOrganizerItemId itemId() const;
@@ -46,7 +46,7 @@ private:
     QString _displayLabel;
     QChar _symbol;
     QString _collectionId;
-    QDate _date;
+    QDateTime _date;
 };
 
 class YearDay : public QObject
@@ -54,7 +54,7 @@ class YearDay : public QObject
     Q_OBJECT
 
     Q_PROPERTY(int type READ type WRITE setType NOTIFY dayChanged)
-    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY dayChanged)
+    Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY dayChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY dayChanged)
     Q_PROPERTY(QQmlListProperty<YearEvent> items READ items NOTIFY dayChanged)
 
@@ -65,8 +65,8 @@ public:
     void setType(int type);
     int type() const;
 
-    void setDate(const QDate &date);
-    QDate date() const;
+    void setDate(const QDateTime &date);
+    QDateTime date() const;
 
     void setDisplayLabel(const QString &label);
     QString displayLabel() const;
@@ -87,7 +87,7 @@ private:
 
 private:
     int _type;
-    QDate _date;
+    QDateTime _date;
     QString _displayLabel;
     std::vector<YearEvent*> _events;
 };

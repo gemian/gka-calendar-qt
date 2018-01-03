@@ -15,7 +15,7 @@ class Q_DECL_EXPORT DayGridModel : public QAbstractListModel {
 
     Q_OBJECT
 
-    Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY modelChanged)
+    Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY modelChanged)
     Q_PROPERTY(QQmlListProperty<DayItem> items READ items NOTIFY modelChanged)
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
 
@@ -23,8 +23,8 @@ public:
     explicit DayGridModel(QObject *parent = nullptr);
     ~DayGridModel() override;
 
-    void setDate(QDate date);
-    QDate date();
+    void setDate(QDateTime date);
+    QDateTime date();
 
     int itemCount() const;
 
@@ -60,7 +60,7 @@ private:
     std::vector<DayItem*> _gridCells;
 
     QtOrganizer::QOrganizerManager *_manager;
-    QDate _date;
+    QDateTime _date;
 
     QTimer modelChangedTimer;
 };

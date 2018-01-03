@@ -49,7 +49,7 @@ TEST_CASE("YearGridSetYearTest") {
     smersh().KillAppAfterTimeout(300);
 
     auto *yearGridModel = new YearGridModel();
-    yearGridModel->setCurrentDate(QDate(2017,6,14));
+    yearGridModel->setCurrentDate(QDateTime(QDate(2017,6,14),QTime()));
     yearGridModel->setYear(2017);
 
     QQmlListProperty<YearDay> dayProperty = yearGridModel->items();
@@ -101,7 +101,7 @@ TEST_CASE("YearGridAddEventTest") {
 
     auto *yearGridModel = new YearGridModel();
     const QDate &date = QDate(2017, 6, 14);
-    yearGridModel->setCurrentDate(date);
+    yearGridModel->setCurrentDate(QDateTime(date,QTime()));
     yearGridModel->setYear(2017);
 
     QList<QtOrganizer::QOrganizerItem> items = QList<QtOrganizer::QOrganizerItem>();

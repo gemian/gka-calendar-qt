@@ -36,7 +36,7 @@ DayGridModel::~DayGridModel() {
     delete _manager;
 }
 
-void DayGridModel::setDate(QDate date) {
+void DayGridModel::setDate(QDateTime date) {
     _date = date;
     auto oldSize = _gridCells.size();
     for (auto cell : _gridCells) {
@@ -48,12 +48,13 @@ void DayGridModel::setDate(QDate date) {
     for (int s = 0; s < DAY_TIME_SLOTS; s++) {
         auto time = QTime(DAY_TIME_SLOTS_START + s, 0);
         auto item = new DayItem();
-        item->setTime(time);
+        QDateTime dateTime = QDateTime(_date.date(),time);
+        item->setTime(dateTime);
         _gridCells.push_back(item);
     }
 
-    QDateTime startDateTime(date, QTime(0, 0, 0, 0));
-    QDateTime endDateTime(date, QTime(23, 59, 59, 0));
+    QDateTime startDateTime(date.date(), QTime(0, 0, 0, 0));
+    QDateTime endDateTime(date.date(), QTime(23, 59, 59, 0));
 
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
 
@@ -71,15 +72,15 @@ void DayGridModel::setDate(QDate date) {
     modelChangedTimer.start();
 }
 
-struct TimeFirstNotBefore: public std::binary_function<DayItem*, QTime, bool> {
-    bool operator() (const DayItem *item, const QTime &time) const {
-        return item->time() >= time;
+struct TimeFirstNotBefore: public std::binary_function<DayItem*, QDateTime, bool> {
+    bool operator() (const DayItem *item, const QDateTime &time) const {
+        return item->time().time() >= time.time();
     }
 };
 
-struct TimeSameHour: public std::binary_function<DayItem*, QTime, bool> {
-    bool operator() (const DayItem *item, const QTime &time) const {
-        return item->time().hour() >= time.hour();
+struct TimeSameHour: public std::binary_function<DayItem*, QDateTime, bool> {
+    bool operator() (const DayItem *item, const QDateTime &time) const {
+        return item->time().time().hour() >= time.time().hour();
     }
 };
 
@@ -88,7 +89,7 @@ void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
         auto itemEventTime = item.detail(QtOrganizer::QOrganizerItemDetail::TypeEventTime);
         auto itemTimeV = itemEventTime.value(QtOrganizer::QOrganizerEventTime::FieldStartDateTime);
         if (itemTimeV.isValid()) {
-            auto itemTime = itemTimeV.toTime();
+            auto itemTime = itemTimeV.toDateTime();
             auto dayItem = new DayItem();
             dayItem->setTime(itemTime);
             dayItem->setDisplayLabel(item.displayLabel());
@@ -98,7 +99,7 @@ void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             auto itAt = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(TimeFirstNotBefore(), itemTime));
             if (itAt != _gridCells.end()) {
                 auto itHour = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(TimeSameHour(), itemTime));
-                if ((*itHour)->time().hour() == itemTime.hour() && (*itHour)->itemId().isEmpty()) {
+                if ((*itHour)->time().time().hour() == itemTime.time().hour() && (*itHour)->itemId().isEmpty()) {
                     (*itHour) = dayItem;
                 } else {
                     _gridCells.insert(itAt, dayItem);
@@ -110,7 +111,7 @@ void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
     }
 }
 
-QDate DayGridModel::date() {
+QDateTime DayGridModel::date() {
     return _date;
 }
 

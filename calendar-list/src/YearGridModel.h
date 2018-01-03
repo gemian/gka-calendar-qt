@@ -29,7 +29,7 @@ public:
 
     int year() const;
     void setYear(int year);
-    void setCurrentDate(QDate date);
+    void setCurrentDate(QDateTime date);
     void addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items);
 
     int itemCount() const;
@@ -68,7 +68,7 @@ private:
 
     int _year;
     QtOrganizer::QOrganizerManager *_manager;
-    QDate _currentDate;
+    QDateTime _currentDate;
 };
 
 QML_DECLARE_TYPE(YearGridModel)
