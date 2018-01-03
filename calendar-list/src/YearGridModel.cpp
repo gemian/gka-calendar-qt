@@ -8,7 +8,7 @@ YearGridModel::YearGridModel(QObject *parent) : QAbstractListModel(parent) {
         manager = "eds";
     }
     QtOrganizer::QOrganizerManager *newManager = new QtOrganizer::QOrganizerManager(manager);
-    if (!newManager || newManager->error()) {
+    if (newManager->error()) {
         qCritical("error no new manager");
         delete newManager;
     } else {
@@ -174,12 +174,12 @@ QVariant YearGridModel::data(const QModelIndex &index, int role) const
 
 QQmlListProperty<YearDay> YearGridModel::items()
 {
-    return QQmlListProperty<YearDay>(this, 0, item_count, item_at);
+    return {this, nullptr, item_count, item_at};
 }
 
 int YearGridModel::item_count(QQmlListProperty<YearDay> *p)
 {
-    YearGridModel* model = qobject_cast<YearGridModel*>(p->object);
+    auto * model = dynamic_cast<YearGridModel*>(p->object);
     if (model)
         return model->_gridCells.size();
     return 0;
@@ -187,10 +187,10 @@ int YearGridModel::item_count(QQmlListProperty<YearDay> *p)
 
 YearDay* YearGridModel::item_at(QQmlListProperty<YearDay> *p, int idx)
 {
-    YearGridModel* model = qobject_cast<YearGridModel*>(p->object);
+    auto * model = dynamic_cast<YearGridModel*>(p->object);
     if (model)
         return model->_gridCells[idx];
-    return 0;
+    return nullptr;
 }
 
 void YearGridModel::manageDataChanged() {
@@ -241,7 +241,7 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             QDate endDate = endDateTime.date();
             event->setDate(startDate);
             event->setDisplayLabel(item.displayLabel());
-            event->setItemId(item.id().toString());
+            event->setItemId(item.id());
             event->setCollectionId(item.collectionId().toString());
             do {
                 addEventToDate(event, startDate);
@@ -252,29 +252,9 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
 }
 
 void YearGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-//    foreach (QtOrganizer::QOrganizerItemId itemId, itemIds) {
-//        qDebug("foreach");
-//        std::map<QString, CalendarEvent*>::iterator it;
-//        it = _events.find(itemId.toString());
-//        if (it != _events.end()) {
-//            qDebug("founditemidinevents");
-//            std::pair<std::multimap<QDateTime, CalendarItem*>::iterator, std::multimap<QDateTime, CalendarItem*>::iterator> possibles;
-//            possibles = _items.equal_range(it->second->startDateTime());
-//            std::multimap<QDateTime, CalendarItem*>::iterator ii=possibles.first;
-//            while (ii!=possibles.second) {
-//                qDebug("founddateinitems");
-//                if (qobject_cast<CalendarEvent*>(ii->second)->itemId() == itemId.toString()) {
-//                    qDebug("eraseitem++");
-//                    _items.erase(ii++);
-//                } else {
-//                    qDebug("++");
-//                    ++ii;
-//                }
-//            }
-//            qDebug("eraseevent");
-//            _events.erase(it);
-//        }
-//    }
+    for (auto cell : _gridCells) {
+        cell->removeEventsFromModel(itemIds);
+    }
 }
 
 void YearGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {

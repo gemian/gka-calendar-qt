@@ -8,7 +8,7 @@ include_directories(
         ${Qt5Organizer_INCLUDE_DIRS}
 )
 
-add_library(CalendarListModelPlugin SHARED CalendarItem.cpp CalendarListModel.cpp YearItem.cpp YearGridModel.cpp CalendarListModelPlugin.cpp)
+add_library(CalendarListModelPlugin SHARED CalendarItem.cpp CalendarListModel.cpp YearItem.cpp YearGridModel.cpp CalendarListModelPlugin.cpp DayItem.cpp DayItem.h DayGridModel.cpp DayGridModel.h)
 
 target_include_directories (CalendarListModelPlugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

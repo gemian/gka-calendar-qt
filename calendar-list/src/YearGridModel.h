@@ -25,10 +25,10 @@ class Q_DECL_EXPORT YearGridModel : public QAbstractListModel {
 
 public:
     explicit YearGridModel(QObject *parent = 0);
-    ~YearGridModel();
+    ~YearGridModel() override;
 
     int year() const;
-    void setYear(const int year);
+    void setYear(int year);
     void setCurrentDate(QDate date);
     void addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items);
 

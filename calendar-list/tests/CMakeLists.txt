@@ -5,7 +5,7 @@ include_directories(
         ${gtest_SOURCE_DIR}
 )
 
-add_executable(runBasicTests test_main.cpp year_grid_test.cpp)
+add_executable(runBasicTests test_main.cpp year_grid_test.cpp day_grid_test.cpp)
 
 target_link_libraries(runBasicTests
         CalendarListModelPlugin

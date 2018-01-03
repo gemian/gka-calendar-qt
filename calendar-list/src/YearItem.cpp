@@ -3,14 +3,17 @@
 YearEvent::YearEvent(QObject *parent) : QObject(parent), _date() {
 }
 
-YearEvent::~YearEvent() {
+YearEvent::~YearEvent() = default;
+
+QString YearEvent::itemIdString() const {
+    return _itemId.toString();
 }
 
-QString YearEvent::itemId() const {
+QtOrganizer::QOrganizerItemId YearEvent::itemId() const {
     return _itemId;
 }
 
-void YearEvent::setItemId(const QString &itemId) {
+void YearEvent::setItemId(const QtOrganizer::QOrganizerItemId &itemId) {
     _itemId = itemId;
 }
 
@@ -49,8 +52,7 @@ void YearEvent::setCollectionId(const QString &collectionId) {
 YearDay::YearDay(QObject *parent) : QObject(parent), _date() {
 }
 
-YearDay::~YearDay() {
-}
+YearDay::~YearDay() = default;
 
 void YearDay::setType(const int type) {
     _type = type;
@@ -79,7 +81,7 @@ QString YearDay::displayLabel() const {
 void YearDay::addEvent(YearEvent *event) {
     if (_events.size() < 2) {
         const QString &initialLetter = event->displayLabel().left(1);
-        if (_events.size() == 0) {
+        if (_events.empty()) {
             _displayLabel = initialLetter;
         } else {
             _displayLabel.append(initialLetter);
@@ -92,23 +94,29 @@ void YearDay::clearEvents() {
     _events.clear();
 }
 
-QQmlListProperty<YearEvent> YearDay::items()
-{
-    return QQmlListProperty<YearEvent>(this, 0, item_count, item_at);
+QQmlListProperty<YearEvent> YearDay::items() {
+    return {this, nullptr, item_count, item_at};
 }
 
-int YearDay::item_count(QQmlListProperty<YearEvent> *p)
-{
-    YearDay* model = qobject_cast<YearDay*>(p->object);
+int YearDay::item_count(QQmlListProperty<YearEvent> *p) {
+    auto * model = dynamic_cast<YearDay*>(p->object);
     if (model)
-        return model->_events.size();
+        return static_cast<int>(model->_events.size());
     return 0;
 }
 
-YearEvent* YearDay::item_at(QQmlListProperty<YearEvent> *p, int idx)
-{
-    YearDay* model = qobject_cast<YearDay*>(p->object);
+YearEvent* YearDay::item_at(QQmlListProperty<YearEvent> *p, int idx) {
+    auto * model = dynamic_cast<YearDay*>(p->object);
     if (model)
         return model->_events[idx];
-    return 0;
+    return nullptr;
+}
+
+void YearDay::removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list) {
+    for (auto it = _events.begin(); it != _events.end(); ) {
+        if (list.contains((*it)->itemId())) {
+            _events.erase(it);
+            delete *it;
+        }
+    }
 }

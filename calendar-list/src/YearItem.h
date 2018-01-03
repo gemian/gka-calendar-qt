@@ -13,7 +13,7 @@ class YearEvent : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QDate date READ date WRITE setDate NOTIFY itemChanged)
-    Q_PROPERTY(QString itemId READ itemId WRITE setItemId NOTIFY itemChanged)
+    Q_PROPERTY(QString itemId READ itemIdString NOTIFY itemChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY itemChanged)
     Q_PROPERTY(QChar symbol READ symbol WRITE setSymbol NOTIFY itemChanged)
     Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
@@ -25,8 +25,9 @@ public:
     void setDate(const QDate &date);
     QDate date() const;
 
-    QString itemId() const;
-    void setItemId(const QString &itemId);
+    QString itemIdString() const;
+    QtOrganizer::QOrganizerItemId itemId() const;
+    void setItemId(const QtOrganizer::QOrganizerItemId &itemId);
 
     QString displayLabel() const;
     void setDisplayLabel(const QString &label);
@@ -41,7 +42,7 @@ Q_SIGNALS:
     void itemChanged();
 
 private:
-    QString _itemId;
+    QtOrganizer::QOrganizerItemId _itemId;
     QString _displayLabel;
     QChar _symbol;
     QString _collectionId;
@@ -61,7 +62,7 @@ public:
     explicit YearDay(QObject *parent = Q_NULLPTR);
     ~YearDay() override;
 
-    void setType(const int type);
+    void setType(int type);
     int type() const;
 
     void setDate(const QDate &date);
@@ -74,6 +75,8 @@ public:
     void clearEvents();
 
     QQmlListProperty<YearEvent> items();
+
+    void removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list);
 
 Q_SIGNALS:
     void dayChanged();

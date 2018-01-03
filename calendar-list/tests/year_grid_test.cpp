@@ -4,8 +4,8 @@
 
 #include <YearGridModel.h>
 #include <QtWidgets/QApplication>
-#include "YearItem.h"
 #include "catch.hpp"
+#include "smersh.h"
 
 TEST_CASE("YearEventTest") {
     auto *event = new YearEvent();
@@ -38,19 +38,6 @@ TEST_CASE("YearDayAdd2EventsTest") {
     delete event2;
     REQUIRE(day->displayLabel() == "EO");
     delete day;
-}
-
-struct smersh {
-    bool KillAppAfterTimeout(int secs=10) const;
-};
-
-bool smersh::KillAppAfterTimeout(int secs) const {
-    QScopedPointer<QTimer> timer(new QTimer);
-    timer->setSingleShot(true);
-    bool ok = timer->connect(timer.data(), SIGNAL(timeout()), qApp, SLOT(quit()), Qt::QueuedConnection) != nullptr;
-    timer->start(secs * 1000); // N seconds timeout
-    timer.take()->setParent(qApp);
-    return ok;
 }
 
 TEST_CASE("YearGridSetYearTest") {
