@@ -5,13 +5,14 @@ MenuBar {
     id: menuBar
 
     property var model;
+    property var settings;
 
     Menu {
         title: qsTr("&File")
         id: fileMenu
         MenuItem {
             id: fileMenuQuit
-            text: qsTr("&Quit")
+            text: qsTr("&Quit (ctrl-q)")
             onTriggered: Qt.quit();
         }
     }
@@ -60,21 +61,21 @@ MenuBar {
         id: viewMenu
         MenuItem {
             id: viewMenuDay
-            text: qsTr("&Day")
+            text: qsTr("&Day (ctrl-shift-D)")
             onTriggered: {
                 alternateViewLoader.source = "DayViewGrid.qml"
             }
         }
         MenuItem {
             id: viewMenuWeek
-            text: qsTr("&Week")
+            text: qsTr("&Week (ctrl-shift-W)")
             onTriggered: {
                 alternateViewLoader.source = "WeekViewGrid.qml"
             }
         }
         MenuItem {
             id: viewMenuYear
-            text: qsTr("&Year")
+            text: qsTr("&Year (ctrl-shift-Y)")
             onTriggered: {
                 alternateViewLoader.source = "YearViewGrid.qml"
             }
@@ -85,7 +86,7 @@ MenuBar {
         id: goMenu
         MenuItem {
             id: goMenuToday
-            text: qsTr("&Today")
+            text: qsTr("&Today (space)")
             onTriggered: {
                 selectedDate = new Date()
                 app.updateSelectedToToday()
@@ -99,7 +100,7 @@ MenuBar {
             id: toolsMenuSettings
             text: qsTr("&Settings")
             onTriggered: {
-
+                dialogLoader.setSource("SettingsDialog.qml", {"settings": menuBar.settings});
             }
         }
     }

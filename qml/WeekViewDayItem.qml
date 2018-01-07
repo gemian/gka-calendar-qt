@@ -107,7 +107,7 @@ FocusScope {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
-                text: app.displayLunarCalendar ? ("%1 %2 %3").arg(lunarDate.IDayCn).arg(lunarDate.gzDay).arg(lunarDate.isTerm ? lunarDate.Term : "")
+                text: app.showLunarCalendar ? ("%1 %2 %3").arg(lunarDate.IDayCn).arg(lunarDate.gzDay).arg(lunarDate.isTerm ? lunarDate.Term : "")
                                                           : (visible ? itemDate.toLocaleDateString(Qt.locale(), "ddd dd") : "")
                 color: (itemDate !== undefined) && (itemDate.toLocaleDateString() === new Date().toLocaleDateString()) ? "#3daee9" : "#31363b"
             }

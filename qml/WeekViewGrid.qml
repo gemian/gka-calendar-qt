@@ -21,7 +21,7 @@ FocusScope {
     }
 
     function updateGridViewToToday() {
-        console.log("updateGridViewToToday");
+//        console.log("updateGridViewToToday");
         var today = new Date();
         updateGridViewToDate(today);
     }
@@ -84,10 +84,10 @@ FocusScope {
                 internal.initialContentX = gridView.contentX
             }
             Keys.onPressed: {
-                console.log("[YGV]key:"+event.key)
+//                console.log("[YGV]key:"+event.key)
             }
             onDragEnded: {
-                console.log("[DragEnd]contentX:"+contentX)
+//                console.log("[DragEnd]contentX:"+contentX)
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {
                     weekStartDate = weekStartDate.addDays(7);
                 } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
@@ -95,7 +95,7 @@ FocusScope {
                 }
             }
             onContentXChanged: {
-                console.log("[YGV]contentX:"+contentX)
+//                console.log("[YGV]contentX:"+contentX)
             }
         }
 

@@ -12,4 +12,5 @@ configure_file(YearViewGrid.qml YearViewGrid.qml COPYONLY)
 configure_file(DayViewGrid.qml DayViewGrid.qml COPYONLY)
 configure_file(DayViewItem.qml DayViewItem.qml COPYONLY)
 configure_file(CollectionsDialog.qml CollectionsDialog.qml COPYONLY)
+configure_file(SettingsDialog.qml SettingsDialog.qml COPYONLY)
 

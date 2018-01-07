@@ -27,7 +27,7 @@ FocusScope {
             dayOfWeek = 6; //Fix for start of week Mon/Sun confusion between Qt/JavaScript
         }
         var gridIndex = (m+1)+13*(dayOfWeek+(d-1));
-        console.log("indexFor y:"+y+", m:"+m+", d:"+d+", fOM"+firstOfMonth+", i:"+gridIndex)
+//        console.log("indexFor y:"+y+", m:"+m+", d:"+d+", fOM"+firstOfMonth+", i:"+gridIndex)
         return gridIndex;
     }
 
@@ -158,7 +158,7 @@ FocusScope {
             }
 
             onFocusChanged: {
-                console.log("focusChange"+activeFocus+yearGridModel.items[index]?yearGridModel.items[index].date:" ");
+//                console.log("focusChange"+activeFocus+yearGridModel.items[index]?yearGridModel.items[index].date:" ");
                 if (activeFocus) {
                     selectedDateLabel.text = " "
                     selectedItemsLabel.text = " "
@@ -272,7 +272,7 @@ FocusScope {
                 gridView.forceActiveFocus();
             }
             Keys.onPressed: {
-                console.log("[YGV]key:"+event.key)
+//                console.log("[YGV]key:"+event.key)
             }
             onDragEnded: {
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {
@@ -339,7 +339,7 @@ FocusScope {
             updateSelectedToToday();
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
-            console.log("dSI: "+daySelectedIndex+", l: "+yearGridModel.items[daySelectedIndex].items.length)
+//            console.log("dSI: "+daySelectedIndex+", l: "+yearGridModel.items[daySelectedIndex].items.length)
             if (yearGridModel.items[daySelectedIndex].type > 0 && yearGridModel.items[daySelectedIndex].type < 4) {
                 if (yearGridModel.items[daySelectedIndex].items.length === 0) {
                     dialogLoader.setSource("EditEventDialog.qml", {"startDate":selectedDate, "allDay":true, "model":organizerModel});

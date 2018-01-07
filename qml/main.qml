@@ -3,6 +3,7 @@ import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.4
+import Qt.labs.settings 1.0
 import "dateExt.js" as DateExt
 
 ApplicationWindow {
@@ -11,6 +12,7 @@ ApplicationWindow {
     signal updateSelectedToToday()
 
     property var selectedDate: new Date()
+    property bool showLunarCalendar
 
     //Fullscreen on device
     height: {
@@ -28,6 +30,18 @@ ApplicationWindow {
         }
     }
     visible: true
+
+    Settings {
+        id: settings
+        property bool showLunarCalendar
+    }
+
+    Binding {
+        target: app
+        property: "showLunarCalendar"
+        value: settings.showLunarCalendar
+        when: settings
+    }
 
     EventListModel {
         id: organizerModel
@@ -94,6 +108,7 @@ ApplicationWindow {
     menuBar: CalendarMenu {
         id: menu
         model: organizerModel
+        settings: settings
     }
 
     Shortcut {
