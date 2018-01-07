@@ -24,7 +24,9 @@ FocusScope {
             internal.dayGridCellHeight = Math.floor(gVHeight/Math.round(itemCount/2))
             print("DayGridModel.onItemsLoaded gvh: "+gVHeight+", ic: "+itemCount+", ch: "+internal.dayGridCellHeight)
             gridView.currentIndex = hourSelectedIndex
-            gridView.currentItem.forceActiveFocus()
+            if (gridView.currentItem) {
+                gridView.currentItem.forceActiveFocus()
+            }
         }
     }
 
@@ -81,8 +83,10 @@ FocusScope {
             }
             visible: true
             model: dayGridModel
-            cellWidth: Math.floor(gridView.width/(2))
-            cellHeight: internal.dayGridCellHeight
+            cellWidth: gridView.width>gridView.height?Math.floor(gridView.width/(2)):gridView.width
+            cellHeight: gridView.width>gridView.height?internal.dayGridCellHeight:internal.dayGridCellHeight/2
+
+
             flow: GridView.FlowTopToBottom
 
             Component.onCompleted: {

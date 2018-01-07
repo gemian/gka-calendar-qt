@@ -36,6 +36,13 @@ FocusScope {
         }
     }
 
+    Connections {
+        target: app
+        onUpdateSelectedToToday: {
+            updateGridViewToToday();
+        }
+    }
+
     Timer {
         running: true
         repeat: false
@@ -61,8 +68,8 @@ FocusScope {
             anchors.topMargin: 5
             anchors.bottomMargin: 5
 
-            cellWidth: gridView.width/2
-            cellHeight: gridView.height/4
+            cellWidth: gridView.width>gridView.height?gridView.width/2:gridView.width
+            cellHeight: gridView.width>gridView.height?gridView.height/4:gridView.height/8
             flow: GridView.FlowTopToBottom
             focus: true
 
@@ -70,7 +77,7 @@ FocusScope {
             delegate: WeekViewDayItem {
                 itemDate: weekStartDate.addDays(index-1)
                 showHeader: (index === 0)
-                dateOnLeft: (index < 4)
+                dateOnLeft: gridView.width>gridView.height?(index < 4):true
             }
 
             Component.onCompleted: {

@@ -9,12 +9,11 @@ import "dateExt.js" as DateExt
 FocusScope {
     id: yearViewContainer
 
-    property var anchorDate: selectedDate
     property int daySelectedIndex: 1
 
     YearGridModel {
         id: yearGridModel
-        year: anchorDate.getFullYear()
+        year: selectedDate.getFullYear()
 
         onModelChanged: {
             print("YearGridModel.onModelChanged")
@@ -34,8 +33,8 @@ FocusScope {
 
     function moveAnchorForEventDateByMonthsNext(event, indexDate, months, next) {
         event.accepted = true;
-        anchorDate = anchorDate.addMonths(months);
-        gridView.currentIndex = indexFor(anchorDate.getFullYear(), next, indexDate.getDate());
+        selectedDate = selectedDate.addMonths(months);
+        gridView.currentIndex = indexFor(selectedDate.getFullYear(), next, indexDate.getDate());
         gridView.currentItem.forceActiveFocus();
     }
 
@@ -55,7 +54,7 @@ FocusScope {
     function moveAnchorAndGridLeftForEvent(event, indexDate) {
         event.accepted = true;
         if (indexDate.getMonth() === 0) {
-            anchorDate = anchorDate.addMonths(-12);
+            selectedDate = selectedDate.addMonths(-12);
             gridView.currentIndex = indexFor(indexDate.getFullYear()-1, 11, Date.daysInMonth(indexDate.getFullYear()-1,11));
         } else {
             gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()-1, Date.daysInMonth(indexDate.getFullYear(),indexDate.getMonth()-1));
@@ -66,11 +65,18 @@ FocusScope {
     function moveAnchorAndGridRightForEvent(event,  indexDate) {
         event.accepted = true;
         if (indexDate.getMonth() === 11) {
-            anchorDate = anchorDate.addMonths(12);
+            selectedDate = selectedDate.addMonths(12);
             gridView.currentIndex = indexFor(indexDate.getFullYear()+1, 0, 1);
         } else {
             gridView.currentIndex = indexFor(indexDate.getFullYear(), indexDate.getMonth()+1, 1);
         }
+        gridView.currentItem.forceActiveFocus();
+    }
+
+    function updateSelectedToToday() {
+        var date = new Date();
+        selectedDate = date;
+        gridView.currentIndex = indexFor(date.getFullYear(), date.getMonth(), date.getDate());
         gridView.currentItem.forceActiveFocus();
     }
 
@@ -112,8 +118,15 @@ FocusScope {
         return colour;
     }
 
+    Connections {
+        target: app
+        onUpdateSelectedToToday: {
+            updateSelectedToToday();
+        }
+    }
+
     Component.onCompleted: {
-        gridView.currentIndex = indexFor(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+        gridView.currentIndex = indexFor(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())
         gridView.currentItem.forceActiveFocus()
     }
 
@@ -263,11 +276,11 @@ FocusScope {
             }
             onDragEnded: {
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {
-                    anchorDate = anchorDate.addMonths(12);
+                    selectedDate = selectedDate.addMonths(12);
                 } else if (contentX < internal.initialContentX-internal.contentXactionOn) {
-                    anchorDate = anchorDate.addMonths(-12);
+                    selectedDate = selectedDate.addMonths(-12);
                 }
-                gridView.currentIndex = indexFor(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate())
+                gridView.currentIndex = indexFor(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())
             }
         }
         Row {
@@ -298,7 +311,7 @@ FocusScope {
 
     Label {
         id: lastYear
-        text: anchorDate.getFullYear()-1
+        text: selectedDate.getFullYear()-1
         font.pixelSize: selectedYear.font.pixelSize * 2
         font.bold: true
         color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#31363b"
@@ -310,7 +323,7 @@ FocusScope {
 
     Label {
         id: nextYear
-        text: anchorDate.getFullYear()+1
+        text: selectedDate.getFullYear()+1
         font.pixelSize: selectedYear.font.pixelSize * 2
         font.bold: true
         color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#31363b"
@@ -323,10 +336,7 @@ FocusScope {
     Keys.onPressed: {
         console.log("key:"+event.key)
         if (event.key === Qt.Key_Space) {
-            var date = new Date();
-            anchorDate = date;
-            gridView.currentIndex = indexFor(date.getFullYear(), date.getMonth(), date.getDate());
-            gridView.currentItem.forceActiveFocus()
+            updateSelectedToToday();
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
             console.log("dSI: "+daySelectedIndex+", l: "+yearGridModel.items[daySelectedIndex].items.length)

@@ -51,7 +51,7 @@ FocusScope {
         clip: true
         id: dayRectangle
         anchors.fill: parent
-        color: "#edeeef"
+        color: index===0?"#3498db":"#edeeef"
         opacity: 0.9
 
         Row {
@@ -65,7 +65,6 @@ FocusScope {
                 text: selectedDate.toLocaleDateString(Qt.locale(), Locale.LongFormat);
                 font.pixelSize: dayItemLabel.font.pixelSize * 2
                 font.bold: true
-                color: "#3498db"
             }
 
             Rectangle {

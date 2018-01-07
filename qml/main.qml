@@ -8,6 +8,8 @@ import "dateExt.js" as DateExt
 ApplicationWindow {
     id: app
 
+    signal updateSelectedToToday()
+
     property var selectedDate: new Date()
 
     //Fullscreen on device
