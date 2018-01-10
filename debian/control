@@ -36,8 +36,6 @@ Depends:
  qml-module-qt-labs-settings,
  qml-module-qtcontacts,
  qml-module-qtorganizer,
- qml-module-ubuntu-components,
- qtcontact5-galera,
  qtorganizer5-eds,
 Description: Calendar application for touch+mouse+keyboard operation
  The Calendar application gives easy access to day, week and year views.
