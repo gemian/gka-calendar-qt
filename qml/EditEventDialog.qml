@@ -968,7 +968,7 @@ Window {
                         anchors.right: parent.right
                         CheckBox {
                             id: weeklyRepeatMon
-                            text: qsTr("Mon")
+                            text: (new Date()).weekStart(1).addDays(0).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             activeFocusOnTab: true
                             KeyNavigation.right: weeklyRepeatTue
@@ -977,7 +977,7 @@ Window {
                         }
                         CheckBox {
                             id: weeklyRepeatTue
-                            text: qsTr("Tue")
+                            text: (new Date()).weekStart(1).addDays(1).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             KeyNavigation.right: weeklyRepeatWed
                             KeyNavigation.up: repeatWeeklyButton
@@ -985,7 +985,7 @@ Window {
                         }
                         CheckBox {
                             id: weeklyRepeatWed
-                            text: qsTr("Wed")
+                            text: (new Date()).weekStart(1).addDays(2).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             KeyNavigation.right: weeklyRepeatThu
                             KeyNavigation.up: repeatWeeklyButton
@@ -993,7 +993,7 @@ Window {
                         }
                         CheckBox {
                             id: weeklyRepeatThu
-                            text: qsTr("Thr")
+                            text: (new Date()).weekStart(1).addDays(3).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             KeyNavigation.right: weeklyRepeatFri
                             KeyNavigation.up: repeatWeeklyButton
@@ -1001,21 +1001,21 @@ Window {
                         }
                         CheckBox {
                             id: weeklyRepeatFri
-                            text: qsTr("Fri")
+                            text: (new Date()).weekStart(1).addDays(4).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSun
                         }
                         CheckBox {
                             id: weeklyRepeatSat
-                            text: qsTr("Sat")
+                            text: (new Date()).weekStart(1).addDays(5).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             activeFocusOnTab: true
                             KeyNavigation.right: weeklyRepeatSun
                         }
                         CheckBox {
                             id: weeklyRepeatSun
-                            text: qsTr("Sun") //Qt.locale().dayName(7,Locale.NarrowFormat)
+                            text: (new Date()).weekStart(1).addDays(6).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                         }
                     }
@@ -1043,7 +1043,7 @@ Window {
                             KeyNavigation.right: monthlyRepeatByWeek
                         }
                         Label {
-                            id: montlyRepeatByDateLabel
+                            id: monthlyRepeatByDateLabel
                             text: startDate?startDate.getDate():""
                             visible: monthlyRepeatByDate.checked
                             anchors.verticalCenter: parent.verticalCenter
@@ -1065,7 +1065,7 @@ Window {
                             KeyNavigation.right: monthlyRepeatByWeekLast
                         }
                         Label {
-                            id: montlyRepeatByWeekLabel
+                            id: monthlyRepeatByWeekLabel
                             text: startDate?Math.ceil( startDate.getDate() / 7):""
                             visible: monthlyRepeatByWeek.checked
                             anchors.verticalCenter: parent.verticalCenter

@@ -8,7 +8,7 @@ include_directories(
 add_executable(runBasicTests test_main.cpp year_grid_test.cpp day_grid_test.cpp)
 
 target_link_libraries(runBasicTests
-        CalendarListModelPlugin
+        calendar-list-plugin
         Qt5::Qml
         Qt5::Quick
         ${CMAKE_DL_LIBS})

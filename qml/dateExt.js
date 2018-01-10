@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2013-2014 Canonical Ltd
  *
- * This file is part of Ubuntu Calendar App
+ * This file was part of Ubuntu Calendar App
  *
  * Ubuntu Calendar App is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as

@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.7)
 
 project(gka-calendar-qt)
+string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 
+set(CMAKE_CXX_STANDARD 14)
 set (QT_MIN_VERSION "5.7.0")
 
 find_package(ECM REQUIRED NO_MODULE)
@@ -15,16 +17,12 @@ include(KDECMakeSettings)
 include(ECMQueryQmake)
 include(GenerateExportHeader)
 
+add_definitions(-DPACKAGE_VERSION="0.1" -DPACKAGE_DATA_DIR="${CMAKE_INSTALL_PREFIX}/share/gka/calendar-qt")
+add_definitions(-DPACKAGE_QML_DIR="${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_QMLDIR}/org/gka/calendar-qt")
+
 add_subdirectory(calendar-list)
 add_subdirectory(qml)
+add_subdirectory(files)
+add_subdirectory(po)
+add_subdirectory(src)
 
-add_executable(${PROJECT_NAME} main.cpp)
-
-target_link_libraries(${PROJECT_NAME}
-        Qt5::Gui
-        Qt5::Quick
-        Qt5::QuickControls2
-        Qt5::Widgets
-        Qt5::Organizer
-        ${CMAKE_DL_LIBS}
-        )
