@@ -198,4 +198,12 @@ ApplicationWindow {
             }
         }
     }
+
+    Component.onCompleted: {
+        print("Screen.pixelDensity: "+Screen.pixelDensity);
+        print("Screen.devicePixelRatio: "+Screen.devicePixelRatio);
+        print("Screen.virtualX: "+Screen.virtualX);
+        print("Screen.virtualY: "+Screen.virtualY);
+
+    }
 }
