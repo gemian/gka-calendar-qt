@@ -1,4 +1,4 @@
-project(gka-data-e-translations)
+project(gka-calendar-qt-translations)
 
 include(FindGettext)
 

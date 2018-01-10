@@ -14,7 +14,7 @@
    viewBox="0 0 79.374998 79.374998"
    version="1.1"
    id="svg8"
-   sodipodi:docname="gka-calendar-e.svg"
+   sodipodi:docname="gka-calendar-qt.svg"
    inkscape:version="0.92.1 r15371">
   <defs
      id="defs2">
@@ -138,7 +138,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.4933333"
-     inkscape:cx="133.31565"
+     inkscape:cx="162.05065"
      inkscape:cy="166.04278"
      inkscape:document-units="mm"
      inkscape:current-layer="layer3"
@@ -147,7 +147,7 @@
      inkscape:window-width="1416"
      inkscape:window-height="992"
      inkscape:window-x="159"
-     inkscape:window-y="-39"
+     inkscape:window-y="-62"
      inkscape:window-maximized="0"
      units="px" />
   <metadata
@@ -167,17 +167,19 @@
      inkscape:groupmode="layer"
      id="layer1"
      style="display:inline"
-     transform="translate(0,-217.62498)" />
-  <g
-     inkscape:groupmode="layer"
-     id="layer2"
-     inkscape:label="Layer 2"
-     style="display:inline"
-     transform="translate(0,-217.62498)" />
+     transform="translate(0,-217.62498)">
+    <rect
+       style="fill:#fffffd;fill-opacity:1;stroke:#020000;stroke-width:0.28040132;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4001"
+       width="74.796349"
+       height="73.841553"
+       x="2.3425035"
+       y="220.49782" />
+  </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"
-     inkscape:label="Layer 3"
+     inkscape:label="Layer 2"
      style="display:inline"
      transform="translate(0,-217.62498)">
     <rect
@@ -188,13 +190,6 @@
        x="3.8408322"
        y="222.20863"
        inkscape:label="rect329" />
-    <rect
-       style="fill:none;fill-opacity:1;stroke:#020000;stroke-width:0.28040132;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4001"
-       width="74.796349"
-       height="73.841553"
-       x="2.3425035"
-       y="220.49782" />
     <rect
        style="display:inline;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.30629021;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect329-3"
@@ -261,7 +256,7 @@
          id="tspan4871"
          x="4.9528704"
          y="234.5976"
-         style="stroke-width:0.67797011;font-size:12.7px">2018</tspan></text>
+         style="font-size:12.69999981px;stroke-width:0.67797011">2018</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.93888855px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
