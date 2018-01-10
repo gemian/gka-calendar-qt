@@ -2,7 +2,7 @@ Source: gka-calendar-qt
 Priority: extra
 Maintainer: Adam Boardman <adamboardman@gmail.com>
 Build-Depends: cmake,
-               extra-cmake-modules
+               extra-cmake-modules,
                debhelper (>= 9),
                intltool,
                python3:any,
