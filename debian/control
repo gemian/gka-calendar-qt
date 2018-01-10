@@ -40,7 +40,6 @@ Depends:
  qml-module-qtquick-controls,
  qml-module-qtquick-controls2,
  qml-module-qtquick-templates2,
-
  libqt5quickcontrols2-5,
  qtorganizer5-eds,
 Description: Calendar application for touch+mouse+keyboard operation
