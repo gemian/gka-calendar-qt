@@ -32,7 +32,6 @@ Package: gka-calendar-qt
 Architecture: all
 Depends:
  ${misc:Depends},
- qmlscene,
  qml-module-qt-labs-settings,
  qml-module-qtcontacts,
  qml-module-qtorganizer,
