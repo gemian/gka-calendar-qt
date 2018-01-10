@@ -22,6 +22,7 @@ Build-Depends:
  qtdeclarative5-dev-tools,
  qtdeclarative5-dev,
  qtquickcontrols2-5-dev,
+ qtpim-dev,
 Standards-Version: 3.9.8
 Section: misc
 Homepage: https://github.com/adamboardman/gka-calendar-qt
