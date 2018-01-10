@@ -36,6 +36,7 @@ Depends:
  qml-module-qt-labs-settings,
  qml-module-qtcontacts,
  qml-module-qtorganizer,
+ libqt5quickcontrols2-5,
  qtorganizer5-eds,
 Description: Calendar application for touch+mouse+keyboard operation
  The Calendar application gives easy access to day, week and year views.
