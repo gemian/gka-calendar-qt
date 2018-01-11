@@ -2,13 +2,14 @@ import QtQuick 2.7
 import QtOrganizer 5.0
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.1
 
 Window {
     id: collectionsDialog
     visible: true
     modality: Qt.ApplicationModal
-    width: Math.max(questionRow.width, buttonRow.width)
-    height: dialogColumn.height
+    width: collectionsRow.width
+    height: collectionsActionColumn.height
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
 
@@ -17,101 +18,210 @@ Window {
     property var collections: collectionsDialog.model.getCollections()
     property int padding: 10
 
-    function saveAndClose() {
-        for (var i = 0 ; i < collections.length ; ++i) {
-            var cal = collections[i];
-            model.saveCollection(cal);
-        }
-        collectionsDialog.close()
+    SystemPalette { id: sysPalette; colorGroup: SystemPalette.Active }
+
+    function addCollection() {
+        subDialogLoader.setSource("EditCollectionDialog.qml", {
+            "model":collectionsDialog.model,
+            "collection":null
+        });
     }
 
-    Component.onCompleted: {
-        calendarsListView.forceActiveFocus()
+    function editCollection() {
+        subDialogLoader.setSource("EditCollectionDialog.qml", {
+            "model":collectionsDialog.model,
+            "collection":collections[calendarsListView.currentIndex]
+        });
+    }
+
+    function deleteCollection() {
+        model.removeCollection(collections[calendarsListView.currentIndex].collectionId);
     }
 
     title: qsTr("Calendar Collections");
 
-    Column {
-        id: dialogColumn
-        width: questionLabel.width
-        topPadding: collectionsDialog.padding
-        bottomPadding: collectionsDialog.padding
+    Loader {
+        id: subDialogLoader
+        visible: status == Loader.Ready
+        onStatusChanged: {
+            console.log("subDialogLoader onStateChanged");
+        }
+        onLoaded: {
+            console.log("subDialogLoader onLoaded");
+        }
+        State {
+            name: 'loaded';
+            when: loader.status === Loader.Ready
+        }
+    }
+
+    Row {
+        id: collectionsRow
         spacing: collectionsDialog.padding
 
-        Row {
-            id: questionRow
-            leftPadding: collectionsDialog.padding
+        Column {
+            id: dialogColumn
+            width: Math.max(questionLabel.width, calendarsListView.width)
+            topPadding: collectionsDialog.padding
+            bottomPadding: collectionsDialog.padding
             rightPadding: collectionsDialog.padding
-            Label {
-                id: questionLabel
-                text: qsTr("Available Calendar Collections");
-                wrapMode: Text.Wrap
-            }
-        }
-        ListView {
-            id: calendarsListView
-            clip: true
-            width: parent.width
-            leftMargin: 5
-            height: questionRow.height*5
-            model: collections
+            spacing: collectionsDialog.padding
 
-            Connections {
-                target: collectionsDialog.model
-                onModelChanged: {
-                    calendarsListView.model = collectionsDialog.model.getCollections()
+            Row {
+                id: questionRow
+                leftPadding: collectionsDialog.padding
+                rightPadding: collectionsDialog.padding
+                Label {
+                    id: questionLabel
+                    text: qsTr("Available Calendar Collections");
+                    wrapMode: Text.Wrap
                 }
             }
-
-            delegate: RadioButton {
-                id: calendarRadioButton
-                text: modelData.name
+            ListView {
+                id: calendarsListView
+                clip: true
+                width: dialogColumn.width
+                height: collectionsActionColumn.height
+                leftMargin: 5
+                model: collections
+                focus: true
                 activeFocusOnTab: true
-                activeFocusOnPress: true
-                checked: modelData.extendedMetaData("collection-selected") === true
-                onCheckedChanged: {
-                    modelData.setExtendedMetaData("collection-selected", checked);
+
+                Connections {
+                    target: collectionsDialog.model
+                    onModelChanged: {
+                        collections = collectionsDialog.model.getCollections()
+                        calendarsListView.model = collections
+                    }
                 }
-                Keys.onEnterPressed: {
-                    checked = !checked
+
+                Component {
+                    id: collectionDelegate
+
+                    Item {
+                        id: collectionItem
+                        width: collectionRow.width
+                        height: collectionName.height + collectionsDialog.padding
+
+                        Rectangle {
+                            anchors.fill: parent
+                            visible: collectionItem.ListView.isCurrentItem
+                            gradient: Gradient {
+                                GradientStop {color: collectionItem.activeFocus ? Qt.lighter(sysPalette.highlight, 1.03) : Qt.lighter(sysPalette.button, 1.01) ; position: 0}
+                                GradientStop {color: collectionItem.activeFocus ? Qt.darker(sysPalette.highlight, 1.10) :  Qt.darker(sysPalette.button, 1.03) ; position: 1}
+                            }
+                            color: collectionItem.pressed || collectionItem.activeFocus ? sysPalette.highlight : sysPalette.button
+                            radius: 2.5;
+                            border.color: (collectionItem.activeFocus || collectionItem.hovered) ? sysPalette.highlight : "#999"
+                        }
+
+                        Row {
+                            id: collectionRow
+                            leftPadding: collectionsDialog.padding/2
+                            rightPadding: collectionsDialog.padding/2
+                            topPadding: collectionsDialog.padding/2
+                            bottomPadding: collectionsDialog.padding/2
+                            spacing: collectionsDialog.padding
+
+                            Rectangle {
+                                width: padding*2
+                                height: collectionName.height
+                                radius: padding/2
+                                color: modelData.color
+                            }
+
+                            Label {
+                                id: collectionName
+                                text: modelData.name
+                                color: collectionItem.activeFocus ? sysPalette.highlightedText : sysPalette.buttonText
+                            }
+
+                        }
+                        Keys.onEnterPressed: {
+                            editCollection();
+                        }
+                        Keys.onReturnPressed: {
+                            editCollection();
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                calendarsListView.currentIndex = index
+                                calendarsListView.currentItem.forceActiveFocus()
+                            }
+                        }
+                    }
                 }
-                Keys.onReturnPressed: {
-                    checked = !checked
-                }
+
+                delegate: collectionDelegate
             }
         }
 
-        Row {
-            id: buttonRow
+        Column {
+            id: collectionsActionColumn
+            topPadding: collectionsDialog.padding
+            bottomPadding: collectionsDialog.padding
             leftPadding: collectionsDialog.padding
             rightPadding: collectionsDialog.padding
             spacing: collectionsDialog.padding
 
             Button {
-                id: okButton
-                text: qsTr("OK (ctrl-s)")
+                id: addCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                KeyNavigation.up: calendarsListView
-                KeyNavigation.right: cancelButton
+                text: qsTr("Add (ctrl-a)")
                 onClicked: {
-                    saveAndClose();
+                    addCollection();
                 }
                 Keys.onEnterPressed: {
-                    saveAndClose();
+                    addCollection();
                 }
                 Keys.onReturnPressed: {
-                    saveAndClose();
+                    addCollection();
                 }
+                KeyNavigation.left: calendarsListView
+                KeyNavigation.down: editCollectionButton
             }
 
+            Button {
+                id: editCollectionButton
+                activeFocusOnTab: true
+                activeFocusOnPress: true
+                text: qsTr("Edit (ctrl-e)")
+                onClicked: {
+                    editCollection();
+                }
+                Keys.onEnterPressed: {
+                    editCollection();
+                }
+                Keys.onReturnPressed: {
+                    editCollection();
+                }
+                KeyNavigation.left: calendarsListView
+                KeyNavigation.down: deleteCollectionButton
+            }
+            Button {
+                id: deleteCollectionButton
+                activeFocusOnTab: true
+                activeFocusOnPress: true
+                text: qsTr("Delete (ctrl-d)")
+                onClicked: {
+                    deleteCollection();
+                }
+                Keys.onEnterPressed: {
+                    deleteCollection();
+                }
+                Keys.onReturnPressed: {
+                    deleteCollection();
+                }
+                KeyNavigation.left: calendarsListView
+                KeyNavigation.down: cancelButton
+            }
             Button {
                 id: cancelButton
                 text: qsTr("Cancel (esc)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                KeyNavigation.up: calendarsListView
-                focus: true
                 onClicked: {
                     collectionsDialog.close()
                 }
@@ -121,24 +231,37 @@ Window {
                 Keys.onReturnPressed: {
                     collectionsDialog.close()
                 }
+                KeyNavigation.left: calendarsListView
             }
         }
+
         Keys.onEscapePressed: {
             collectionsDialog.close()
         }
+
         Shortcut {
-            sequence: "Ctrl+s"
+            sequence: "Ctrl+a"
             onActivated: {
-                saveAndClose();
+                addCollection();
+            }
+        }
+
+        Shortcut {
+            sequence: "Ctrl+e"
+            onActivated: {
+                editCollection();
+            }
+        }
+
+        Shortcut {
+            sequence: "Ctrl+d"
+            onActivated: {
+                deleteCollection();
             }
         }
     }
 
-    QtObject {
-        id: internal
-
-        property var collectionId;
-        property var originalCollectionId;
-
+    Component.onCompleted: {
+        calendarsListView.forceActiveFocus()
     }
 }
