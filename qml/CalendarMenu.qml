@@ -36,7 +36,7 @@ MenuBar {
 //        }
         MenuItem {
             id: editMenuCollections
-            text: qsTr("&Calender Collections")
+            text: qsTr("&Calender Collections (ctrl-shift-C)")
             onTriggered: {
                 dialogLoader.setSource("CollectionsDialog.qml", {"model": menuBar.model});
             }
