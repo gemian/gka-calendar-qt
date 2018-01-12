@@ -205,10 +205,10 @@ void CalendarListModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItem
 }
 
 void CalendarListModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsChanged");
+    qDebug("CLM::manageItemsChanged");
     removeItemsFromModel(itemIds);
     addItemsToModel(itemIds);
-    qDebug("modelChanged");
+    qDebug("CLM::modelChanged");
     emit modelChanged();
 }
 

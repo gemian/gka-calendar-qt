@@ -210,10 +210,11 @@ void YearGridModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> 
 }
 
 void YearGridModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsChanged");
+    qDebug("YGM::manageItemsChanged");
     removeItemsFromModel(itemIds);
+    qDebug("YGM::removed->add");
     addItemsToModel(itemIds);
-    qDebug("modelChanged");
+    qDebug("YGM::modelChanged");
     emit modelChanged();
 }
 
@@ -264,6 +265,7 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             do {
                 addEventToDate(event, startDate);
                 startDate = startDate.addDays(1);
+                qDebug() << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
             } while (startDate < endDate && startDate < endOfYear);
         }
     }

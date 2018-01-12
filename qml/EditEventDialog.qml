@@ -107,9 +107,9 @@ Window {
             setRepeatUntilButton(internal.repeatUntilIndex, false);
         }
 
-        eventDialog.startDate =new Date(e.startDateTime);
+        eventDialog.startDate = new Date(e.startDateTime);
 
-        if(e.displayLabel) {
+        if (e.displayLabel) {
             eventNameField.text = e.displayLabel;
         }
 
@@ -152,7 +152,7 @@ Window {
     }
 
     function saveEvent(event) {
-        console.log("startDateTime: "+eventDialog.startDate);
+        console.log("eD:startDateTime: "+eventDialog.startDate);
 
         if (eventDialog.startDate > eventDialog.endDate && !allDayEventCheckbox.checked) {
             console.log("End time can't be before start time");
@@ -171,9 +171,9 @@ Window {
 
             event.allDay = allDayEventCheckbox.checked;
             if (event.allDay) {
-                event.startDateTime = new Date(eventDialog.startDate).midnight()
-                event.endDateTime = new Date(eventDialog.startDate).addDays(1).midnight()
-                console.log("startDateTime: "+event.startDateTime);
+                event.startDateTime = eventDialog.startDate.midnight()
+                event.endDateTime = eventDialog.startDate.addDays(1).midnight()
+                console.log("e:startDateTime: "+event.startDateTime);
             } else {
                 event.startDateTime = eventDialog.startDate;
                 event.endDateTime = eventDialog.endDate;

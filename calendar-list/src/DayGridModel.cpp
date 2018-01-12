@@ -198,7 +198,7 @@ void DayGridModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &
 }
 
 void DayGridModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsChanged");
+    qDebug("DGM::manageItemsChanged");
     removeItemsFromModel(itemIds);
     addItemsToModel(itemIds);
     qDebug("modelChanged");
@@ -206,7 +206,7 @@ void DayGridModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId>
 }
 
 void DayGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsRemoved");
+    qDebug("DGM::manageItemsRemoved");
     removeItemsFromModel(itemIds);
     qDebug("modelChanged");
     emit modelChanged();
