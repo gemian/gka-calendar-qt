@@ -55,9 +55,11 @@ OrganizerModel {
         var collections = eventModel.collections;
         for(var i = 0 ; i < collections.length ; ++i) {
             var cal = collections[i];
-            if( cal.extendedMetaData("collection-type") === "Calendar" ) {
+            if (cal.extendedMetaData("collection-type") === "Calendar" ) {
                 //print("collectionId: "+cal.collectionId)
                 cals.push(cal);
+            } else {
+//                print("collectionId: "+cal.collectionId+", type: "+cal.extendedMetaData("collection-type")+", name: "+cal.name)
             }
         }
         cals.sort(eventModel._sortCollections)
@@ -145,6 +147,6 @@ OrganizerModel {
         if (active) {
             updateIfNecessary()
         }
-        //print ("Available Managers: " + availableManagers)
+//        console.log("Available Managers: " + availableManagers)
     }
 }

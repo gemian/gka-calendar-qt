@@ -17,8 +17,8 @@ Window {
     x: Screen.width / 2 - width / 2
     y: Screen.height / 2 - height / 2
 
-    property int padding: 4
-    property int spacing: 1
+    property int padding: app.appFontSize/2
+    property int spacing: app.appFontSize/3
 
     property var model
     property var collection
@@ -81,6 +81,7 @@ Window {
 
                 Label {
                     text: qsTr("Collection name")
+                    font.pixelSize: app.appFontSize
                 }
                 TextField {
                     id: collectionNameField
@@ -90,12 +91,14 @@ Window {
                         right: parent.right
                     }
                     placeholderText: qsTr("Collection name")
+                    font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionDescriptionField
                     KeyNavigation.right: saveButton
                 }
 
                 Label {
                     text: qsTr("Collection description")
+                    font.pixelSize: app.appFontSize
                 }
                 TextField {
                     id: collectionDescriptionField
@@ -105,12 +108,14 @@ Window {
                         right: parent.right
                     }
                     placeholderText: qsTr("Collection description")
+                    font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionColourField
                     KeyNavigation.right: saveButton
                 }
 
                 Label {
                     text: qsTr("Collection colour")
+                    font.pixelSize: app.appFontSize
                 }
                 TextField {
                     id: collectionColourField
@@ -120,11 +125,12 @@ Window {
                         right: parent.right
                     }
                     placeholderText: qsTr("Collection colour")
+                    font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionSelectedCheckbox
                     KeyNavigation.right: saveButton
                 }
 
-                CheckBox {
+                ZoomCheckBox {
                     text: qsTr("Collection selected")
                     id: collectionSelectedCheckbox
                     activeFocusOnPress: true
@@ -133,7 +139,7 @@ Window {
                     KeyNavigation.down: collectionDefaultCheckbox
                     KeyNavigation.right: saveButton
                 }
-                CheckBox {
+                ZoomCheckBox {
                     text: qsTr("Collection default")
                     id: collectionDefaultCheckbox
                     activeFocusOnPress: true
@@ -149,12 +155,13 @@ Window {
                 bottomPadding: collectionDialog.padding
                 spacing: collectionDialog.padding
 
-                Button {
+                ZoomButton {
                     id: saveButton
                     text: qsTr("Save (ctrl-s)")
                     activeFocusOnTab: true
                     activeFocusOnPress: true
                     KeyNavigation.down: cancelButton
+                    KeyNavigation.left: collectionNameField
                     onClicked: {
                         saveAndClose();
                     }
@@ -166,11 +173,12 @@ Window {
                     }
                 }
 
-                Button {
+                ZoomButton {
                     id: cancelButton
                     text: qsTr("Cancel (esc)")
                     activeFocusOnTab: true
                     activeFocusOnPress: true
+                    KeyNavigation.left: collectionNameField
                     focus: true
                     onClicked: {
                         collectionDialog.close()

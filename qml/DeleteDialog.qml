@@ -14,7 +14,7 @@ Window {
 
     property var event;
     property var model;
-    property int padding: 10;
+    property int padding: app.appFontSize/5
 
     function deleteAndClose(eventId) {
         deleteDialog.model.removeItem(eventId);
@@ -44,6 +44,7 @@ Window {
                 text: event.parentId ?
                           qsTr("Delete single event \"%1\", or all repeating events?").arg(event.displayLabel):
                           qsTr("Are you sure you want to delete the event \"%1\"?").arg(event.displayLabel);
+                font.pixelSize: app.appFontSize
                 wrapMode: Text.Wrap
             }
         }
@@ -53,7 +54,7 @@ Window {
             rightPadding: deleteDialog.padding
             spacing: deleteDialog.padding
 
-            Button {
+            ZoomButton {
                 id: deleteSeriesButton
                 text: qsTr("Delete series (ctrl-s)")
                 visible: event.parentId !== undefined
@@ -71,7 +72,7 @@ Window {
                 }
             }
 
-            Button {
+            ZoomButton {
                 id: deleteIndividualButton
                 text: event.parentId ? qsTr("Delete this (ctrl-d)") : qsTr("Delete (ctrl-d)")
                 activeFocusOnTab: true
@@ -88,7 +89,7 @@ Window {
                 }
             }
 
-            Button {
+            ZoomButton {
                 id: cancelButton
                 text: qsTr("Cancel")
                 activeFocusOnTab: true

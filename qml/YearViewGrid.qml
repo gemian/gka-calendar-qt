@@ -125,11 +125,6 @@ FocusScope {
         }
     }
 
-    Component.onCompleted: {
-        gridView.currentIndex = indexFor(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())
-        gridView.currentItem.forceActiveFocus()
-    }
-
     Component {
         id: yearGridDelegate
 
@@ -145,6 +140,7 @@ FocusScope {
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: yearGridModel.items[index]?yearGridModel.items[index].displayLabel:" "
+                font.pixelSize: app.appFontSize
 
                 MouseArea {
                     anchors.fill: parent
@@ -233,6 +229,7 @@ FocusScope {
                     leftPadding: 4
                     rightPadding: 4
                     text: index===0?" ":shortMonth(index-1)
+                    font.pixelSize: app.appFontSize
                     verticalAlignment: Text.AlignVCenter
                 }
             }
@@ -245,6 +242,7 @@ FocusScope {
             id: selectedYear
             leftPadding: 10
             text: qsTr("Year Planner ") + yearGridModel.year
+            font.pixelSize: app.appFontSize
             font.bold: true
             color: "#3498db"
         }
@@ -292,16 +290,19 @@ FocusScope {
             Label {
                 id:selectedDateLabel
                 text: " "
+                font.pixelSize: app.appFontSize
             }
             Label {
                 id:selectedItemsLabel
                 text: " "
+                font.pixelSize: app.appFontSize
             }
             Label {
                 id:selectedItemsCountLabel
+                font.pixelSize: app.appFontSize
             }
 //            Re-enable once implmented
-//            Button {
+//            ZoomButton {
 //                id:otherItemsButton
 //                visible: selectedItemsCount.text.length > 0
 //                text: qsTr("More")
@@ -312,7 +313,7 @@ FocusScope {
     Label {
         id: lastYear
         text: selectedDate.getFullYear()-1
-        font.pixelSize: selectedYear.font.pixelSize * 2
+        font.pixelSize: app.appFontSize  * 2
         font.bold: true
         color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#31363b"
         rotation: -90
@@ -324,7 +325,7 @@ FocusScope {
     Label {
         id: nextYear
         text: selectedDate.getFullYear()+1
-        font.pixelSize: selectedYear.font.pixelSize * 2
+        font.pixelSize: app.appFontSize * 2
         font.bold: true
         color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#31363b"
         rotation: 90
@@ -356,4 +357,10 @@ FocusScope {
         property int initialContentX;
         property int contentXactionOn;
     }
+
+    Component.onCompleted: {
+        gridView.currentIndex = indexFor(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())
+        gridView.currentItem.forceActiveFocus()
+    }
+
 }

@@ -546,6 +546,7 @@ Window {
                         right: parent.right
                     }
                     placeholderText: qsTr("Event name")
+                    font.pixelSize: app.appFontSize
                     KeyNavigation.down: locationField
                 }
                 TextField {
@@ -555,10 +556,11 @@ Window {
                         right: parent.right
                     }
                     placeholderText: qsTr("Location")
+                    font.pixelSize: app.appFontSize
                     KeyNavigation.down: allDayEventCheckbox
                 }
 
-                CheckBox {
+                ZoomCheckBox {
                     text: qsTr("All Day Event")
                     id: allDayEventCheckbox
                     checked: false
@@ -581,11 +583,13 @@ Window {
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Start Time:")
+                        font.pixelSize: app.appFontSize
                     }
                     TextField {
                         id: startTimeField
                         enabled: !allDayEventCheckbox.checked
                         text: eventDialog.startDate?eventDialog.startDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                        font.pixelSize: app.appFontSize
                         KeyNavigation.down: startDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
@@ -604,10 +608,12 @@ Window {
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("Start Date:")
+                        font.pixelSize: app.appFontSize
                     }
                     TextField {
                         id: startDateField
                         text: eventDialog.startDate?eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                        font.pixelSize: app.appFontSize
                         KeyNavigation.down: endTimeField
                         inputMask: localeDateInputMask
                         onFocusChanged: {
@@ -643,11 +649,13 @@ Window {
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("End Time:")
+                        font.pixelSize: app.appFontSize
                     }
                     TextField {
                         id: endTimeField
                         enabled: !allDayEventCheckbox.checked
                         text: eventDialog.endDate?eventDialog.endDate.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                        font.pixelSize: app.appFontSize
                         KeyNavigation.down: endDateField
                         inputMask: localeTimeInputMask
                         onFocusChanged: {
@@ -666,10 +674,12 @@ Window {
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
                         text: qsTr("End Date:")
+                        font.pixelSize: app.appFontSize
                     }
                     TextField {
                         id: endDateField
                         text: eventDialog.endDate?eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat):""
+                        font.pixelSize: app.appFontSize
                         KeyNavigation.down: okButton
                         inputMask: localeDateInputMask
                         onFocusChanged: {
@@ -703,7 +713,7 @@ Window {
                     spacing: eventDialog.padding*2
                     topPadding: eventDialog.padding*2
 
-                    Button {
+                    ZoomButton {
                         id: okButton
                         text: qsTr("Ok (ctrl-s)")
                         enabled: internal.collectionId !== null && model.collectionIdIsWritable(internal.collectionId)
@@ -723,7 +733,7 @@ Window {
                             eventDialog.close()
                         }
                     }
-                    Button {
+                    ZoomButton {
                         id: cancelButton
                         text: qsTr("Cancel (esc)")
                         activeFocusOnTab: true
@@ -751,9 +761,8 @@ Window {
                     id: extrasButtonRow
                     spacing: eventDialog.padding
 
-                    Button {
+                    ZoomButton {
                         id: descriptionButton
-//                        width: 94
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
@@ -769,9 +778,8 @@ Window {
                         KeyNavigation.right: reminderButton
                         KeyNavigation.down: descriptionField
                     }
-                    Button {
+                    ZoomButton {
                         id: reminderButton
-//                        width: 50
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
@@ -787,9 +795,8 @@ Window {
                         KeyNavigation.right: repeatButton
                         KeyNavigation.down: reminderListView
                     }
-                    Button {
+                    ZoomButton {
                         id: repeatButton
-//                        width: 60
                         checkable: true
                         activeFocusOnTab: true
                         activeFocusOnPress: true
@@ -804,9 +811,8 @@ Window {
                         }
                         KeyNavigation.right: calendarsButton
                     }
-                    Button {
+                    ZoomButton {
                         id: calendarsButton
-//                        width: 76
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
@@ -825,6 +831,7 @@ Window {
 
                 TextArea {
                     id: descriptionField
+                    font.pixelSize: app.appFontSize
                     wrapMode: Text.Wrap
                     visible: activeExtrasIndex == 0
                     height: dialogFocusScope.height - (extrasButtonRow.height + eventDialog.padding * 3)
@@ -846,7 +853,7 @@ Window {
                         id: tabReminderGroup
                     }
 
-                    delegate: RadioButton {
+                    delegate: ZoomRadioButton {
                         id: topButton
                         text: label
                         exclusiveGroup: tabReminderGroup
@@ -874,10 +881,9 @@ Window {
                     Row {
                         id: repeatButtonRow
                         spacing: eventDialog.padding
-                        Button {
+                        ZoomButton {
                             id: repeatOnceButton
                             text: qsTr("Once")
-                            width: 40
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -891,10 +897,9 @@ Window {
                             }
                             KeyNavigation.right: repeatDailyButton
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatDailyButton
                             text: qsTr("Daily")
-                            width: 42
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -908,10 +913,9 @@ Window {
                             }
                             KeyNavigation.right: repeatWeeklyButton
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatWeeklyButton
                             text: qsTr("Weekly")
-                            width: 54
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -926,10 +930,9 @@ Window {
                             KeyNavigation.right: repeatMonthlyButton
                             KeyNavigation.down: weeklyRepeatMon
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatMonthlyButton
                             text: qsTr("Monthly")
-                            width: 54
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -943,10 +946,9 @@ Window {
                             }
                             KeyNavigation.right: repeatYearlyButton
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatYearlyButton
                             text: qsTr("Yearly")
-                            width: 48
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -966,7 +968,7 @@ Window {
                         columns: 5
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatMon
                             text: (new Date()).weekStart(1).addDays(0).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
@@ -975,7 +977,7 @@ Window {
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSat
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatTue
                             text: (new Date()).weekStart(1).addDays(1).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
@@ -983,7 +985,7 @@ Window {
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSun
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatWed
                             text: (new Date()).weekStart(1).addDays(2).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
@@ -991,7 +993,7 @@ Window {
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSun
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatThu
                             text: (new Date()).weekStart(1).addDays(3).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
@@ -999,21 +1001,21 @@ Window {
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSun
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatFri
                             text: (new Date()).weekStart(1).addDays(4).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             KeyNavigation.up: repeatWeeklyButton
                             KeyNavigation.down: weeklyRepeatSun
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatSat
                             text: (new Date()).weekStart(1).addDays(5).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
                             activeFocusOnTab: true
                             KeyNavigation.right: weeklyRepeatSun
                         }
-                        CheckBox {
+                        ZoomCheckBox {
                             id: weeklyRepeatSun
                             text: (new Date()).weekStart(1).addDays(6).toLocaleDateString(Qt.locale(), "ddd")
                             activeFocusOnPress: true
@@ -1026,7 +1028,7 @@ Window {
                         visible: internal.repeatIndex == 3
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        Button {
+                        ZoomButton {
                             id: monthlyRepeatByDate
                             text: qsTr("By Date")
                             checkable: true
@@ -1045,10 +1047,11 @@ Window {
                         Label {
                             id: monthlyRepeatByDateLabel
                             text: startDate?startDate.getDate():""
+                            font.pixelSize: app.appFontSize
                             visible: monthlyRepeatByDate.checked
                             anchors.verticalCenter: parent.verticalCenter
                         }
-                        Button {
+                        ZoomButton {
                             id: monthlyRepeatByWeek
                             text: qsTr("By Week")
                             checkable: true
@@ -1067,10 +1070,11 @@ Window {
                         Label {
                             id: monthlyRepeatByWeekLabel
                             text: startDate?Math.ceil( startDate.getDate() / 7):""
+                            font.pixelSize: app.appFontSize
                             visible: monthlyRepeatByWeek.checked
                             anchors.verticalCenter: parent.verticalCenter
                         }
-                        Button {
+                        ZoomButton {
                             id: monthlyRepeatByWeekLast
                             text: qsTr("By Week Last")
                             checkable: true
@@ -1092,10 +1096,9 @@ Window {
                         spacing: eventDialog.padding
                         visible: internal.repeatIndex > 0
                         width: parent.width
-                        Button {
+                        ZoomButton {
                             id: repeatUntilForeverButton
                             text: qsTr("Forever")
-                            width: 60
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -1109,10 +1112,9 @@ Window {
                             }
                             KeyNavigation.right: repeatUntilCountButton
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatUntilCountButton
                             text: qsTr("Count Occurences")
-                            width: 126
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -1127,10 +1129,9 @@ Window {
                             KeyNavigation.right: repeatUntilDateButton
                             KeyNavigation.down: repeatUntilCountField
                         }
-                        Button {
+                        ZoomButton {
                             id: repeatUntilDateButton
                             text: qsTr("Until Date")
-                            width: 70
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -1155,6 +1156,7 @@ Window {
                             margins: eventDialog.spacing
                         }
                         placeholderText: qsTr("Occurences")
+                        font.pixelSize: app.appFontSize
                     }
                     TextField {
                         id: repeatUntilDateField
@@ -1165,6 +1167,7 @@ Window {
                             margins: eventDialog.spacing
                         }
                         placeholderText: qsTr("End Date")
+                        font.pixelSize: app.appFontSize
                     }
                 }
 
@@ -1190,7 +1193,7 @@ Window {
                         id: tabCalendarGroup
                     }
 
-                    delegate: RadioButton {
+                    delegate: ZoomRadioButton {
                         id: calendarButton
                         text: modelData.name
                         checked: modelData.collectionId === internal.collectionId

@@ -16,7 +16,7 @@ Window {
     property var event
     property var model
     property var collections: collectionsDialog.model.getCollections()
-    property int padding: 10
+    property int padding: app.appFontSize
 
     SystemPalette { id: sysPalette; colorGroup: SystemPalette.Active }
 
@@ -61,7 +61,7 @@ Window {
 
         Column {
             id: dialogColumn
-            width: Math.max(questionLabel.width, calendarsListView.width)
+            width: Math.max(questionLabel.width+app.appFontSize*3, calendarsListView.width)
             topPadding: collectionsDialog.padding
             bottomPadding: collectionsDialog.padding
             rightPadding: collectionsDialog.padding
@@ -74,6 +74,7 @@ Window {
                 Label {
                     id: questionLabel
                     text: qsTr("Available Calendar Collections");
+                    font.pixelSize: app.appFontSize
                     wrapMode: Text.Wrap
                 }
             }
@@ -111,7 +112,7 @@ Window {
                                 GradientStop {color: collectionItem.activeFocus ? Qt.darker(sysPalette.highlight, 1.10) :  Qt.darker(sysPalette.button, 1.03) ; position: 1}
                             }
                             color: collectionItem.pressed || collectionItem.activeFocus ? sysPalette.highlight : sysPalette.button
-                            radius: 2.5;
+                            radius: app.appFontSize/3
                             border.color: (collectionItem.activeFocus || collectionItem.hovered) ? sysPalette.highlight : "#999"
                         }
 
@@ -133,6 +134,7 @@ Window {
                             Label {
                                 id: collectionName
                                 text: modelData.name
+                                font.pixelSize: app.appFontSize
                                 color: collectionItem.activeFocus ? sysPalette.highlightedText : sysPalette.buttonText
                             }
 
@@ -165,7 +167,7 @@ Window {
             rightPadding: collectionsDialog.padding
             spacing: collectionsDialog.padding
 
-            Button {
+            ZoomButton {
                 id: addCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
@@ -183,7 +185,7 @@ Window {
                 KeyNavigation.down: editCollectionButton
             }
 
-            Button {
+            ZoomButton {
                 id: editCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
@@ -200,7 +202,7 @@ Window {
                 KeyNavigation.left: calendarsListView
                 KeyNavigation.down: deleteCollectionButton
             }
-            Button {
+            ZoomButton {
                 id: deleteCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
@@ -217,7 +219,7 @@ Window {
                 KeyNavigation.left: calendarsListView
                 KeyNavigation.down: cancelButton
             }
-            Button {
+            ZoomButton {
                 id: cancelButton
                 text: qsTr("Cancel (esc)")
                 activeFocusOnTab: true

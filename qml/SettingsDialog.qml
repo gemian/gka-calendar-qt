@@ -52,7 +52,7 @@ Window {
             rightPadding: settingsDialog.padding
             spacing: settingsDialog.padding
 
-            Button {
+            ZoomButton {
                 id: okButton
                 text: qsTr("OK (ctrl-s)")
                 activeFocusOnTab: true
@@ -70,7 +70,7 @@ Window {
                 }
             }
 
-            Button {
+            ZoomButton {
                 id: cancelButton
                 text: qsTr("Cancel (esc)")
                 activeFocusOnTab: true

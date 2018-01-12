@@ -74,10 +74,10 @@ FocusScope {
         GridView {
             id: gridView
             anchors.fill: parent
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
+            anchors.leftMargin: app.appFontSize/2
+            anchors.rightMargin: app.appFontSize/2
+            anchors.topMargin: app.appFontSize/2
+            anchors.bottomMargin: app.appFontSize/2
 
             delegate: DayViewItem {
             }
@@ -117,7 +117,7 @@ FocusScope {
     Label {
         id: previousDay
         text: selectedDate.addDays(-1).toLocaleDateString(Qt.locale(), Locale.ShortFormat);
-        font.pixelSize: defaultLabel.font.pixelSize * 2
+        font.pixelSize: app.appFontSize * 2
         font.bold: true
         color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#31363b"
         rotation: -90
@@ -129,7 +129,7 @@ FocusScope {
     Label {
         id: nextDay
         text: selectedDate.addDays(1).toLocaleDateString(Qt.locale(), Locale.ShortFormat);
-        font.pixelSize: defaultLabel.font.pixelSize * 2
+        font.pixelSize: app.appFontSize * 2
         font.bold: true
         color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#31363b"
         rotation: 90

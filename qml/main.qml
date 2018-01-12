@@ -13,6 +13,7 @@ ApplicationWindow {
 
     property var selectedDate: new Date()
     property bool showLunarCalendar
+    property real appFontSize
 
     //Fullscreen on device
     height: {
@@ -34,12 +35,20 @@ ApplicationWindow {
     Settings {
         id: settings
         property bool showLunarCalendar
+        property real appFontSize
     }
 
     Binding {
         target: app
         property: "showLunarCalendar"
         value: settings.showLunarCalendar
+        when: settings
+    }
+
+    Binding {
+        target: app
+        property: "appFontSize"
+        value: settings.appFontSize
         when: settings
     }
 
@@ -136,6 +145,26 @@ ApplicationWindow {
         onActivated: alternateViewLoader.source = "YearViewGrid.qml"
     }
 
+    Shortcut {
+        sequence: "Ctrl+Shift+m"
+        onActivated: {
+            console.log (">appFontSize: " + app.appFontSize)
+            if (settings.appFontSize > 8) {
+                settings.appFontSize -= 1
+            }
+            console.log ("<appFontSize: " + app.appFontSize)
+        }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+m"
+        onActivated: {
+            console.log (">appFontSize: " + app.appFontSize)
+            settings.appFontSize += 1
+            console.log ("<appFontSize: " + app.appFontSize)
+        }
+    }
+
     FocusScope {
         id: mainView
         anchors.fill: parent
@@ -199,7 +228,20 @@ ApplicationWindow {
         }
     }
 
+    Label {
+        id: defaultLabel
+        visible: false
+    }
+
     Component.onCompleted: {
+        print("app.showLunarCalendar: "+app.showLunarCalendar);
+        print("settings.showLunarCalendar: "+settings.showLunarCalendar);
+        print("app.appFontSize: "+app.appFontSize);
+        print("settings.appFontSize: "+settings.appFontSize);
+        if (app.appFontSize == 0) {
+            app.appFontSize = defaultLabel.font.pixelSize;
+        }
+
         print("Screen.pixelDensity: "+Screen.pixelDensity);
         print("Screen.devicePixelRatio: "+Screen.devicePixelRatio);
         print("Screen.virtualX: "+Screen.virtualX);

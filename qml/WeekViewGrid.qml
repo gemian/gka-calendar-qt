@@ -63,10 +63,10 @@ FocusScope {
         GridView {
             id: gridView
             anchors.fill: parent
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
+            anchors.leftMargin: app.appFontSize/2
+            anchors.rightMargin: app.appFontSize/2
+            anchors.topMargin: app.appFontSize/2
+            anchors.bottomMargin: app.appFontSize/2
 
             cellWidth: gridView.width>gridView.height?gridView.width/2:gridView.width
             cellHeight: gridView.width>gridView.height?gridView.height/4:gridView.height/8
@@ -100,14 +100,9 @@ FocusScope {
         }
 
         Label {
-            id: defaultLabel
-            visible: false
-        }
-
-        Label {
             id: lastWeek
             text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
-            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.pixelSize: app.appFontSize * 3
             font.bold: true
             color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#bdc3c7"
             rotation: -90
@@ -119,7 +114,7 @@ FocusScope {
         Label {
             id: nextWeek
             text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
-            font.pixelSize: defaultLabel.font.pixelSize * 2
+            font.pixelSize: app.appFontSize * 3
             font.bold: true
             color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#bdc3c7"
             rotation: 90

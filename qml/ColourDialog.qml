@@ -95,7 +95,7 @@ Window {
             bottomPadding: colourDialog.padding
             spacing: colourDialog.padding
 
-            Button {
+            ZoomButton {
                 id: saveButton
                 text: qsTr("Save (ctrl-s)")
                 activeFocusOnTab: true
@@ -113,7 +113,7 @@ Window {
                 }
             }
 
-            Button {
+            ZoomButton {
                 id: cancelButton
                 text: qsTr("Cancel")
                 activeFocusOnTab: true

@@ -55,14 +55,14 @@ FocusScope {
 
         Row {
             id: dayItemRow
-            leftPadding: 5
-            spacing: 5
+            leftPadding: app.appFontSize/2
+            spacing: app.appFontSize/2
 
             Label {
                 id: selectedDay
                 visible: index == 0
                 text: selectedDate.toLocaleDateString(Qt.locale(), Locale.LongFormat);
-                font.pixelSize: dayItemLabel.font.pixelSize * 2
+                font.pixelSize: app.appFontSize * 2
                 font.bold: true
             }
 
@@ -71,7 +71,7 @@ FocusScope {
                 visible: index >= 1
                 width: Math.max(timeLabelStart.width,20)//units.gu(1)
                 height: timeLabelStart.height
-                radius: 2
+                radius: app.appFontSize/10
                 activeFocusOnTab: true
                 focus: index === hourSelectedIndex
 
@@ -82,6 +82,7 @@ FocusScope {
                 Text {
                     id: timeLabelStart
                     color: calendarIndicator.activeFocus ? "white" : "black"
+                    font.pixelSize: app.appFontSize
                     text: dayGridModel.items[index]?dayGridModel.items[index].time.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
                 }
             }
@@ -91,6 +92,7 @@ FocusScope {
                 visible: index >= 1
                 width: dayRectangle.width - calendarIndicator.width - 10
                 wrapMode: Text.Wrap
+                font.pixelSize: app.appFontSize
                 text: dayGridModel.items[index]?dayGridModel.items[index].displayLabel:""
             }
         }
