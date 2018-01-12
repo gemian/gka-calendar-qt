@@ -60,6 +60,25 @@ MenuBar {
         title: qsTr("&View")
         id: viewMenu
         MenuItem {
+            id: viewMenuZoomIn
+            text: qsTr("Zoom &In (ctrl-m)")
+            onTriggered: {
+                settings.appFontSize += 1
+            }
+        }
+        MenuItem {
+            id: viewMenuZoomOut
+            text: qsTr("Zoom &Out (ctrl-shift-M)")
+            onTriggered: {
+                if (settings.appFontSize > 8) {
+                    settings.appFontSize -= 1
+                }
+            }
+        }
+        MenuSeparator {
+
+        }
+        MenuItem {
             id: viewMenuDay
             text: qsTr("&Day (ctrl-shift-D)")
             onTriggered: {

@@ -28,7 +28,7 @@ Window {
         bottomPadding: settingsDialog.padding
         spacing: settingsDialog.padding
 
-        RadioButton {
+        ZoomRadioButton {
             id: showLunarCalendar
             text: qsTr("Show Lunar Calendar");
             activeFocusOnPress: true
