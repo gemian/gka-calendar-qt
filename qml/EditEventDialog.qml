@@ -482,6 +482,28 @@ Window {
         return dateTime;
     }
 
+    function monthlyRepeatByWeekText(startDate) {
+        var out = startDate.toLocaleDateString(Qt.locale(), 'dddd');
+        switch(Math.ceil(startDate.getDate() / 7)) {
+        case 1:
+            out = qsTr("First %1").arg(out);
+            break;
+        case 2:
+            out = qsTr("Second %1").arg(out);
+            break;
+        case 3:
+            out = qsTr("Third %1").arg(out);
+            break;
+        case 4:
+            out = qsTr("Fourth %1").arg(out);
+            break;
+        case 5:
+            out = qsTr("Fifth %1").arg(out);
+            break;
+        }
+        return out;
+    }
+
     Component.onCompleted: {
         if (eventObject === undefined) {
             console.log("Attempted to edit an undefined event");
@@ -1069,7 +1091,7 @@ Window {
                         }
                         Label {
                             id: monthlyRepeatByWeekLabel
-                            text: startDate?Math.ceil( startDate.getDate() / 7):""
+                            text: startDate?monthlyRepeatByWeekText(startDate):""
                             font.pixelSize: app.appFontSize
                             visible: monthlyRepeatByWeek.checked
                             anchors.verticalCenter: parent.verticalCenter
