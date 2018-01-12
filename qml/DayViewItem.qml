@@ -7,8 +7,8 @@ import "lunar.js" as Lunar
 
 FocusScope {
     id: dayItem
-    width: gridView.cellWidth-2
-    height: gridView.cellHeight-2
+    width: Math.floor(gridView.cellWidth-app.appFontSize/6)
+    height: Math.floor(gridView.cellHeight-app.appFontSize/6)
 
     MouseArea {
         anchors.fill: parent
@@ -53,6 +53,16 @@ FocusScope {
         color: index===0?"#3498db":"#edeeef"
         opacity: 0.9
 
+        Text {
+            id: todayText
+            anchors.fill: parent
+            visible: index == 0 && selectedDate.isSameDay(new Date())
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignBottom
+            font.pointSize: app.appFontSize;
+            text: qsTr("Today");
+        }
+
         Row {
             id: dayItemRow
             leftPadding: app.appFontSize/2
@@ -69,18 +79,19 @@ FocusScope {
             Rectangle {
                 id: calendarIndicator
                 visible: index >= 1
-                width: Math.max(timeLabelStart.width,20)//units.gu(1)
-                height: timeLabelStart.height
-                radius: app.appFontSize/10
+                width: Math.max(timeLabelStart.width+app.appFontSize/5,app.appFontSize*2)
+                height: timeLabelStart.height+app.appFontSize/5
+                radius: app.appFontSize/5
                 activeFocusOnTab: true
                 focus: index === hourSelectedIndex
 
-                color: activeFocus ? "black" : "transparent"
-                //color: model.item.collectionId ? organizerModel.collection(model.item.collectionId).color : (activeFocus ? "black" : "grey")
+                border.color: activeFocus ? "black" : "transparent"
+                color: dayGridModel.items[index] && dayGridModel.items[index].collectionId ? organizerModel.collection(dayGridModel.items[index].collectionId).color : (activeFocus ? "black" : "transparent")
 
                 // start time event Label
                 Text {
                     id: timeLabelStart
+                    anchors.centerIn: calendarIndicator
                     color: calendarIndicator.activeFocus ? "white" : "black"
                     font.pixelSize: app.appFontSize
                     text: dayGridModel.items[index]?dayGridModel.items[index].time.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""

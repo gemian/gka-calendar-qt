@@ -52,22 +52,22 @@ FocusScope {
 
         Text {
             anchors.fill: parent
-            leftPadding: app.appFontSize/5
+            anchors.leftMargin: app.appFontSize/2
             text: if (weekStartDate.getMonth() === weekEndDate.getMonth()) {
                       weekStartDate.toLocaleDateString(Qt.locale(), "MMMM yyyy");
                   } else {
                       weekStartDate.toLocaleDateString(Qt.locale(), "MMM") + " - " + weekEndDate.toLocaleDateString(Qt.locale(), "MMM yyyy");
                   }
-            fontSizeMode: Text.Fit;
-            minimumPointSize: 10;
-            font.pointSize: app.appFontSize * 3;
+            fontSizeMode: Text.Fit
+            minimumPixelSize: 10
+            font.pixelSize: app.appFontSize * 3
         }
         Text {
             anchors.fill: parent
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
             padding: app.appFontSize/5
-            font.pointSize: app.appFontSize;
+            font.pixelSize: app.appFontSize;
             text: qsTr("Week %1").arg(weekStartDate.weekNumber(1));
         }
         Text {
@@ -75,7 +75,7 @@ FocusScope {
             horizontalAlignment: Text.AlignLeft
             verticalAlignment: Text.AlignBottom
             padding: app.appFontSize/5
-            font.pointSize: app.appFontSize;
+            font.pixelSize: app.appFontSize;
             //text: "dSI: " + daySelectedIndex + ", dCSI: " + dayChildSelectedIndex + ", cC: " + childrenCompleted + ", hRw: " + headerRectangle.width + ", GVvcW: " + gridView.cellWidth
         }
     }
@@ -107,7 +107,7 @@ FocusScope {
                 verticalAlignment: Text.AlignVCenter
                 horizontalAlignment: Text.AlignHCenter
                 font.bold: true
-                font.pointSize: app.appFontSize;
+                font.pixelSize: app.appFontSize;
                 text: app.showLunarCalendar ? ("%1 %2 %3").arg(lunarDate.IDayCn).arg(lunarDate.gzDay).arg(lunarDate.isTerm ? lunarDate.Term : "")
                                                           : (visible ? itemDate.toLocaleDateString(Qt.locale(), "ddd dd") : "")
                 color: (itemDate !== undefined) && (itemDate.toLocaleDateString() === new Date().toLocaleDateString()) ? "#3daee9" : "#31363b"
@@ -199,7 +199,7 @@ FocusScope {
 
                 delegate: FocusScope {
                     width: ListView.view.width
-                    height: dayItemLabel.height
+                    height: calendarIndicator.height
                     x: childrenRect.x
                     y: childrenRect.y
                     id: detailsListitem
@@ -217,20 +217,21 @@ FocusScope {
                     Rectangle {
                         id: calendarIndicator
                         anchors.verticalCenter: parent.verticalCenter
-                        width: Math.max(timeLabelStart.width,20)//units.gu(1)
-                        height: timeLabelStart.height
+                        width: Math.max(timeLabelStart.width+app.appFontSize/5,+app.appFontSize*2)
+                        height: timeLabelStart.height+app.appFontSize/5
                         radius: 2
                         activeFocusOnTab: true
                         focus: !showHeader && (gridViewIndex === daySelectedIndex) && (dayChildSelectedIndex === index)
 
-                        color: activeFocus ? "black" : "transparent"
-                        //color: model.item.collectionId ? organizerModel.collection(model.item.collectionId).color : (activeFocus ? "black" : "grey")
+                        border.color: activeFocus ? "black" : "transparent"
+                        color: model.item && model.item.collectionId ? organizerModel.collection(model.item.collectionId).color : (activeFocus ? "black" : "transparent")
 
                         // start time event Label
                         Text {
                             id: timeLabelStart
+                            anchors.centerIn: calendarIndicator
                             color: calendarIndicator.activeFocus ? "white" : "black"
-                            font.pointSize: app.appFontSize;
+                            font.pixelSize: app.appFontSize;
                             text: model.item.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                         }
                     }
@@ -244,7 +245,7 @@ FocusScope {
                         width: parent.width - calendarIndicator.width
                         wrapMode: Text.Wrap
                         text: model.item.displayLabel
-                        font.pointSize: app.appFontSize;
+                        font.pixelSize: app.appFontSize;
                     }
 
                     MouseArea {
@@ -293,7 +294,7 @@ FocusScope {
                     Text {
                         id: noItemLabel
                         text: " "
-                        font.pointSize: app.appFontSize;
+                        font.pixelSize: app.appFontSize;
                     }
                 }
 

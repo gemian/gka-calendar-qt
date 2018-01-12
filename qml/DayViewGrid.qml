@@ -20,9 +20,7 @@ FocusScope {
         }
 
         onItemsLoaded: {
-            var gVHeight = mainView.height - 10
-            internal.dayGridCellHeight = Math.floor(gVHeight/Math.round(itemCount/2))
-            print("DayGridModel.onItemsLoaded gvh: "+gVHeight+", ic: "+itemCount+", ch: "+internal.dayGridCellHeight)
+            setupGridSize();
             gridView.currentIndex = hourSelectedIndex
             if (gridView.currentItem) {
                 gridView.currentItem.forceActiveFocus()
@@ -61,23 +59,35 @@ FocusScope {
         return colour;
     }
 
+    function setupGridSize() {
+        var gVHeight = mainView.height - app.appFontSize
+        internal.dayGridCellHeight = Math.floor(gVHeight/Math.round(dayGridModel.itemCount/2))
+        print("setupGridSize gvh: "+gVHeight+", ic: "+dayGridModel.itemCount+", ch: "+internal.dayGridCellHeight + ", aFS: " + app.appFontSize)
+    }
+
     Component.onCompleted: {
     }
 
     Rectangle {
         width: mainView.width
         height: mainView.height
+
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#193441" }
             GradientStop { position: 1.0; color: Qt.darker("#193441") }
         }
+
+        onHeightChanged: {
+            setupGridSize();
+        }
+
         GridView {
             id: gridView
             anchors.fill: parent
-            anchors.leftMargin: app.appFontSize/2
-            anchors.rightMargin: app.appFontSize/2
-            anchors.topMargin: app.appFontSize/2
-            anchors.bottomMargin: app.appFontSize/2
+            anchors.leftMargin: Math.floor(app.appFontSize/2)
+            anchors.rightMargin: Math.floor(app.appFontSize/2)
+            anchors.topMargin: Math.floor(app.appFontSize/2)
+            anchors.bottomMargin: Math.floor(app.appFontSize/2)
 
             delegate: DayViewItem {
             }
@@ -85,7 +95,6 @@ FocusScope {
             model: dayGridModel
             cellWidth: gridView.width>gridView.height?Math.floor(gridView.width/(2)):gridView.width
             cellHeight: gridView.width>gridView.height?internal.dayGridCellHeight:internal.dayGridCellHeight/2
-
 
             flow: GridView.FlowTopToBottom
 
