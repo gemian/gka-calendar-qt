@@ -59,7 +59,7 @@ FocusScope {
             visible: index == 0 && selectedDate.isSameDay(new Date())
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
-            font.pointSize: app.appFontSize;
+            font.pointSize: app.appFontSize * 0.8;
             text: qsTr("Today");
         }
 
@@ -72,7 +72,7 @@ FocusScope {
                 id: selectedDay
                 visible: index == 0
                 text: selectedDate.toLocaleDateString(Qt.locale(), Locale.LongFormat);
-                font.pixelSize: app.appFontSize * 2
+                font.pixelSize: app.appFontSize * 1.8
                 font.bold: true
             }
 
