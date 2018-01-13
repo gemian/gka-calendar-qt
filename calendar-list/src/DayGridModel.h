@@ -20,7 +20,7 @@ class Q_DECL_EXPORT DayGridModel : public QAbstractListModel {
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
 
 public:
-    explicit DayGridModel(QObject *parent = nullptr);
+    explicit DayGridModel(QObject *parent = nullptr, QString prefManager="eds");
     ~DayGridModel() override;
 
     void setDate(QDateTime date);

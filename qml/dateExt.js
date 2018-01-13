@@ -47,20 +47,30 @@ Date.weeksInMonth = function(year, month, weekday) {
     return n
 }
 
+Date.prototype.midnightUTC = function() {
+    var date = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate(), 0, 0, 0, 0));
+    return date;
+}
+
+Date.prototype.endOfDayUTC = function() {
+    var date = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate(), 23, 59, 59, 0));
+    return date;
+}
+
 Date.prototype.midnight = function() {
-    var date = new Date(this)
+    var date = new Date(this);
     date.setHours(0,0,0,0);
-    return date
+    return date;
 }
 
 Date.prototype.endOfDay = function() {
-    var date = new Date(this)
+    var date = new Date(this);
     date.setHours(23,59,59,0);
-    return date
+    return date;
 }
 
 Date.prototype.addDays = function(days) {
-    var date = new Date(this)
+    var date = new Date(this);
     if (days === 0)
         return date
 

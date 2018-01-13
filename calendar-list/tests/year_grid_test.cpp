@@ -48,7 +48,7 @@ TEST_CASE("YearGridSetYearTest") {
     //prevent hanging if QMenu.exec() got called
     smersh().KillAppAfterTimeout(300);
 
-    auto *yearGridModel = new YearGridModel();
+    auto *yearGridModel = new YearGridModel(nullptr, "memory");
     yearGridModel->setCurrentDate(QDateTime(QDate(2017,6,14),QTime()));
     yearGridModel->setYear(2017);
 
@@ -99,7 +99,7 @@ TEST_CASE("YearGridAddEventTest") {
     //prevent hanging if QMenu.exec() got called
     smersh().KillAppAfterTimeout(300);
 
-    auto *yearGridModel = new YearGridModel();
+    auto *yearGridModel = new YearGridModel(nullptr, "memory");
     const QDate &date = QDate(2017, 6, 14);
     yearGridModel->setCurrentDate(QDateTime(date,QTime()));
     yearGridModel->setYear(2017);

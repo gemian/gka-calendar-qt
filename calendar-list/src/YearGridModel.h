@@ -24,7 +24,7 @@ class Q_DECL_EXPORT YearGridModel : public QAbstractListModel {
     Q_PROPERTY(int itemCount READ itemCount NOTIFY modelChanged)
 
 public:
-    explicit YearGridModel(QObject *parent = 0);
+    explicit YearGridModel(QObject *parent = 0, QString prefManager="eds");
     ~YearGridModel() override;
 
     int year() const;

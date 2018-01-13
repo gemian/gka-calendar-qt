@@ -15,7 +15,7 @@ FocusScope {
     property bool showHeader: true
     property bool dateOnLeft: true
     property int gridViewIndex: index
-    property var itemDate: new Date()
+    property var itemDate
     property var lunarDate: (itemDate !== undefined) ? Lunar.calendar.solar2lunar(itemDate.getFullYear(), itemDate.getMonth() + 1, itemDate.getDate()) : null
 
     MouseArea {

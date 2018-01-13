@@ -171,8 +171,8 @@ Window {
 
             event.allDay = allDayEventCheckbox.checked;
             if (event.allDay) {
-                event.startDateTime = eventDialog.startDate.midnight()
-                event.endDateTime = eventDialog.startDate.addDays(1).midnight()
+                event.startDateTime = eventDialog.startDate.midnightUTC();
+                event.endDateTime = eventDialog.endDate.addDay(1).midnightUTC();
                 console.log("e:startDateTime: "+event.startDateTime);
             } else {
                 event.startDateTime = eventDialog.startDate;

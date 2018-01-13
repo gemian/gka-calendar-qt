@@ -1,10 +1,10 @@
 #include "DayGridModel.h"
 
-DayGridModel::DayGridModel(QObject *parent) : QAbstractListModel(parent) {
+DayGridModel::DayGridModel(QObject *parent, QString prefManager) : QAbstractListModel(parent) {
     QString manager = "memory";
     QStringList possibles = QtOrganizer::QOrganizerManager::availableManagers();
-    if (possibles.contains("eds")) {
-        manager = "eds";
+    if (possibles.contains(prefManager)) {
+        manager = prefManager;
     }
     QtOrganizer::QOrganizerManager *newManager = new QtOrganizer::QOrganizerManager(manager);
     if (newManager->error()) {
@@ -48,13 +48,15 @@ void DayGridModel::setDate(QDateTime date) {
     for (int s = 0; s < DAY_TIME_SLOTS; s++) {
         auto time = QTime(DAY_TIME_SLOTS_START + s, 0);
         auto item = new DayItem();
-        QDateTime dateTime = QDateTime(_date.date(),time);
+        QDateTime dateTime = QDateTime(_date.date(),time,QTimeZone(QTimeZone::systemTimeZoneId()));
         item->setTime(dateTime);
         _gridCells.push_back(item);
     }
 
-    QDateTime startDateTime(date.date(), QTime(0, 0, 0, 0));
-    QDateTime endDateTime(date.date(), QTime(23, 59, 59, 0));
+    QDateTime startDateTime(date.date(), QTime(0, 0, 0, 0), QTimeZone(QTimeZone::systemTimeZoneId()));
+    QDateTime endDateTime(date.date(), QTime(23, 59, 59, 0), QTimeZone(QTimeZone::systemTimeZoneId()));
+
+//    qDebug() << "sDT" << startDateTime << "eDT" << endDateTime;
 
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
 
@@ -90,9 +92,18 @@ struct TimeSameHour: public std::binary_function<DayItem*, QDateTime, bool> {
 void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
     for (const auto &item : items) {
         auto itemEventTime = item.detail(QtOrganizer::QOrganizerItemDetail::TypeEventTime);
-        auto itemTimeV = itemEventTime.value(QtOrganizer::QOrganizerEventTime::FieldStartDateTime);
-        if (itemTimeV.isValid()) {
-            auto itemTime = itemTimeV.toDateTime();
+        auto itemTimeStart = itemEventTime.value(QtOrganizer::QOrganizerEventTime::FieldStartDateTime);
+        if (itemTimeStart.isValid()) {
+            auto itemTimeEnd = itemEventTime.value(QtOrganizer::QOrganizerEventTime::FieldEndDateTime);
+            if (itemTimeEnd.isValid()) {
+//                qDebug() << "DayGridModel::addItemsToGrid S" << _date.daysTo(itemTimeStart.toDateTime());
+//                qDebug() << "DayGridModel::addItemsToGrid E" << _date.daysTo(itemTimeEnd.toDateTime());
+                if (_date.daysTo(itemTimeStart.toDateTime()) < 0 && _date.daysTo(itemTimeEnd.toDateTime()) <= 0) {
+                    continue;
+                }
+            }
+
+            auto itemTime = itemTimeStart.toDateTime();
             auto dayItem = new DayItem();
             dayItem->setTime(itemTime);
             dayItem->setDisplayLabel(item.displayLabel());
@@ -186,44 +197,44 @@ DayItem *DayGridModel::item_at(QQmlListProperty<DayItem> *p, int idx)
 
 void DayGridModel::manageDataChanged() {
     //this one means big changes clear and rebuild data
-    qDebug("manageDataChanged");
+//    qDebug("manageDataChanged");
     setDate(_date);
 }
 
 void DayGridModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsAdded");
+//    qDebug("manageItemsAdded");
     addItemsToModel(itemIds);
-    qDebug("modelChanged");
+//    qDebug("modelChanged");
     emit modelChanged();
 }
 
 void DayGridModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("DGM::manageItemsChanged");
+//    qDebug("DGM::manageItemsChanged");
     removeItemsFromModel(itemIds);
     addItemsToModel(itemIds);
-    qDebug("modelChanged");
+//    qDebug("modelChanged");
     emit modelChanged();
 }
 
 void DayGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("DGM::manageItemsRemoved");
+//    qDebug("DGM::manageItemsRemoved");
     removeItemsFromModel(itemIds);
-    qDebug("modelChanged");
+//    qDebug("modelChanged");
     emit modelChanged();
 }
 
 void DayGridModel::manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setDate(date());
 }
 
 void DayGridModel::manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setDate(date());
 }
 
 void DayGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setDate(date());
 }
 
@@ -255,6 +266,6 @@ void DayGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemI
 
 void DayGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(itemIds);
-    qWarning() << "addItemsToModel" << items;
+//    qWarning() << "addItemsToModel" << items;
     addItemsToGrid(items);
 }

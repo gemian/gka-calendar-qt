@@ -113,10 +113,14 @@ YearEvent* YearDay::item_at(QQmlListProperty<YearEvent> *p, int idx) {
 }
 
 void YearDay::removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list) {
-    for (auto it = _events.begin(); it != _events.end(); it++) {
-        if (list.contains((*it)->itemId())) {
-            _events.erase(it);
+//    qDebug() << "YearDay::removeEventsFromModel" << list;
+    for (auto it = _events.begin(); it != _events.end(); ) {
+//        qDebug() << "it:" << *it;
+        if (*it && list.contains((*it)->itemId())) {
+            it = _events.erase(it);
             delete *it;
+        } else {
+            it++;
         }
     }
 }

@@ -1,11 +1,11 @@
 #include "YearGridModel.h"
 
-YearGridModel::YearGridModel(QObject *parent) : QAbstractListModel(parent) {
+YearGridModel::YearGridModel(QObject *parent, QString prefManager) : QAbstractListModel(parent) {
 
     QString manager = "memory";
     QStringList possibles = QtOrganizer::QOrganizerManager::availableManagers();
-    if (possibles.contains("eds")) {
-        manager = "eds";
+    if (possibles.contains(prefManager)) {
+        manager = prefManager;
     }
     QtOrganizer::QOrganizerManager *newManager = new QtOrganizer::QOrganizerManager(manager);
     if (newManager->error()) {
@@ -142,12 +142,8 @@ void YearGridModel::setYear(const int year) {
             }
         }
 
-        QDate yearBegin(year, 1, 1);
-        QDate yearEnd(year, 12, 31);
-        QDateTime startDateTime = QDateTime();
-        startDateTime.setDate(yearBegin);
-        QDateTime endDateTime = QDateTime();
-        endDateTime.setDate(yearEnd);
+        QDateTime startDateTime(QDate(year, 1, 1), QTime(0, 0, 0, 0), QTimeZone(QTimeZone::systemTimeZoneId()));
+        QDateTime endDateTime(QDate(year, 12, 31), QTime(23, 59, 59, 0), QTimeZone(QTimeZone::systemTimeZoneId()));
 
         QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
         addItemsToGrid(items);
@@ -198,45 +194,45 @@ YearDay* YearGridModel::item_at(QQmlListProperty<YearDay> *p, int idx)
 
 void YearGridModel::manageDataChanged() {
     //this one means big changes clear and rebuild data
-    qDebug("manageDataChanged");
+//    qDebug("manageDataChanged");
     setYear(year());
 }
 
 void YearGridModel::manageItemsAdded(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsAdded");
+//    qDebug("manageItemsAdded");
     addItemsToModel(itemIds);
-    qDebug("modelChanged");
+//    qDebug("modelChanged");
     emit modelChanged();
 }
 
 void YearGridModel::manageItemsChanged(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("YGM::manageItemsChanged");
+//    qDebug("YGM::manageItemsChanged");
     removeItemsFromModel(itemIds);
-    qDebug("YGM::removed->add");
+//    qDebug("YGM::removed->add");
     addItemsToModel(itemIds);
-    qDebug("YGM::modelChanged");
+//    qDebug("YGM::modelChanged");
     emit modelChanged();
 }
 
 void YearGridModel::manageItemsRemoved(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    qDebug("manageItemsRemoved");
+//    qDebug("manageItemsRemoved");
     removeItemsFromModel(itemIds);
-    qDebug("modelChanged");
+//    qDebug("modelChanged");
     emit modelChanged();
 }
 
 void YearGridModel::manageCollectionsAdded(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setYear(year());
 }
 
 void YearGridModel::manageCollectionsChanged(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setYear(year());
 }
 
 void YearGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerCollectionId> &itemIds) {
-    qDebug("manageCollectionsAdded");
+//    qDebug("manageCollectionsAdded");
     setYear(year());
 }
 
@@ -264,9 +260,11 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             event->setCollectionId(item.collectionId().toString());
             do {
                 addEventToDate(event, startDate);
+//                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
                 startDate = startDate.addDays(1);
-                qDebug() << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
             } while (startDate < endDate && startDate < endOfYear);
+        } else {
+//            qDebug() << "ET: " << eventTime << ", I: " << item;
         }
     }
 }
@@ -279,7 +277,7 @@ void YearGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItem
 
 void YearGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(itemIds);
-    qWarning() << "addItemsToModel" << items;
+//    qWarning() << "addItemsToModel" << items;
     addItemsToGrid(items);
 }
 
