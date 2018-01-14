@@ -843,6 +843,11 @@ Window {
                     visible: activeExtrasIndex == 0
                     height: dialogFocusScope.height - (extrasButtonRow.height + eventDialog.padding * 3)
                     width: parent.width
+                    onFocusChanged: {
+                        if (!activeFocus) {
+                            cursorPosition = 0
+                        }
+                    }
                 }
 
                 ListView {
