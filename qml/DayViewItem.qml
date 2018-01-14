@@ -10,6 +10,8 @@ FocusScope {
     width: Math.floor(gridView.cellWidth-app.appFontSize/6)
     height: Math.floor(gridView.cellHeight-app.appFontSize/6)
 
+    property var oModel
+
     MouseArea {
         anchors.fill: parent
         onPressed: {
@@ -17,11 +19,18 @@ FocusScope {
         }
 
         onReleased: {
-            console.log("itemclickdvd i:" + index)
+            console.log("dayItemRel i:" + index)
             var diff = parent.width/10
             if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
                 if (hourSelectedIndex === index) {
-                    dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[index].itemId, "model":organizerModel});
+                    if (dayGridModel.items[index].itemId.length === 0) {
+                        var dateTime = selectedDate
+                        dateTime.setHours(dayGridModel.items[index].time.getHours())
+                        dateTime.setMinutes(dayGridModel.items[index].time.getMinutes())
+                        dialogLoader.setSource("EditEventDialog.qml", {"startDate":dateTime, "model":organizerModel});
+                    } else {
+                        dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[index].itemId, "model":organizerModel});
+                    }
                 }
                 hourSelectedIndex = index
                 gridView.currentIndex = index
@@ -31,7 +40,7 @@ FocusScope {
     }
 
     onFocusChanged: {
-        console.log("detailsListitem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index+", time:"+dayGridModel.items[index].time)
+        console.log("dayItem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index+", time:"+dayGridModel.items[index].time)
         if (activeFocus) {
             if (!dayGridModel.items[index].time.isValid()) {
                 if (index < 8) {

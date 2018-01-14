@@ -90,6 +90,7 @@ FocusScope {
             anchors.bottomMargin: Math.floor(app.appFontSize/2)
 
             delegate: DayViewItem {
+                oModel: organizerModel
             }
             visible: true
             model: dayGridModel
@@ -99,11 +100,9 @@ FocusScope {
             flow: GridView.FlowTopToBottom
 
             Component.onCompleted: {
-                console.log("gridViewCompelted")
                 internal.initialContentX = contentX
                 internal.contentXactionOn = gridView.width/10
                 gridView.forceActiveFocus();
-
             }
             Keys.onPressed: {
                 console.log("[DGV]key:"+event.key)

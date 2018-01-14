@@ -34,6 +34,7 @@ Window {
 
     function addEvent() {
         internal.collectionId = model.getDefaultCollection().collectionId;
+        internal.originalCollectionId = "";
         console.log("Add Event Setting default collection:"+internal.collectionId);
     }
 
@@ -504,30 +505,6 @@ Window {
         return out;
     }
 
-    Component.onCompleted: {
-        if (eventObject === undefined) {
-            console.log("Attempted to edit an undefined event");
-            return;
-        } else if (eventId != null) {
-            internal.fetchParentRequestId = model.fetchItems([eventId]);
-        } else if (eventObject === null) {
-            addEvent();
-            if (!eventDialog.endDate) {
-                eventDialog.endDate = eventDialog.startDate;
-            }
-            if (allDay) {
-                allDayEventCheckbox.checked = true;
-            }
-        } else if ((eventObject.itemType === Type.EventOccurrence) || (eventObject.itemType === Type.TodoOccurrence)) {
-            internal.fetchParentRequestId = model.fetchItems([eventObject.parentId]);
-        } else {
-            editEvent(eventObject);
-        }
-        eventNameField.forceActiveFocus();
-        descriptionButton.checked = true;
-        dialogFocusScope.visible = true;
-    }
-
     Connections{
         target: model
         onItemsFetched: {
@@ -738,7 +715,7 @@ Window {
                     ZoomButton {
                         id: okButton
                         text: qsTr("Ok (ctrl-s)")
-                        enabled: internal.collectionId !== null && model.collectionIdIsWritable(internal.collectionId)
+                        enabled: internal.collectionId !== null && model && model.collectionIdIsWritable(internal.collectionId)
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         KeyNavigation.right: cancelButton
@@ -1199,7 +1176,7 @@ Window {
                     visible: activeExtrasIndex == 3
                     width: parent.width
                     height: dialogFocusScope.height - (extrasButtonRow.height + eventDialog.padding * 3)
-                    model: eventDialog.model.getWritableAndSelectedCollections()
+                    model: eventDialog.model?eventDialog.model.getWritableAndSelectedCollections():null
 
                     Connections {
                         target: eventDialog.model
@@ -1441,4 +1418,27 @@ Window {
 
     }
 
+    Component.onCompleted: {
+        if (eventObject === undefined) {
+            console.log("Attempted to edit an undefined event");
+            return;
+        } else if (eventId != null) {
+            internal.fetchParentRequestId = model.fetchItems([eventId]);
+        } else if (eventObject === null) {
+            addEvent();
+            if (!eventDialog.endDate) {
+                eventDialog.endDate = eventDialog.startDate;
+            }
+            if (allDay) {
+                allDayEventCheckbox.checked = true;
+            }
+        } else if ((eventObject.itemType === Type.EventOccurrence) || (eventObject.itemType === Type.TodoOccurrence)) {
+            internal.fetchParentRequestId = model.fetchItems([eventObject.parentId]);
+        } else {
+            editEvent(eventObject);
+        }
+        eventNameField.forceActiveFocus();
+        descriptionButton.checked = true;
+        dialogFocusScope.visible = true;
+    }
 }
