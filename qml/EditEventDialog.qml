@@ -1167,14 +1167,38 @@ Window {
                     }
                     TextField {
                         id: repeatUntilDateField
+                        inputMask: localeDateInputMask
                         visible: internal.repeatIndex > 0 && internal.repeatUntilIndex == 2
                         anchors {
                             left: parent.left
                             right: parent.right
                             margins: eventDialog.spacing
                         }
-                        placeholderText: qsTr("End Date")
+                        text: startDateField.text
                         font.pixelSize: app.appFontSize
+                        onFocusChanged: {
+                            if (!activeFocus) {
+                                var repeatUntilDate = Date.fromLocaleDateString(Qt.locale(), text, Locale.ShortFormat);
+                                text = repeatUntilDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                            }
+                        }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                datePicker.repeatUntilDate = true;
+                                datePicker.selectedDate = Date.fromLocaleDateString(Qt.locale(), repeatUntilDateField.text, Locale.ShortFormat);
+                                datePicker.visible = true;
+                            }
+                        }
+                        Keys.onPressed: {
+                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Space) {
+                                console.log("key Tab");
+                                datePicker.repeatUntilDate = true;
+                                datePicker.selectedDate = Date.fromLocaleDateString(Qt.locale(), text, Locale.ShortFormat);
+                                datePicker.visible = true;
+                                event.accepted = true;
+                            }
+                        }
                     }
                 }
 
@@ -1245,6 +1269,7 @@ Window {
 
         Calendar {
             property bool startDate: true
+            property bool repeatUntilDate: false
             id: datePicker
             visible: false
             z: focusShade.z + 1
@@ -1269,7 +1294,10 @@ Window {
             }
             onVisibleChanged: {
                 if (!visible) {
-                    if (startDate) {
+                    if (repeatUntilDate) {
+                        repeatUntilDateField.text = selectedDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                        repeatUntilDateField.forceActiveFocus();
+                    } else if (startDate) {
                         eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, selectedDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat));
                         startDateField.text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
                         startDateField.forceActiveFocus();
