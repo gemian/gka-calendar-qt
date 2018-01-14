@@ -619,6 +619,10 @@ Window {
                             if (!activeFocus) {
                                 eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, text);
                                 text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                if (eventDialog.startDate > eventDialog.endDate) {
+                                    eventDialog.endDate = updateDateTimeWithDateText(eventDialog.endDate, text);
+                                    endDateField.text = eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                }
                             }
                         }
                         MouseArea {
@@ -685,6 +689,10 @@ Window {
                             if (!activeFocus) {
                                 eventDialog.endDate = updateDateTimeWithDateText(eventDialog.endDate, text);
                                 text = eventDialog.endDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                if (eventDialog.startDate > eventDialog.endDate) {
+                                    eventDialog.startDate = updateDateTimeWithDateText(eventDialog.startDate, text);
+                                    startDateField.text = eventDialog.startDate.toLocaleDateString(Qt.locale(), Locale.ShortFormat);
+                                }
                             }
                         }
                         MouseArea {
