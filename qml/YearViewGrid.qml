@@ -2,11 +2,13 @@ import QtQuick 2.7
 import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
-import QtQuick.Controls 2.0
+import QtQuick.Controls 1.4
 import CalendarListModel 1.0
 import "dateExt.js" as DateExt
 
 FocusScope {
+    SystemPalette { id: sysPalette; colorGroup: SystemPalette.Active }
+
     id: yearViewContainer
 
     property int daySelectedIndex: 1
@@ -118,6 +120,10 @@ FocusScope {
         return colour;
     }
 
+    function editItem(itemId) {
+        dialogLoader.setSource("EditEventDialog.qml", {"eventId": itemId, "model":organizerModel});
+    }
+
     Connections {
         target: app
         onUpdateSelectedToToday: {
@@ -157,20 +163,13 @@ FocusScope {
 //                console.log("focusChange"+activeFocus+yearGridModel.items[index]?yearGridModel.items[index].date:" ");
                 if (activeFocus) {
                     selectedDateLabel.text = " "
-                    selectedItemsLabel.text = " "
-                    selectedItemsCountLabel.text = ""
                     daySelectedIndex = index;
                     if (yearGridModel.items[index]) {
                         if (yearGridModel.items[index].type > 0 && yearGridModel.items[index].type < 4) {
                             selectedDate = yearGridModel.items[index].date;
                         }
                         selectedDateLabel.text = yearGridModel.items[index].date.toLocaleString(Qt.locale(), "ddd dd MMM")+":";
-                        if (yearGridModel.items[index].items.length > 0) {
-                            selectedItemsLabel.text = yearGridModel.items[index].items[0].displayLabel;
-                            if (yearGridModel.items[index].items.length > 1) {
-                                selectedItemsCountLabel.text = yearGridModel.items[index].items.length;
-                            }
-                        }
+                        selectedDateList.model = yearGridModel.items[index].items;
                     }
                 }
             }
@@ -211,8 +210,8 @@ FocusScope {
             width: gridView.cellWidth;
             height: gridView.cellHeight
             color: "lightsteelblue";
-            border.color: "black"
-            border.width: 2
+            border.color: gridView.activeFocus ? sysPalette.highlight : "black"
+            border.width: app.appFontSize/5
         }
     }
 
@@ -226,8 +225,8 @@ FocusScope {
                 Label {
                     Layout.alignment: Qt.AlignRight
                     Layout.preferredHeight: gridView.cellHeight
-                    leftPadding: 4
-                    rightPadding: 4
+                    Layout.leftMargin: app.appFontSize/2
+                    Layout.rightMargin: app.appFontSize/2
                     text: index===0?" ":shortMonth(index-1)
                     font.pixelSize: app.appFontSize
                     verticalAlignment: Text.AlignVCenter
@@ -237,10 +236,9 @@ FocusScope {
     }
 
     Column {
-
         Label {
             id: selectedYear
-            leftPadding: 10
+            Layout.leftMargin: app.appFontSize
             text: qsTr("Year Planner ") + yearGridModel.year
             font.pixelSize: app.appFontSize
             font.bold: true
@@ -250,10 +248,11 @@ FocusScope {
             id: gridView
             width: mainView.width
             height: mainView.height-(selectedYear.height+selectedDateRow.height)
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
-            anchors.bottomMargin: 5
+            anchors.leftMargin: app.appFontSize/2
+            anchors.rightMargin: app.appFontSize/2
+            anchors.topMargin: app.appFontSize/2
+            anchors.bottomMargin: app.appFontSize/2
+            activeFocusOnTab: true
 
             delegate: yearGridDelegate
             header: gridHeader
@@ -281,32 +280,42 @@ FocusScope {
                 gridView.currentIndex = indexFor(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate())
             }
         }
+
         Row {
             id: selectedDateRow
-            leftPadding: 10
-            topPadding: 10
-            bottomPadding: 10
-            spacing: 10
+            leftPadding: app.appFontSize
+            topPadding: app.appFontSize
+            bottomPadding: app.appFontSize
+            spacing: app.appFontSize
             Label {
-                id:selectedDateLabel
+                id: selectedDateLabel
                 text: " "
                 font.pixelSize: app.appFontSize
             }
-            Label {
-                id:selectedItemsLabel
-                text: " "
-                font.pixelSize: app.appFontSize
+
+            Repeater {
+                id: selectedDateList
+
+                delegate: ZoomButton {
+                    id: selectedItemsLabel
+                    text: displayLabel
+                    onFocusChanged: {
+                        if (activeFocus) {
+                            internal.selectedButton = index
+                        }
+                    }
+
+                    onClicked: {
+                        editItem(itemId);
+                    }
+                    Keys.onEnterPressed: {
+                        editItem(itemId);
+                    }
+                    Keys.onReturnPressed: {
+                        editItem(itemId);
+                    }
+                }
             }
-            Label {
-                id:selectedItemsCountLabel
-                font.pixelSize: app.appFontSize
-            }
-//            Re-enable once implmented
-//            ZoomButton {
-//                id:otherItemsButton
-//                visible: selectedItemsCount.text.length > 0
-//                text: qsTr("More")
-//            }
         }
     }
 
@@ -349,6 +358,20 @@ FocusScope {
                 }
             }
         }
+        if (event.key === Qt.Key_Up) {
+            gridView.forceActiveFocus();
+        }
+        if (event.key === Qt.Key_Left) {
+            if (internal.selectedButton > 0) {
+                selectedDateList.itemAt(internal.selectedButton-1).forceActiveFocus()
+            }
+        }
+        if (event.key === Qt.Key_Right) {
+            var nextItem = selectedDateList.itemAt(internal.selectedButton+1);
+            if (nextItem) {
+                nextItem.forceActiveFocus()
+            }
+        }
     }
 
     QtObject {
@@ -356,6 +379,7 @@ FocusScope {
 
         property int initialContentX;
         property int contentXactionOn;
+        property int selectedButton;
     }
 
     Component.onCompleted: {
