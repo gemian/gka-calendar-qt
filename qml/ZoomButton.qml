@@ -11,6 +11,7 @@ Button {
 
     style: ButtonStyle {
         background: Rectangle {
+            opacity: control.enabled ? 1.0 : 0.5
             implicitWidth: 60
             implicitHeight: 25
             radius: app.appFontSize/3
@@ -31,6 +32,7 @@ Button {
             }
         }
         label: Text {
+            opacity: control.enabled ? 1.0 : 0.5
             renderType: Text.NativeRendering
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
