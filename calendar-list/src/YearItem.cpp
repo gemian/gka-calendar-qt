@@ -17,6 +17,14 @@ void YearEvent::setItemId(const QtOrganizer::QOrganizerItemId &itemId) {
     _itemId = itemId;
 }
 
+QString YearEvent::parentId() const {
+    return _parentId;
+}
+
+void YearEvent::setParentId(const QString &parentId) {
+    _parentId=parentId;
+}
+
 QString YearEvent::displayLabel() const {
     return _displayLabel;
 }

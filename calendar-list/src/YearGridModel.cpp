@@ -258,6 +258,16 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             event->setDisplayLabel(item.displayLabel());
             event->setItemId(item.id());
             event->setCollectionId(item.collectionId().toString());
+
+            auto parentIdDetail = item.detail(QtOrganizer::QOrganizerItemDetail::TypeParent);
+//            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
+            auto parentId = parentIdDetail.value(QtOrganizer::QOrganizerItemParent::FieldParentId);
+//            qDebug() << "ParentId:" << parentId;
+            if (parentId.isValid()) {
+//                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
+                event->setParentId(parentId.value<QtOrganizer::QOrganizerItemId>().toString());
+            }
+
             do {
                 addEventToDate(event, startDate);
 //                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;

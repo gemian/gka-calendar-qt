@@ -14,6 +14,7 @@ class YearEvent : public QObject
 
     Q_PROPERTY(QDateTime date READ date WRITE setDate NOTIFY itemChanged)
     Q_PROPERTY(QString itemId READ itemIdString NOTIFY itemChanged)
+    Q_PROPERTY(QString parentId READ parentId NOTIFY itemChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY itemChanged)
     Q_PROPERTY(QChar symbol READ symbol WRITE setSymbol NOTIFY itemChanged)
     Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
@@ -29,6 +30,9 @@ public:
     QtOrganizer::QOrganizerItemId itemId() const;
     void setItemId(const QtOrganizer::QOrganizerItemId &itemId);
 
+    QString parentId() const;
+    void setParentId(const QString &parentId);
+
     QString displayLabel() const;
     void setDisplayLabel(const QString &label);
 
@@ -43,6 +47,7 @@ Q_SIGNALS:
 
 private:
     QtOrganizer::QOrganizerItemId _itemId;
+    QString _parentId;
     QString _displayLabel;
     QChar _symbol;
     QString _collectionId;

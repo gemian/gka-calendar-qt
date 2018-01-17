@@ -313,13 +313,13 @@ FocusScope {
                     }
 
                     onClicked: {
-                        editItem(itemId);
+                        editItem(parentId?parentId:itemId);
                     }
                     Keys.onEnterPressed: {
-                        editItem(itemId);
+                        editItem(parentId?parentId:itemId);
                     }
                     Keys.onReturnPressed: {
-                        editItem(itemId);
+                        editItem(parentId?parentId:itemId);
                     }
                 }
             }
@@ -361,7 +361,7 @@ FocusScope {
                 if (yearGridModel.items[daySelectedIndex].items.length === 0) {
                     dialogLoader.setSource("EditEventDialog.qml", {"startDate":selectedDate, "allDay":true, "model":organizerModel});
                 } else {
-                    dialogLoader.setSource("EditEventDialog.qml", {"eventId": yearGridModel.items[daySelectedIndex].items[0].itemId, "model":organizerModel});
+                    dialogLoader.setSource("EditEventDialog.qml", {"eventId": yearGridModel.items[daySelectedIndex].items[0].parentId?yearGridModel.items[daySelectedIndex].items[0].parentId:yearGridModel.items[daySelectedIndex].items[0].itemId, "model":organizerModel});
                 }
             }
         }
