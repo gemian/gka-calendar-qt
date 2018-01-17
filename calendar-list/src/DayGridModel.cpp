@@ -110,6 +110,15 @@ void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             dayItem->setItemId(item.id().toString());
             dayItem->setCollectionId(item.collectionId().toString());
 
+            auto parentIdDetail = item.detail(QtOrganizer::QOrganizerItemDetail::TypeParent);
+//            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
+            auto parentId = parentIdDetail.value(QtOrganizer::QOrganizerItemParent::FieldParentId);
+//            qDebug() << "ParentId:" << parentId;
+            if (parentId.isValid()) {
+//                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
+                dayItem->setParentId(parentId.value<QtOrganizer::QOrganizerItemId>().toString());
+            }
+
             auto itAt = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(TimeFirstNotBefore(), itemTime));
             if (itAt != _gridCells.end()) {
                 auto itHour = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(TimeSameHour(), itemTime));

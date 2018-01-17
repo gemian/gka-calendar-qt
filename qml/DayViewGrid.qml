@@ -185,7 +185,7 @@ FocusScope {
                 dateTime.setMinutes(dayGridModel.items[hourSelectedIndex].time.getMinutes())
                 dialogLoader.setSource("EditEventDialog.qml", {"startDate":dateTime, "model":organizerModel});
             } else {
-                dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[hourSelectedIndex].itemId, "model":organizerModel});
+                dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[hourSelectedIndex].parentId?dayGridModel.items[hourSelectedIndex].parentId:dayGridModel.items[hourSelectedIndex].itemId, "model":organizerModel});
             }
         }
     }

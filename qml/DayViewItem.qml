@@ -19,7 +19,7 @@ FocusScope {
         }
 
         onReleased: {
-            console.log("dayItemRel i:" + index)
+//            console.log("dayItemRel i:" + index)
             var diff = parent.width/10
             if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
                 if (hourSelectedIndex === index) {
@@ -29,7 +29,7 @@ FocusScope {
                         dateTime.setMinutes(dayGridModel.items[index].time.getMinutes())
                         dialogLoader.setSource("EditEventDialog.qml", {"startDate":dateTime, "model":organizerModel});
                     } else {
-                        dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[index].itemId, "model":organizerModel});
+                        dialogLoader.setSource("EditEventDialog.qml", {"eventId": dayGridModel.items[index].parentId?dayGridModel.items[index].parentId:dayGridModel.items[index].itemId, "model":organizerModel});
                     }
                 }
                 hourSelectedIndex = index
@@ -40,7 +40,7 @@ FocusScope {
     }
 
     onFocusChanged: {
-        console.log("dayItem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index+", time:"+dayGridModel.items[index].time)
+//        console.log("dayItem focusChanged aF: "+activeFocus+", hSI: " + hourSelectedIndex + ", i: " + index+", time:"+dayGridModel.items[index].time)
         if (activeFocus) {
             if (!dayGridModel.items[index].time.isValid()) {
                 if (index < 8) {
@@ -119,6 +119,6 @@ FocusScope {
     }
 
     Component.onCompleted: {
-        console.log("itemcell.onCompleted i:"+index)
+//        console.log("itemcell.onCompleted i:"+index)
     }
 }

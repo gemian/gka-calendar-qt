@@ -11,6 +11,7 @@ class DayItem : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(QString itemId READ itemId WRITE setItemId NOTIFY itemChanged)
+    Q_PROPERTY(QString parentId READ parentId WRITE setParentId NOTIFY itemChanged)
     Q_PROPERTY(QDateTime time READ time WRITE setTime NOTIFY itemChanged)
     Q_PROPERTY(QString displayLabel READ displayLabel WRITE setDisplayLabel NOTIFY itemChanged)
     Q_PROPERTY(QString collectionId READ collectionId WRITE setCollectionId NOTIFY itemChanged)
@@ -21,6 +22,9 @@ public:
 
     QString itemId() const;
     void setItemId(const QString &itemId);
+
+    QString parentId() const;
+    void setParentId(const QString &parentId);
 
     QDateTime time() const;
     void setTime(const QDateTime &time);
@@ -36,6 +40,7 @@ public:
 
 private:
     QString _itemId;
+    QString _parentId;
     QString _displayLabel;
     QDateTime _time;
     QString _collectionId;

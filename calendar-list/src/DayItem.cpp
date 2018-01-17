@@ -18,6 +18,14 @@ void DayItem::setItemId(const QString &itemId) {
     _itemId=itemId;
 }
 
+QString DayItem::parentId() const {
+    return _parentId;
+}
+
+void DayItem::setParentId(const QString &parentId) {
+    _parentId=parentId;
+}
+
 QDateTime DayItem::time() const {
     return _time;
 }
