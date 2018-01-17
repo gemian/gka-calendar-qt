@@ -16,6 +16,8 @@ ApplicationWindow {
     property bool showLunarCalendar
     property real appFontSize
 
+    title: qsTr("Calendar")
+
     //Fullscreen on device
     height: {
         if (Screen.height === 1080 && Screen.width === 2160) {
@@ -122,7 +124,6 @@ ApplicationWindow {
     }
 
     function jumpToDate() {
-        console.log("jump to date"+selectedDate)
         dialogLoader.setSource("ZoomCalendar.qml", {"startDate": selectedDate, "selectedDate": selectedDate})
     }
 
@@ -225,13 +226,13 @@ ApplicationWindow {
             anchors.fill: parent
             visible: status == Loader.Ready
             onStatusChanged: {
-                console.log("dialogLoader onStateChanged");
+//                console.log("dialogLoader onStateChanged");
                 if (status == Loader.Ready) {
                     //item.Open();
                 }
             }
             onLoaded: {
-                console.log("dialogLoader onLoaded");
+//                console.log("dialogLoader onLoaded");
             }
             State {
                 name: 'loaded';
@@ -240,10 +241,9 @@ ApplicationWindow {
         }
         Connections {
             target: dialogLoader.item
-            onSetSelectedDate: {
-                console.log(date)
-                app.updateSelectedToDate(date);
-            }
+//            onSetSelectedDate: {
+//                app.updateSelectedToDate(date);
+//            }
         }
     }
 
@@ -253,10 +253,6 @@ ApplicationWindow {
     }
 
     Component.onCompleted: {
-        print("app.showLunarCalendar: "+app.showLunarCalendar);
-        print("settings.showLunarCalendar: "+settings.showLunarCalendar);
-        print("app.appFontSize: "+app.appFontSize);
-        print("settings.appFontSize: "+settings.appFontSize);
         if (app.appFontSize == 0) {
             app.appFontSize = defaultLabel.font.pixelSize;
         }

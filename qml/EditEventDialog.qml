@@ -45,22 +45,6 @@ Window {
         if (!isOcurrence && e.recurrence.recurrenceRules[0] !== undefined && e.recurrence.recurrenceRules[0] !== null) {
             var rule = e.recurrence.recurrenceRules[0];
             internal.repeatIndex = recurrenceValue[rule.frequency];
-            console.log("rule:"+rule);
-            console.log("rule.limit:"+rule.limit);
-            console.log("rule.frequency:"+rule.frequency);
-            console.log("rule.daysOfWeek:"+rule.daysOfWeek);
-            console.log("rule.daysOfMonth:"+rule.daysOfMonth);
-            console.log("rule.daysOfYear:"+rule.daysOfYear);
-            console.log("rule.weeksOfYear:"+rule.weeksOfYear);
-            console.log("rule.monthsOfYear:"+rule.monthsOfYear);
-            console.log("rule.firstDayOfWeek:"+rule.firstDayOfWeek);
-            console.log("rule.days:"+rule.days);
-            console.log("rule.positions:"+rule.positions);
-            console.log("recurrenceValue:"+recurrenceValue);
-            console.log("recurrenceValue0:"+recurrenceValue[0]);
-            console.log("recurrenceValue1:"+recurrenceValue[1]);
-            console.log("recurrenceValue2:"+recurrenceValue[2]);
-            console.log("repeatIndex:"+internal.repeatIndex);
             setRepeatButton(internal.repeatIndex, true);
             if (rule.daysOfWeek.indexOf(Qt.Monday) !== -1) {
                 weeklyRepeatMon.checked = true;
@@ -167,14 +151,14 @@ Window {
                 }
                 event = Qt.createQmlObject("import QtOrganizer 5.0; Event {}", Qt.application, "EditEventDialog.qml");
             } else {
-                console.log("saving event: "+event);
+//                console.log("saving event: "+event);
             }
 
             event.allDay = allDayEventCheckbox.checked;
             if (event.allDay) {
                 event.startDateTime = eventDialog.startDate.midnightUTC();
                 event.endDateTime = eventDialog.endDate.addDays(1).midnightUTC();
-                console.log("e:startDateTime: "+event.startDateTime);
+//                console.log("e:startDateTime: "+event.startDateTime);
             } else {
                 event.startDateTime = eventDialog.startDate;
                 event.endDateTime = eventDialog.endDate;
@@ -386,7 +370,7 @@ Window {
     }
 
     function setRepeatMonthlyButton(index, setFocus) {
-        console.log("setRepeatMonthlyButton:"+index);
+//        console.log("setRepeatMonthlyButton:"+index);
         internal.repeatMonthlyIndex = index;
         monthlyRepeatByDate.checked = false;
         monthlyRepeatByWeek.checked = false;
@@ -517,6 +501,8 @@ Window {
                     console.warn("Fail to fetch parent event")
                 }
                 internal.fetchParentRequestId = -1
+            } else {
+                console.warn("fetched un-requested id:"+requestId+", items:"+fetchedItems)
             }
         }
     }
@@ -1464,6 +1450,7 @@ Window {
             console.log("Attempted to edit an undefined event");
             return;
         } else if (eventId != null) {
+//            console.log("fetchByEventId"+eventId);
             internal.fetchParentRequestId = model.fetchItems([eventId]);
         } else if (eventObject === null) {
             addEvent();
@@ -1474,6 +1461,7 @@ Window {
                 allDayEventCheckbox.checked = true;
             }
         } else if ((eventObject.itemType === Type.EventOccurrence) || (eventObject.itemType === Type.TodoOccurrence)) {
+//            console.log("fetchByParentEventId"+eventObject.parentId);
             internal.fetchParentRequestId = model.fetchItems([eventObject.parentId]);
         } else {
             editEvent(eventObject);

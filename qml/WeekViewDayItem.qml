@@ -239,13 +239,13 @@ FocusScope {
                     Text {
                         id: dayItemLabel
                         anchors {
-                            left: calendarIndicator.right;
-                            leftMargin: 5//units.gu(1)
+                            left: calendarIndicator.right
+                            leftMargin: app.appFontSize/2
                         }
                         width: parent.width - calendarIndicator.width
                         wrapMode: Text.Wrap
                         text: model.item.displayLabel
-                        font.pixelSize: app.appFontSize;
+                        font.pixelSize: app.appFontSize
                     }
 
                     MouseArea {
@@ -260,7 +260,6 @@ FocusScope {
                                 if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
                                     dialogLoader.setSource("EditEventDialog.qml", {"eventObject": model.item, "model":organizerModel});
                                 }
-//                                console.log("itemclicklvd i:"+gridViewIndex + ", i:" + index)
                                 daySelectedIndex = gridViewIndex
                                 dayChildSelectedIndex = index
                                 dayListView.currentIndex = index
