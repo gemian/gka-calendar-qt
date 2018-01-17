@@ -41,6 +41,9 @@ FocusScope {
         onUpdateSelectedToToday: {
             updateGridViewToToday();
         }
+        onUpdateSelectedToDate: {
+            updateGridViewToDate(date);
+        }
     }
 
     Timer {

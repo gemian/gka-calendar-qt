@@ -19,6 +19,7 @@ configure_file(ColourDialog.qml ColourDialog.qml COPYONLY)
 configure_file(ZoomButton.qml ZoomButton.qml COPYONLY)
 configure_file(ZoomCheckBox.qml ZoomCheckBox.qml COPYONLY)
 configure_file(ZoomRadioButton.qml ZoomRadioButton.qml COPYONLY)
+configure_file(ZoomCalendar.qml ZoomCalendar.qml COPYONLY)
 
 file(GLOB JS_FILES *.js)
 file(GLOB QML_FILES *.qml)

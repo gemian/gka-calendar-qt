@@ -107,8 +107,14 @@ MenuBar {
             id: goMenuToday
             text: qsTr("&Today (space)")
             onTriggered: {
-                selectedDate = new Date()
                 app.updateSelectedToToday()
+            }
+        }
+        MenuItem {
+            id: goMenuSelect
+            text: qsTr("&Jump to date (ctrl-j)")
+            onTriggered: {
+                app.jumpToDate();
             }
         }
     }

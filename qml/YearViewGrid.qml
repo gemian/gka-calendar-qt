@@ -77,6 +77,10 @@ FocusScope {
 
     function updateSelectedToToday() {
         var date = new Date();
+        updateSelectedToDate(date);
+    }
+
+    function updateSelectedToDate(date) {
         selectedDate = date;
         gridView.currentIndex = indexFor(date.getFullYear(), date.getMonth(), date.getDate());
         gridView.currentItem.forceActiveFocus();
@@ -128,6 +132,9 @@ FocusScope {
         target: app
         onUpdateSelectedToToday: {
             updateSelectedToToday();
+        }
+        onUpdateSelectedToDate: {
+            updateSelectedToDate(date);
         }
     }
 

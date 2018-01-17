@@ -10,6 +10,7 @@ ApplicationWindow {
     id: app
 
     signal updateSelectedToToday()
+    signal updateSelectedToDate(var date)
 
     property var selectedDate: new Date()
     property bool showLunarCalendar
@@ -120,6 +121,11 @@ ApplicationWindow {
         settings: settings
     }
 
+    function jumpToDate() {
+        console.log("jump to date"+selectedDate)
+        dialogLoader.setSource("ZoomCalendar.qml", {"startDate": selectedDate, "selectedDate": selectedDate})
+    }
+
     Shortcut {
         sequence: StandardKey.Quit
         onActivated: Qt.quit()
@@ -163,6 +169,11 @@ ApplicationWindow {
             settings.appFontSize += 1
             console.log ("<appFontSize: " + app.appFontSize)
         }
+    }
+
+    Shortcut {
+        sequence: "Ctrl+j"
+        onActivated: app.jumpToDate()
     }
 
     FocusScope {
@@ -211,6 +222,7 @@ ApplicationWindow {
 
         Loader {
             id: dialogLoader
+            anchors.fill: parent
             visible: status == Loader.Ready
             onStatusChanged: {
                 console.log("dialogLoader onStateChanged");
@@ -224,6 +236,13 @@ ApplicationWindow {
             State {
                 name: 'loaded';
                 when: loader.status === Loader.Ready
+            }
+        }
+        Connections {
+            target: dialogLoader.item
+            onSetSelectedDate: {
+                console.log(date)
+                app.updateSelectedToDate(date);
             }
         }
     }

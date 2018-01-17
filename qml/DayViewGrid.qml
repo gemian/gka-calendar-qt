@@ -65,7 +65,24 @@ FocusScope {
         print("setupGridSize gvh: "+gVHeight+", ic: "+dayGridModel.itemCount+", ch: "+internal.dayGridCellHeight + ", aFS: " + app.appFontSize)
     }
 
-    Component.onCompleted: {
+    function updateGridViewToToday() {
+        var today = new Date();
+        updateGridViewToDate(today);
+    }
+
+    function updateGridViewToDate(toDate) {
+        console.log("day view to: "+toDate);
+        selectedDate = toDate;
+    }
+
+    Connections {
+        target: app
+        onUpdateSelectedToToday: {
+            updateGridViewToToday();
+        }
+        onUpdateSelectedToDate: {
+            updateGridViewToDate(date);
+        }
     }
 
     Rectangle {
