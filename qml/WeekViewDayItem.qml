@@ -199,7 +199,7 @@ FocusScope {
 
                 delegate: FocusScope {
                     width: ListView.view.width
-                    height: calendarIndicator.height
+                    height: Math.max(calendarIndicator.height,dayItemLabel.height)
                     x: childrenRect.x
                     y: childrenRect.y
                     id: detailsListitem
