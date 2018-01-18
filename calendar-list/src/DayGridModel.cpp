@@ -36,6 +36,10 @@ DayGridModel::~DayGridModel() {
     delete _manager;
 }
 
+QtOrganizer::QOrganizerManager *DayGridModel::manager() {
+    return _manager;
+}
+
 void DayGridModel::setDate(QDateTime date) {
     _date = date;
     auto oldSize = _gridCells.size();
@@ -123,6 +127,7 @@ void DayGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             if (itAt != _gridCells.end()) {
                 auto itHour = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(TimeSameHour(), itemTime));
                 if ((*itHour)->time().time().hour() == itemTime.time().hour() && (*itHour)->itemId().isEmpty()) {
+                    (*itHour)->deleteLater();
                     (*itHour) = dayItem;
                 } else {
                     _gridCells.insert(itAt, dayItem);
@@ -247,30 +252,21 @@ void DayGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizerC
     setDate(date());
 }
 
+struct DaySameId: public std::binary_function<DayItem*, QString, bool> {
+    bool operator() (const DayItem *item, const QString &id) const {
+        return item->itemId() == id;
+    }
+};
+
 void DayGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-//    foreach (QtOrganizer::QOrganizerItemId itemId, itemIds) {
-//        qDebug("foreach");
-//        std::map<QString, CalendarEvent*>::iterator it;
-//        it = _events.find(itemId.toString());
-//        if (it != _events.end()) {
-//            qDebug("founditemidinevents");
-//            std::pair<std::multimap<QDateTime, CalendarItem*>::iterator, std::multimap<QDateTime, CalendarItem*>::iterator> possibles;
-//            possibles = _items.equal_range(it->second->startDateTime());
-//            std::multimap<QDateTime, CalendarItem*>::iterator ii=possibles.first;
-//            while (ii!=possibles.second) {
-//                qDebug("founddateinitems");
-//                if (qobject_cast<CalendarEvent*>(ii->second)->itemId() == itemId.toString()) {
-//                    qDebug("eraseitem++");
-//                    _items.erase(ii++);
-//                } else {
-//                    qDebug("++");
-//                    ++ii;
-//                }
-//            }
-//            qDebug("eraseevent");
-//            _events.erase(it);
-//        }
-//    }
+    foreach (QtOrganizer::QOrganizerItemId itemId, itemIds) {
+//        qDebug() << "foreach" << itemId.toString();
+        auto it = std::find_if(_gridCells.begin(), _gridCells.end(), std::bind2nd(DaySameId(), itemId.toString()));
+        if (it != _gridCells.end()) {
+            (*it)->deleteLater();
+            it = _gridCells.erase(it);
+        }
+    }
 }
 
 void DayGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {

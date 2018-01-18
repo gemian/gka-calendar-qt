@@ -91,7 +91,7 @@ TEST_CASE("YearGridSetYearTest") {
     a.exec();
 }
 
-TEST_CASE("YearGridAddEventTest") {
+TEST_CASE("YearGridEventTest") {
     int argc = 0;
     char **argv = nullptr;
     QApplication a(argc, argv);
@@ -101,53 +101,125 @@ TEST_CASE("YearGridAddEventTest") {
 
     auto *yearGridModel = new YearGridModel(nullptr, "memory");
     const QDate &date = QDate(2017, 6, 14);
-    yearGridModel->setCurrentDate(QDateTime(date,QTime()));
-    yearGridModel->setYear(2017);
 
     QList<QtOrganizer::QOrganizerItem> items = QList<QtOrganizer::QOrganizerItem>();
     QtOrganizer::QOrganizerEvent item;
     item.setDisplayLabel("Event Name");
-    QtOrganizer::QOrganizerItemId id("a","b");
-    item.setId(id);
+    item.setType(QtOrganizer::QOrganizerItemType::TypeEvent);
+    item.setAllDay(true);
     QDateTime startDateTime = QDateTime();
     startDateTime.setDate(date);
     QDateTime endDateTime = QDateTime();
     endDateTime.setDate(date.addDays(2));
     item.setStartDateTime(startDateTime);
     item.setEndDateTime(endDateTime);
-    QByteArray byteArray = QByteArray().append("c");
-    QtOrganizer::QOrganizerCollectionId collectionId("b", byteArray);
-    item.setCollectionId(collectionId);
+    QtOrganizer::QOrganizerCollection collection;
+    collection.setMetaData(QtOrganizer::QOrganizerCollection::KeyName, "testcollection");
+    collection.setExtendedMetaData("collection-type","Calendar");
+    collection.setExtendedMetaData("collection-selected",true);
+    yearGridModel->manager()->saveCollection(&collection);
+    qDebug() << "collection.id" << collection.id();
+//    collection.setId(collection.id());
+    item.setCollectionId(collection.id());
     items.append(item);
     startDateTime = startDateTime.addDays(1);
     item.setStartDateTime(startDateTime);
     endDateTime = endDateTime.addMonths(1);
     item.setEndDateTime(endDateTime);
     items.append(item);
-    yearGridModel->addItemsToGrid(items);
+    yearGridModel->manager()->saveItems(&items);
 
-    QQmlListProperty<YearDay> dayProperty = yearGridModel->items();
+    QtOrganizer::QOrganizerItemId id1(items[0].id());
+    QtOrganizer::QOrganizerItemId id2(items[1].id());
+    qDebug() << "id1" << id1;
 
-    YearDay *pDay = dayProperty.at(&dayProperty, 6 + ((14+3) * GRID_HEIGHT));
-    QQmlListProperty<YearEvent> yearProperty = pDay->items();
+    qDebug() << "reload: " << yearGridModel->manager()->item(id1);
 
-    int count = yearProperty.count(&yearProperty);
-    REQUIRE(count == 2);
-    YearEvent *pYear = yearProperty.at(&yearProperty, 0);
-    REQUIRE(pYear->displayLabel() == "Event Name");
+    yearGridModel->setCurrentDate(QDateTime(date,QTime()));
+    yearGridModel->setYear(2017);
 
-    pDay = dayProperty.at(&dayProperty, 6 + ((31+3) * GRID_HEIGHT));
-    yearProperty = pDay->items();
-    count = yearProperty.count(&yearProperty);
-    REQUIRE(count == 0);
+    SECTION("add") {
+        QQmlListProperty<YearDay> dayProperty = yearGridModel->items();
 
-    pDay = dayProperty.at(&dayProperty, 7 + ((1+5) * GRID_HEIGHT));
-    yearProperty = pDay->items();
-    count = yearProperty.count(&yearProperty);
-    REQUIRE(count == 1);
+        YearDay *pDay = dayProperty.at(&dayProperty, 6 + ((14+3) * GRID_HEIGHT));
+        QQmlListProperty<YearEvent> yearProperty = pDay->items();
+
+        int count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 2);
+
+        YearEvent *pYear = yearProperty.at(&yearProperty, 0);
+        REQUIRE(pYear->displayLabel() == "Event Name");
+
+        pDay = dayProperty.at(&dayProperty, 6 + ((31+3) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 0);
+
+        pDay = dayProperty.at(&dayProperty, 7 + ((1+5) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 1);
+    }
+
+    SECTION("Remove") {
+        QList<QtOrganizer::QOrganizerItemId> itemIds;
+        itemIds.push_back(id1);
+        yearGridModel->manageItemsRemoved(itemIds);
+
+        QQmlListProperty<YearDay> dayProperty = yearGridModel->items();
+
+        YearDay *pDay = dayProperty.at(&dayProperty, 6 + ((14+3) * GRID_HEIGHT));
+        QQmlListProperty<YearEvent> yearProperty = pDay->items();
+
+        int count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 1);
+
+        YearEvent *pYear = yearProperty.at(&yearProperty, 0);
+        REQUIRE(pYear->displayLabel() == "Event Name");
+
+        pDay = dayProperty.at(&dayProperty, 6 + ((31+3) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 0);
+
+        pDay = dayProperty.at(&dayProperty, 7 + ((1+5) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 1);
+    }
+
+    SECTION("Changed") {
+        item = yearGridModel->manager()->item(id1);
+        item.setDisplayLabel("Event Changed");
+        yearGridModel->manager()->saveItem(&item);
+
+        QQmlListProperty<YearDay> dayProperty = yearGridModel->items();
+
+        YearDay *pDay = dayProperty.at(&dayProperty, 6 + ((14+3) * GRID_HEIGHT));
+        QQmlListProperty<YearEvent> yearProperty = pDay->items();
+
+        int count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 2);
+        qDebug() << "YearProperty.obj" << yearProperty.object;
+
+        YearEvent *pYear = yearProperty.at(&yearProperty, 0);
+        qDebug() << "Year" << pYear;
+        REQUIRE(pYear->displayLabel() == "Event Name");
+
+        pDay = dayProperty.at(&dayProperty, 6 + ((31+3) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 0);
+
+        pDay = dayProperty.at(&dayProperty, 7 + ((1+5) * GRID_HEIGHT));
+        yearProperty = pDay->items();
+        count = yearProperty.count(&yearProperty);
+        REQUIRE(count == 1);
+    }
 
     delete yearGridModel;
 
     smersh().KillAppAfterTimeout(1);
     a.exec();
 }
+

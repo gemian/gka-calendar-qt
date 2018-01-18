@@ -39,6 +39,8 @@ public:
 
     QQmlListProperty<YearDay> items();
 
+    QtOrganizer::QOrganizerManager *manager();
+
 signals:
     void modelChanged();
 
@@ -58,7 +60,7 @@ private:
     QtOrganizer::QOrganizerItemIntersectionFilter filter();
     void removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
     void addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds);
-    void addEventToDate(YearEvent *event, QDate date);
+    void addEventToDate(QPointer<YearEvent> event, QDate date);
 
     int cellIndexForMonthAndColumn(int month, int c);
 

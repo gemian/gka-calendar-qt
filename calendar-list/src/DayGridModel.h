@@ -35,6 +35,8 @@ public:
 
     void addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items);
 
+    QtOrganizer::QOrganizerManager *manager();
+
 signals:
     void modelChanged();
     void itemsLoaded();

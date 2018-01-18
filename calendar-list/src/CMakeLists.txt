@@ -1,5 +1,8 @@
 set(CMAKE_CXX_STANDARD 14)
 
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -fconcepts")
+#set(CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_STATIC_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address -fconcepts")
+
 find_package(ECM REQUIRED NO_MODULE)
 find_package(Qt5 REQUIRED NO_MODULE COMPONENTS Core Quick Test Gui Widgets Organizer)
 

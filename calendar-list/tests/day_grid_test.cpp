@@ -119,15 +119,16 @@ TEST_CASE("PopulatedDayGrid1AprilTest") {
     QList<QtOrganizer::QOrganizerItem> items = QList<QtOrganizer::QOrganizerItem>();
     QtOrganizer::QOrganizerEvent item;
     item.setDisplayLabel("Event Name");
-    QtOrganizer::QOrganizerItemId id("a","b");
-    item.setId(id);
     QDateTime startDateTime = QDateTime(date, QTime(12,30), QTimeZone(QTimeZone::systemTimeZoneId()));
     QDateTime endDateTime = QDateTime(date, QTime(13,30), QTimeZone(QTimeZone::systemTimeZoneId()));
     item.setStartDateTime(startDateTime);
     item.setEndDateTime(endDateTime);
-    QByteArray byteArray = QByteArray().append("c");
-    QtOrganizer::QOrganizerCollectionId collectionId("b", byteArray);
-    item.setCollectionId(collectionId);
+    QtOrganizer::QOrganizerCollection collection;
+    collection.setMetaData(QtOrganizer::QOrganizerCollection::KeyName, "testcollection");
+    collection.setExtendedMetaData("collection-type","Calendar");
+    collection.setExtendedMetaData("collection-selected",true);
+    dayGridModel->manager()->saveCollection(&collection);
+    item.setCollectionId(collection.id());
     items.append(item);
     startDateTime = startDateTime.addSecs(2*60*60);
     item.setStartDateTime(startDateTime);
@@ -140,7 +141,9 @@ TEST_CASE("PopulatedDayGrid1AprilTest") {
     item.setStartDateTime(QDateTime(date, QTime(0,1), QTimeZone(QTimeZone::systemTimeZoneId())));
     item.setEndDateTime(QDateTime(date, QTime(0,20), QTimeZone(QTimeZone::systemTimeZoneId())));
     items.append(item);
-    dayGridModel->addItemsToGrid(items);
+    dayGridModel->manager()->saveItems(&items);
+
+    dayGridModel->setDate(startDateTime);
 
     QQmlListProperty<DayItem> dayList = dayGridModel->items();
 

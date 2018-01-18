@@ -76,25 +76,27 @@ public:
     void setDisplayLabel(const QString &label);
     QString displayLabel() const;
 
-    void addEvent(YearEvent *event);
+    void addEvent(QPointer<YearEvent> event);
     void clearEvents();
 
     QQmlListProperty<YearEvent> items();
 
-    void removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list);
+    bool removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list);
 
 Q_SIGNALS:
     void dayChanged();
 
 private:
     static int item_count(QQmlListProperty<YearEvent> *p);
-    static YearEvent * item_at(QQmlListProperty<YearEvent> *p, int idx);
+    static YearEvent *item_at(QQmlListProperty<YearEvent> *p, int idx);
+    void rebuildDisplayLabel();
 
 private:
     int _type;
     QDateTime _date;
     QString _displayLabel;
-    std::vector<YearEvent*> _events;
+    std::vector<QPointer<YearEvent>> _events;
+
 };
 
 QML_DECLARE_TYPE(YearDay)

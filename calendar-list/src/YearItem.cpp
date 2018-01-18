@@ -60,7 +60,9 @@ void YearEvent::setCollectionId(const QString &collectionId) {
 YearDay::YearDay(QObject *parent) : QObject(parent), _date() {
 }
 
-YearDay::~YearDay() = default;
+YearDay::~YearDay() {
+    clearEvents();
+}
 
 void YearDay::setType(const int type) {
     _type = type;
@@ -86,19 +88,15 @@ QString YearDay::displayLabel() const {
     return _displayLabel;
 }
 
-void YearDay::addEvent(YearEvent *event) {
-    if (_events.size() < 2) {
-        const QString &initialLetter = event->displayLabel().left(1);
-        if (_events.empty()) {
-            _displayLabel = initialLetter;
-        } else {
-            _displayLabel.append(initialLetter);
-        }
-    }
+void YearDay::addEvent(QPointer<YearEvent> event) {
     _events.emplace_back(event);
+    rebuildDisplayLabel();
 }
 
 void YearDay::clearEvents() {
+    foreach (auto event, _events) {
+        event->deleteLater();
+    }
     _events.clear();
 }
 
@@ -120,15 +118,32 @@ YearEvent* YearDay::item_at(QQmlListProperty<YearEvent> *p, int idx) {
     return nullptr;
 }
 
-void YearDay::removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list) {
+bool YearDay::removeEventsFromModel(const QList<QtOrganizer::QOrganizerItemId> &list) {
+    bool eventsRemoved = false;
 //    qDebug() << "YearDay::removeEventsFromModel" << list;
     for (auto it = _events.begin(); it != _events.end(); ) {
-//        qDebug() << "it:" << *it;
+//        qDebug() << "it:" << (*it)->displayLabel();
         if (*it && list.contains((*it)->itemId())) {
+            (*it)->deleteLater();
             it = _events.erase(it);
-            delete *it;
+            eventsRemoved = true;
+            rebuildDisplayLabel();
         } else {
             it++;
+        }
+    }
+    return eventsRemoved;
+}
+
+void YearDay::rebuildDisplayLabel() {
+    _displayLabel = "";
+    for (int i = 0; i < _events.size() && i < 2; i++) {
+        auto event = _events[i];
+        const QString &initialLetter = event->displayLabel().left(1);
+        if (i == 0) {
+            _displayLabel = initialLetter;
+        } else {
+            _displayLabel.append(initialLetter);
         }
     }
 }

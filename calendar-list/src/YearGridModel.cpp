@@ -34,12 +34,13 @@ YearGridModel::YearGridModel(QObject *parent, QString prefManager) : QAbstractLi
             auto cellIndex = d * GRID_HEIGHT + g * GRID_HEIGHT * DAYS_IN_WEEK;
             auto cell = _gridCells[cellIndex] = new YearDay();
             const QString &dayOfWeek = date.toString("ddd").left(1);
-            qWarning() << cellIndex << dayOfWeek;
+//            qWarning() << cellIndex << dayOfWeek;
             cell->setDisplayLabel(dayOfWeek);
             cell->setType(DayTypeHeading);
         }
         date = date.addDays(1);
     }
+    _year = 0;
 }
 
 YearGridModel::~YearGridModel() {
@@ -146,6 +147,7 @@ void YearGridModel::setYear(const int year) {
         QDateTime endDateTime(QDate(year, 12, 31), QTime(23, 59, 59, 0), QTimeZone(QTimeZone::systemTimeZoneId()));
 
         QList<QtOrganizer::QOrganizerItem> items = _manager->items(startDateTime, endDateTime, filter());
+//        qWarning() << "year got items: " << items;
         addItemsToGrid(items);
 
         emit modelChanged();
@@ -174,6 +176,10 @@ QVariant YearGridModel::data(const QModelIndex &index, int role) const
 QQmlListProperty<YearDay> YearGridModel::items()
 {
     return {this, nullptr, item_count, item_at};
+}
+
+QtOrganizer::QOrganizerManager *YearGridModel::manager() {
+    return _manager;
 }
 
 int YearGridModel::item_count(QQmlListProperty<YearDay> *p)
@@ -236,18 +242,25 @@ void YearGridModel::manageCollectionsRemoved(const QList<QtOrganizer::QOrganizer
     setYear(year());
 }
 
-void YearGridModel::addEventToDate(YearEvent *event, QDate date) {
+void YearGridModel::addEventToDate(QPointer<YearEvent> event, QDate date) {
     int gridIndex = date.month()+GRID_HEIGHT*(_monthOffset[date.month()-1]+(date.day()-1));
     _gridCells[gridIndex]->addEvent(event);
+    beginRemoveRows(QModelIndex(), gridIndex, gridIndex);
+    endRemoveRows();
+    beginInsertRows(QModelIndex(), gridIndex, gridIndex);
+    endInsertRows();
 }
 
 void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
+    if (_year < 1970 ) {
+        return;
+    }
     QDate endOfYear(_year, 12, 1);
     endOfYear.setDate(_year, 12, endOfYear.daysInMonth());
     for (const auto &item : items) {
         QtOrganizer::QOrganizerEventTime eventTime = item.detail(QtOrganizer::QOrganizerItemDetail::TypeEventTime);
         if (!eventTime.isEmpty() && eventTime.startDateTime().isValid()) {
-            auto *event = new YearEvent();
+            QPointer<YearEvent> event = new YearEvent();
             QDateTime startDateTime = eventTime.startDateTime();
             startDateTime.setTime(QTime(12,0,0,0));
             QDate startDate = startDateTime.date();
@@ -259,35 +272,41 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
             event->setItemId(item.id());
             event->setCollectionId(item.collectionId().toString());
 
+
             auto parentIdDetail = item.detail(QtOrganizer::QOrganizerItemDetail::TypeParent);
-//            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
+            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
             auto parentId = parentIdDetail.value(QtOrganizer::QOrganizerItemParent::FieldParentId);
-//            qDebug() << "ParentId:" << parentId;
+            qDebug() << "ParentId:" << parentId;
             if (parentId.isValid()) {
-//                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
+                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
                 event->setParentId(parentId.value<QtOrganizer::QOrganizerItemId>().toString());
             }
 
             do {
                 addEventToDate(event, startDate);
-//                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
+                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
                 startDate = startDate.addDays(1);
             } while (startDate < endDate && startDate < endOfYear);
         } else {
-//            qDebug() << "ET: " << eventTime << ", I: " << item;
+            qDebug() << "ET: " << eventTime << ", I: " << item;
         }
     }
 }
 
 void YearGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
-    for (auto cell : _gridCells) {
-        cell->removeEventsFromModel(itemIds);
+    for (auto i=0; i < _gridCells.size(); i++) {
+        if (_gridCells[i]->removeEventsFromModel(itemIds)) {
+            beginRemoveRows(QModelIndex(), i, i);
+            endRemoveRows();
+            beginInsertRows(QModelIndex(), i, i);
+            endInsertRows();
+        }
     }
 }
 
 void YearGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(itemIds);
-//    qWarning() << "addItemsToModel" << items;
+    qWarning() << "addItemsToModel" << items;
     addItemsToGrid(items);
 }
 
