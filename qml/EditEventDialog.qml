@@ -35,7 +35,8 @@ Window {
     function addEvent() {
         internal.collectionId = model.getDefaultCollection().collectionId;
         internal.originalCollectionId = "";
-        console.log("Add Event Setting default collection:"+internal.collectionId);
+//        console.log("default collection writable:"+model.collectionIdIsWritable(internal.collectionId));
+//        console.log("Add Event Setting default collection:"+internal.collectionId);
     }
 
     function editEvent(e) {
@@ -1222,18 +1223,26 @@ Window {
                         exclusiveGroup: tabCalendarGroup
                         activeFocusOnTab: true
                         activeFocusOnPress: true
-                        onCheckedChanged: {
-                            if (checked) {
+                        onClicked: {
+                            if (modelData.collectionId !== internal.collectionId) {
                                 internal.collectionId = modelData.collectionId;
-                            } else if (internal.collectionId === modelData.collectionId) {
+                            } else {
                                 internal.collectionId = null
                             }
                         }
                         Keys.onEnterPressed: {
-                            checked = !checked
+                            if (modelData.collectionId !== internal.collectionId) {
+                                internal.collectionId = modelData.collectionId;
+                            } else {
+                                internal.collectionId = null
+                            }
                         }
                         Keys.onReturnPressed: {
-                            checked = !checked
+                            if (modelData.collectionId !== internal.collectionId) {
+                                internal.collectionId = modelData.collectionId;
+                            } else {
+                                internal.collectionId = null
+                            }
                         }
                     }
                 }

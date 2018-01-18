@@ -87,7 +87,12 @@ OrganizerModel {
             return defaultCol
         }
 
-        var cals = getCollections();
+        var cals = getWritableAndSelectedCollections();
+        if (cals.length > 0) {
+            return cals[0];
+        }
+
+        cals = getCollections();
         for(var i = 0 ; i < cals.length ; ++i) {
             var cal = cals[i]
             var val = cal.extendedMetaData("collection-selected")
@@ -95,11 +100,11 @@ OrganizerModel {
                 return cal;
             }
         }
-
         return cals[0]
     }
 
     function setDefaultCollection( collectionId ) {
+        console.log("save default collection"+collectionId);
         var cals = getCollections();
          for(var i = 0 ; i < cals.length ; ++i) {
              var cal = cals[i]
