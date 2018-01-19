@@ -38,6 +38,13 @@ Window {
         model.removeCollection(collections[calendarsListView.currentIndex].collectionId);
     }
 
+    function selectCollection() {
+        var cal = collections[calendarsListView.currentIndex]
+        cal.setExtendedMetaData("collection-selected", !cal.extendedMetaData("collection-selected"));
+        model.saveCollection(cal);
+        console.log("selectCollection"+cal.extendedMetaData("collection-selected"));
+    }
+
     title: qsTr("Calendar Collections");
 
     Loader {
@@ -61,7 +68,7 @@ Window {
 
         Column {
             id: dialogColumn
-            width: Math.max(questionLabel.width+app.appFontSize*3, calendarsListView.width)
+            width: questionLabel.width+app.appFontSize*3
             topPadding: collectionsDialog.padding
             bottomPadding: collectionsDialog.padding
             rightPadding: collectionsDialog.padding
@@ -129,12 +136,28 @@ Window {
                                 height: collectionName.height
                                 radius: padding/2
                                 color: modelData.color
+                                Rectangle {
+                                    width: padding
+                                    height: collectionName.height
+                                    radius: padding
+                                    anchors.centerIn: parent
+                                    opacity: collections[index].extendedMetaData("collection-selected")?0:0.5
+                                    color: "white"
+                                    Rectangle {
+                                        width: padding
+                                        height: padding/3
+                                        radius: padding
+                                        anchors.centerIn: parent
+                                        color: modelData.color
+                                    }
+                                }
                             }
 
                             Label {
                                 id: collectionName
                                 text: modelData.name
                                 font.pixelSize: app.appFontSize
+                                font.bold: collections[index].extendedMetaData("collection-default")
                                 color: collectionItem.activeFocus ? sysPalette.highlightedText : sysPalette.buttonText
                             }
 
@@ -217,6 +240,23 @@ Window {
                     deleteCollection();
                 }
                 KeyNavigation.left: calendarsListView
+                KeyNavigation.down: selectCollectionButton
+            }
+            ZoomButton {
+                id: selectCollectionButton
+                activeFocusOnTab: true
+                activeFocusOnPress: true
+                text: collections[calendarsListView.currentIndex].extendedMetaData("collection-selected") !== true?qsTr("Show (ctrl-s)"):qsTr("Hide (ctrl-s)")
+                onClicked: {
+                    selectCollection();
+                }
+                Keys.onEnterPressed: {
+                    selectCollection();
+                }
+                Keys.onReturnPressed: {
+                    selectCollection();
+                }
+                KeyNavigation.left: calendarsListView
                 KeyNavigation.down: cancelButton
             }
             ZoomButton {
@@ -259,6 +299,13 @@ Window {
             sequence: "Ctrl+d"
             onActivated: {
                 deleteCollection();
+            }
+        }
+
+        Shortcut {
+            sequence: "Ctrl+s"
+            onActivated: {
+                selectCollection();
             }
         }
     }
