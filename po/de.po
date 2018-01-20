@@ -5,10 +5,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gka-calendar-qt\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-19 21:10+0000\n"
+"POT-Creation-Date: 2018-01-19 16:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Adam Boardman\n"
-"Language: \n"
+"Language: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16,387 +16,387 @@ msgstr ""
 #: qml/RemindersModel.qml:52
 #, qt-format
 msgid "%1 day"
-msgstr ""
+msgstr "%1 Tag"
 
 #: qml/RemindersModel.qml:63
 #, qt-format
 msgid "%1 hour"
-msgstr ""
+msgstr "%1 Stunde"
 
 #: qml/RemindersModel.qml:72
 #, qt-format
 msgid "%1 minute"
-msgstr ""
+msgstr "%1 Minute"
 
 #: qml/RemindersModel.qml:41
 #, qt-format
 msgid "%1 week"
-msgstr ""
+msgstr "%1 Woche"
 
 #: qml/CalendarMenu.qml:25
 msgid "&Add Item"
-msgstr ""
+msgstr "&Artikel hinzufügen"
 
 #: qml/CalendarMenu.qml:39
 msgid "&Calender Collections (ctrl-shift-C)"
-msgstr ""
+msgstr "&Kalender-Sammlung (ctrl-shift-C)"
 
 #: qml/CalendarMenu.qml:83
 msgid "&Day (ctrl-shift-D)"
-msgstr ""
+msgstr "&Tag (ctrl-shift-D)"
 
 #: qml/CalendarMenu.qml:21
 msgid "&Edit"
-msgstr ""
+msgstr "&Bearbeiten"
 
 #: qml/CalendarMenu.qml:11
 msgid "&File"
-msgstr ""
+msgstr "&Datei"
 
 #: qml/CalendarMenu.qml:104
 msgid "&Go"
-msgstr ""
+msgstr "&Gehen"
 
 #: qml/CalendarMenu.qml:115
 msgid "&Jump to date (ctrl-j)"
-msgstr ""
+msgstr "&Zum Datum springen (ctrl-j)"
 
 #: qml/CalendarMenu.qml:15
 msgid "&Quit (ctrl-q)"
-msgstr ""
+msgstr "&Schließen (ctrl-q)"
 
 #: qml/CalendarMenu.qml:126
 msgid "&Settings"
-msgstr ""
+msgstr "die &Einstellungen"
 
 #: qml/CalendarMenu.qml:108
 msgid "&Today (space)"
-msgstr ""
+msgstr "&Heute (space)"
 
 #: qml/CalendarMenu.qml:122
 msgid "&Tools"
-msgstr ""
+msgstr "&Werkzeuge"
 
 #: qml/CalendarMenu.qml:60
 msgid "&View"
-msgstr ""
+msgstr "&Aussicht"
 
 #: qml/CalendarMenu.qml:90
 msgid "&Week (ctrl-shift-W)"
-msgstr ""
+msgstr "&Woche (ctrl-shift-W)"
 
 #: qml/CalendarMenu.qml:97
 msgid "&Year (ctrl-shift-Y)"
-msgstr ""
+msgstr "&Jahr (ctrl-shift-Y)"
 
 #: qml/RemindersModel.qml:108
 msgid "1 day"
-msgstr ""
+msgstr "1 Tag"
 
 #: qml/RemindersModel.qml:106
 msgid "1 hour"
-msgstr ""
+msgstr "1 Stunde"
 
 #: qml/RemindersModel.qml:111
 msgid "1 week"
-msgstr ""
+msgstr "1 Woche"
 
 #: qml/RemindersModel.qml:103
 msgid "10 minutes"
-msgstr ""
+msgstr "10 Minuten"
 
 #: qml/RemindersModel.qml:104
 msgid "15 minutes"
-msgstr ""
+msgstr "15 Minuten"
 
 #: qml/RemindersModel.qml:109
 msgid "2 days"
-msgstr ""
+msgstr "2 Tage"
 
 #: qml/RemindersModel.qml:107
 msgid "2 hours"
-msgstr ""
+msgstr "2 Stunden"
 
 #: qml/RemindersModel.qml:112
 msgid "2 weeks"
-msgstr ""
+msgstr "2 Wochen"
 
 #: qml/RemindersModel.qml:110
 msgid "3 days"
-msgstr ""
+msgstr "3 Tage"
 
 #: qml/RemindersModel.qml:105
 msgid "30 minutes"
-msgstr ""
+msgstr "30 Minuten"
 
 #: qml/RemindersModel.qml:102
 msgid "5 minutes"
-msgstr ""
+msgstr "5 Minuten"
 
 #: qml/CollectionsDialog.qml:197
 msgid "Add (ctrl-a)"
-msgstr ""
+msgstr "Hinzufügen (ctrl-a)"
 
 #: qml/ColourDialog.qml:52
 msgid "Adjust colour"
-msgstr ""
+msgstr "Passe die Farbe an"
 
 #: qml/EditEventDialog.qml:780
 msgid "Alarm (ctrl-shift-A)"
-msgstr ""
+msgstr "Alarm (ctrl-shift-A)"
 
 #: qml/EditEventDialog.qml:550
 msgid "All Day Event"
-msgstr ""
+msgstr "Ganztägige Veranstaltung"
 
 #: qml/DeleteDialog.qml:46
 #, qt-format
 msgid "Are you sure you want to delete the event \"%1\"?"
-msgstr ""
+msgstr "Möchten Sie das Ereignis \"%1\" wirklich löschen?"
 
 #: qml/CollectionsDialog.qml:83
 msgid "Available Calendar Collections"
-msgstr ""
+msgstr "Verfügbare Kalendersammlungen"
 
 #: qml/EditEventDialog.qml:1032
 msgid "By Date"
-msgstr ""
+msgstr "Nach Datum"
 
 #: qml/EditEventDialog.qml:1055
 msgid "By Week"
-msgstr ""
+msgstr "Nach Woche"
 
 #: qml/EditEventDialog.qml:1078
 msgid "By Week Last"
-msgstr ""
+msgstr "Nach letzter Woche"
 
 #: qml/main.qml:19
 msgid "Calendar"
-msgstr ""
+msgstr "Kalender"
 
 #: qml/EditEventDialog.qml:813
 msgid "Calendar (ctrl-g)"
-msgstr ""
+msgstr "Kalender (ctrl-g)"
 
 #: qml/CollectionsDialog.qml:48
 msgid "Calendar Collections"
-msgstr ""
+msgstr "Kalendersammlungen"
 
 #: qml/ColourDialog.qml:118 qml/DeleteDialog.qml:94
 msgid "Cancel"
-msgstr ""
+msgstr "Stornieren"
 
 #: qml/CollectionsDialog.qml:264 qml/EditCollectionDialog.qml:178
 #: qml/EditEventDialog.qml:732 qml/SettingsDialog.qml:75
 msgid "Cancel (esc)"
-msgstr ""
+msgstr "Stornieren (esc)"
 
 #: qml/EditCollectionDialog.qml:117 qml/EditCollectionDialog.qml:127
 msgid "Collection colour"
-msgstr ""
+msgstr "Sammlungsfarbe"
 
 #: qml/EditCollectionDialog.qml:143
 msgid "Collection default"
-msgstr ""
+msgstr "Standard der Sammlung"
 
 #: qml/EditCollectionDialog.qml:100 qml/EditCollectionDialog.qml:110
 msgid "Collection description"
-msgstr ""
+msgstr "Beschreibung der Sammlung"
 
 #: qml/EditCollectionDialog.qml:83 qml/EditCollectionDialog.qml:93
 msgid "Collection name"
-msgstr ""
+msgstr "Sammlungsname"
 
 #: qml/EditCollectionDialog.qml:134
 msgid "Collection selected"
-msgstr ""
+msgstr "Sammlung ausgewählt"
 
 #: qml/ColourDialog.qml:40
 msgid "Colour for collection"
-msgstr ""
+msgstr "Farbe für die Sammlung"
 
 #: qml/ColourDialog.qml:57
 msgid "Colour hex"
-msgstr ""
+msgstr "Farbe Hex"
 
 #: qml/EditEventDialog.qml:1116
 msgid "Count Occurrences"
-msgstr ""
+msgstr "Zählen Sie Vorkommen"
 
 #: qml/EditEventDialog.qml:901
 msgid "Daily"
-msgstr ""
+msgstr "Täglich"
 
 #: qml/CollectionsDialog.qml:232 qml/DeleteDialog.qml:77
 msgid "Delete (ctrl-d)"
-msgstr ""
+msgstr "Löschen (ctrl-d)"
 
 #: qml/DeleteDialog.qml:29
 msgid "Delete Event"
-msgstr ""
+msgstr "Ereignis löschen"
 
 #: qml/DeleteDialog.qml:29
 msgid "Delete Recurring Event"
-msgstr ""
+msgstr "Löschen Sie wiederkehrende Ereignisse"
 
 #: qml/DeleteDialog.qml:59
 msgid "Delete series (ctrl-s)"
-msgstr ""
+msgstr "Reihe löschen (ctrl-s)"
 
 #: qml/DeleteDialog.qml:45
 #, qt-format
 msgid "Delete single event \"%1\", or all repeating events?"
-msgstr ""
+msgstr "Löschen Sie einzelnes Ereignis \"%1\", oder alle sich wiederholenden Ereignisse?"
 
 #: qml/DeleteDialog.qml:77
 msgid "Delete this (ctrl-d)"
-msgstr ""
+msgstr "Lösch das (ctrl-d)"
 
 #: qml/EditEventDialog.qml:763
 msgid "Description (ctrl-d)"
-msgstr ""
+msgstr "Beschreibung (ctrl-d)"
 
 #: qml/CollectionsDialog.qml:215
 msgid "Edit (ctrl-e)"
-msgstr ""
+msgstr "Bearbeiten (ctrl-e)"
 
 #: qml/EditEventDialog.qml:666
 msgid "End Date:"
-msgstr ""
+msgstr "Endtermin:"
 
 #: qml/EditEventDialog.qml:641
 msgid "End Time:"
-msgstr ""
+msgstr "Endzeit:"
 
 #: qml/EditCollectionDialog.qml:14 qml/EditEventDialog.qml:14
 msgid "Enter event details"
-msgstr ""
+msgstr "Geben Sie Ereignisdetails ein"
 
 #: qml/EditEventDialog.qml:534
 msgid "Event name"
-msgstr ""
+msgstr "Veranstaltungsname"
 
 #: qml/EditEventDialog.qml:487
 #, qt-format
 msgid "Fifth %1"
-msgstr ""
+msgstr "Fünfter %1"
 
 #: qml/EditEventDialog.qml:475
 #, qt-format
 msgid "First %1"
-msgstr ""
+msgstr "Erstes %1"
 
 #: qml/EditEventDialog.qml:1100
 msgid "Forever"
-msgstr ""
+msgstr "Für immer"
 
 #: qml/EditEventDialog.qml:484
 #, qt-format
 msgid "Fourth %1"
-msgstr ""
+msgstr "Weiter %1"
 
 #: qml/CollectionsDialog.qml:249
 msgid "Hide (ctrl-s)"
-msgstr ""
+msgstr "Verbergen (ctrl-s)"
 
 #: qml/EditEventDialog.qml:544
 msgid "Location"
-msgstr ""
+msgstr "Ort"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"
-msgstr ""
+msgstr "Monatlich"
 
 #: qml/RemindersModel.qml:29 qml/RemindersModel.qml:97
 msgid "No Alarm"
-msgstr ""
+msgstr "Kein Alarm"
 
 #: qml/EditEventDialog.qml:712 qml/SettingsDialog.qml:57
 msgid "OK (ctrl-s)"
-msgstr ""
+msgstr "OK (ctrl-s)"
 
 #: qml/EditEventDialog.qml:1157
 msgid "Occurrences"
-msgstr ""
+msgstr "Vorkommen"
 
 #. TRANSLATORS: this refers to when a reminder should be shown as a notification
 #. in the indicators. "On Event" means that it will be shown right at the time
 #. the event starts, not any time before
 #: qml/RemindersModel.qml:32 qml/RemindersModel.qml:101
 msgid "On Event"
-msgstr ""
+msgstr "Beim Ereignis"
 
 #: qml/EditEventDialog.qml:885
 msgid "Once"
-msgstr ""
+msgstr "Einmal"
 
 #: qml/EditEventDialog.qml:797
 msgid "Repeat (ctrl-r)"
-msgstr ""
+msgstr "Wiederholen (ctrl-r)"
 
 #: qml/ColourDialog.qml:100 qml/EditCollectionDialog.qml:160
 msgid "Save (ctrl-s)"
-msgstr ""
+msgstr "Sparen (ctrl-s)"
 
 #: qml/EditEventDialog.qml:478
 #, qt-format
 msgid "Second %1"
-msgstr ""
+msgstr "Zweites %1"
 
 #: qml/SettingsDialog.qml:22
 msgid "Settings"
-msgstr ""
+msgstr "die Einstellungen"
 
 #: qml/CollectionsDialog.qml:249
 msgid "Show (ctrl-s)"
-msgstr ""
+msgstr "Zeigen (ctrl-s)"
 
 #: qml/SettingsDialog.qml:33
 msgid "Show Lunar Calendar"
-msgstr ""
+msgstr "Zeige Mondkalender"
 
 #: qml/EditEventDialog.qml:596
 msgid "Start Date:"
-msgstr ""
+msgstr "Anfangsdatum:"
 
 #: qml/EditEventDialog.qml:571
 msgid "Start Time:"
-msgstr ""
+msgstr "Startzeit:"
 
 #: qml/EditEventDialog.qml:481
 #, qt-format
 msgid "Third %1"
-msgstr ""
+msgstr "Dritte %1"
 
 #: qml/DayViewItem.qml:72
 msgid "Today"
-msgstr ""
+msgstr "Heute"
 
 #: qml/EditEventDialog.qml:1133
 msgid "Until Date"
-msgstr ""
+msgstr "Bis zum Datum"
 
 #: qml/WeekViewDayItem.qml:71 qml/WeekViewGrid.qml:107 qml/WeekViewGrid.qml:119
 #, qt-format
 msgid "Week %1"
-msgstr ""
+msgstr "Woche %1"
 
 #: qml/EditEventDialog.qml:917
 msgid "Weekly"
-msgstr ""
+msgstr "Wöchentlich"
 
 #: qml/YearViewGrid.qml:249
 msgid "Year Planner "
-msgstr ""
+msgstr "Jahresplaner"
 
 #: qml/EditEventDialog.qml:950
 msgid "Yearly"
-msgstr ""
+msgstr "Jährlich"
 
 #: qml/CalendarMenu.qml:64
 msgid "Zoom &In (ctrl-m)"
-msgstr ""
+msgstr "Hineinzoomen (ctrl-m)"
 
 #: qml/CalendarMenu.qml:71
 msgid "Zoom &Out (ctrl-shift-M)"
-msgstr ""
+msgstr "Rauszoomen (ctrl-shift-M)"

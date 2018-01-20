@@ -709,7 +709,7 @@ Window {
 
                     ZoomButton {
                         id: okButton
-                        text: qsTr("Ok (ctrl-s)")
+                        text: qsTr("OK (ctrl-s)")
                         enabled: internal.collectionId !== null && model && model.collectionIdIsWritable(internal.collectionId)
                         activeFocusOnTab: true
                         activeFocusOnPress: true
@@ -1113,7 +1113,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatUntilCountButton
-                            text: qsTr("Count Occurences")
+                            text: qsTr("Count Occurrences")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
