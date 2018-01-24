@@ -122,12 +122,12 @@ FocusScope {
             property var itemIdToLoad: null
             property bool editItem: false
 
-            function enabledColections() {
+            function enabledCollections() {
                 var collectionIds = [];
                 var collections = getCollections()
-                for(var i=0; i < collections.length ; ++i) {
+                for (var i=0; i < collections.length; ++i) {
                     var collection = collections[i]
-                    if(collection.extendedMetaData("collection-selected") === true) {
+                    if (collection.extendedMetaData("collection-selected") === true) {
                         collectionIds.push(collection.collectionId);
                     }
                 }
@@ -135,7 +135,7 @@ FocusScope {
             }
 
             function applyFilterFinal() {
-                var collectionIds = enabledColections()
+                var collectionIds = enabledCollections()
                 collectionFilter.ids = collectionIds
                 filter = Qt.binding(function() { return mainFilter; })
                 isReady = true
@@ -153,7 +153,7 @@ FocusScope {
                 }
             ]
             onCollectionsChanged: {
-                var collectionIds = enabledColections()
+                var collectionIds = enabledCollections()
                 var oldCollections = collectionFilter.ids
                 var needsUpdate = false
                 if (collectionIds.length !== oldCollections.length) {
@@ -319,9 +319,7 @@ FocusScope {
                     }
                 }
             }
-
         }
-
     }
 
     function setDateToLeftColumn(index) {

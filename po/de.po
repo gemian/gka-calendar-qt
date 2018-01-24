@@ -53,11 +53,11 @@ msgstr "&Bearbeiten"
 msgid "&File"
 msgstr "&Datei"
 
-#: qml/CalendarMenu.qml:104
+#: qml/CalendarMenu.qml:111
 msgid "&Go"
 msgstr "&Gehen"
 
-#: qml/CalendarMenu.qml:115
+#: qml/CalendarMenu.qml:122
 msgid "&Jump to date (ctrl-j)"
 msgstr "&Zum Datum springen (ctrl-j)"
 
@@ -65,15 +65,19 @@ msgstr "&Zum Datum springen (ctrl-j)"
 msgid "&Quit (ctrl-q)"
 msgstr "&Schließen (ctrl-q)"
 
-#: qml/CalendarMenu.qml:126
+#: qml/CalendarMenu.qml:133
 msgid "&Settings"
 msgstr "die &Einstellungen"
 
-#: qml/CalendarMenu.qml:108
+#: qml/CalendarMenu.qml:104
+msgid "&To-do (ctrl-shift-T)"
+msgstr ""
+
+#: qml/CalendarMenu.qml:115
 msgid "&Today (space)"
 msgstr "&Heute (space)"
 
-#: qml/CalendarMenu.qml:122
+#: qml/CalendarMenu.qml:129
 msgid "&Tools"
 msgstr "&Werkzeuge"
 
@@ -303,6 +307,10 @@ msgstr "Verbergen (ctrl-s)"
 msgid "Location"
 msgstr "Ort"
 
+#: qml/ToDoView.qml:339
+msgid "Memos"
+msgstr ""
+
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"
 msgstr "Monatlich"
@@ -367,6 +375,10 @@ msgstr "Startzeit:"
 #, qt-format
 msgid "Third %1"
 msgstr "Dritte %1"
+
+#: qml/ToDoView.qml:301
+msgid "To-do"
+msgstr ""
 
 #: qml/DayViewItem.qml:72
 msgid "Today"

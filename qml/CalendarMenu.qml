@@ -99,6 +99,13 @@ MenuBar {
                 alternateViewLoader.source = "YearViewGrid.qml"
             }
         }
+        MenuItem {
+            id: viewMenuToDo
+            text: qsTr("&To-do (ctrl-shift-T)")
+            onTriggered: {
+                alternateViewLoader.source = "ToDoView.qml"
+            }
+        }
     }
     Menu {
         title: qsTr("&Go")

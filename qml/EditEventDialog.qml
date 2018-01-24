@@ -1154,7 +1154,7 @@ Window {
                             right: parent.right
                             margins: eventDialog.spacing
                         }
-                        placeholderText: qsTr("Occurences")
+                        placeholderText: qsTr("Occurrences")
                         font.pixelSize: app.appFontSize
                     }
                     TextField {

@@ -37,6 +37,10 @@ ApplicationWindow {
 
     Settings {
         id: settings
+        property alias x: app.x
+        property alias y: app.y
+        property alias width: app.width
+        property alias height: app.height
         property bool showLunarCalendar
         property real appFontSize
     }
@@ -150,6 +154,11 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+Shift+y"
         onActivated: alternateViewLoader.source = "YearViewGrid.qml"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+t"
+        onActivated: alternateViewLoader.source = "ToDoView.qml"
     }
 
     Shortcut {

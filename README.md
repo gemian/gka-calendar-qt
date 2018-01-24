@@ -7,6 +7,15 @@ See INSTALL.md for how to build.
 
 ## Keyboard navigation
 
+### All views
+
+* **Alt+F** open the file menu, use arrow keys to navigate or further Alt+Q etc to select other items
+* **Ctrl+Q** quit the app
+* **Ctrl+Shift+W** week view
+* **Ctrl+Shift+D** day view
+* **Ctrl+Shift+Y** year view
+* **Ctrl+Shift+T** todo view
+
 ### Week view
 
 * **Up** move back in time by one day, will change page at the top
@@ -14,8 +23,24 @@ See INSTALL.md for how to build.
 * **Left** move back in time by 3/4 days, will change the column or page as appropriate
 * **Right** move forwards in time by 3/4 days, will change the column or page as appropriate
 * **Space** jump to today
-* **Alt+F** open the file menu, use arrow keys to navigate or further Alt+Q etc to select other items
-* **Ctrl+Q** quit the app
+* **Enter** edit selected entry, or create new entry
+* **Delete** delete selected entry
+
+### Day view
+
+* **Arrow keys** Move round the view
+* **Space** jump to today
+* **Enter** edit selected entry, or create new entry
+
+### Year view
+
+* **Arrow keys** Move round the view
+* **Space** jump to today
+* **Enter** edit selected entry, or create new entry
+
+### To-do/Memos view
+
+* **Arrow keys** Move round the view
 
 ### New/Edit Event dialog
 
