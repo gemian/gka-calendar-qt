@@ -89,6 +89,10 @@ FocusScope {
             Keys.onPressed: {
 //                console.log("[YGV]key:"+event.key)
             }
+            Keys.onEscapePressed: {
+                event.accepted = true;
+            }
+
             onDragEnded: {
 //                console.log("[DragEnd]contentX:"+contentX)
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {

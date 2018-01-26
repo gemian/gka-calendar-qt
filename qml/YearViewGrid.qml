@@ -278,6 +278,9 @@ FocusScope {
             Keys.onPressed: {
 //                console.log("[YGV]key:"+event.key)
             }
+            Keys.onEscapePressed: {
+                event.accepted = true;
+            }
             onDragEnded: {
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {
                     selectedDate = selectedDate.addMonths(12);

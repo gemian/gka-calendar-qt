@@ -122,7 +122,10 @@ FocusScope {
                 gridView.forceActiveFocus();
             }
             Keys.onPressed: {
-                console.log("[DGV]key:"+event.key)
+//                console.log("[DGV]key:"+event.key)
+            }
+            Keys.onEscapePressed: {
+                event.accepted = true;
             }
             onDragEnded: {
                 if (contentX > internal.initialContentX+internal.contentXactionOn) {

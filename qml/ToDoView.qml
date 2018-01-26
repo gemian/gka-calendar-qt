@@ -240,7 +240,6 @@ FocusScope {
         onModelChanged: {
             print("memoModel.onModelChanged")
             isLoading = false
-            setupGridSize();
             gridView.currentIndex = selectedIndex
             if (gridView.currentItem) {
                 gridView.currentItem.forceActiveFocus()
@@ -274,10 +273,6 @@ FocusScope {
         gradient: Gradient {
             GradientStop { position: 0.0; color: "#193441" }
             GradientStop { position: 1.0; color: Qt.darker("#193441") }
-        }
-
-        onHeightChanged: {
-            setupGridSize();
         }
 
         FocusScope {
@@ -360,6 +355,9 @@ FocusScope {
         }
     }
 
+    Keys.onEscapePressed: {
+        event.accepted = true;
+    }
     Keys.onPressed: {
         console.log("key:"+event.key)
 
