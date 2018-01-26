@@ -67,7 +67,22 @@ FocusScope {
                     anchors.centerIn: todoIndicator
                     color: todoIndicator.activeFocus ? "white" : "black"
                     font.pixelSize: app.appFontSize
-                    text: oModel.items[index]&&oModel.items[index].time?oModel.items[index].time.toLocaleTimeString(Qt.locale(), Locale.ShortFormat):""
+                    text: oModel.items[index].status === Todo.Complete?"\u2713":""
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onReleased: {
+                        if (oModel.items[index].status !== Todo.Complete) {
+                            oModel.items[index].status = Todo.Complete;
+                        } else {
+                            oModel.items[index].status = Todo.NotStarted;
+                        }
+                        todoSelectedIndex = index
+                        todoListView.currentIndex = index
+                        todoListView.currentItem.forceActiveFocus()
+                    }
                 }
             }
 
@@ -76,7 +91,15 @@ FocusScope {
                 width: todoRectangle.width - todoIndicator.width - 10
                 wrapMode: Text.Wrap
                 font.pixelSize: app.appFontSize
+                font.strikeout: oModel.items[index].status === Todo.Complete
                 text: oModel.items[index]?oModel.items[index].displayLabel:""
+//                oModel.items[index].status+" SD"+
+//                oModel.items[index].startDateTime+" ED"+
+//                oModel.items[index].endDateTime+" DD"+
+//                oModel.items[index].dueDateTime+" AD"+
+//                oModel.items[index].allDay+" FD"+
+//                oModel.items[index].finishedDateTime+" PC"+
+//                oModel.items[index].percentageComplete
             }
         }
     }
