@@ -11,9 +11,7 @@ MenuBar {
         title: qsTr("&File")
         id: fileMenu
         MenuItem {
-            id: fileMenuQuit
-            text: qsTr("&Quit (ctrl-q)")
-            onTriggered: Qt.quit();
+            action: quitAction
         }
     }
 
@@ -35,11 +33,7 @@ MenuBar {
 //            }
 //        }
         MenuItem {
-            id: editMenuCollections
-            text: qsTr("&Calender Collections (ctrl-shift-C)")
-            onTriggered: {
-                dialogLoader.setSource("CollectionsDialog.qml", {"model": menuBar.model});
-            }
+            action: collectionsDialogAction
         }
 
 //        MenuItem {
@@ -60,69 +54,35 @@ MenuBar {
         title: qsTr("&View")
         id: viewMenu
         MenuItem {
-            id: viewMenuZoomIn
-            text: qsTr("Zoom &In (ctrl-m)")
-            onTriggered: {
-                settings.appFontSize += 1
-            }
+            action: zoomInAction
         }
         MenuItem {
-            id: viewMenuZoomOut
-            text: qsTr("Zoom &Out (ctrl-shift-M)")
-            onTriggered: {
-                if (settings.appFontSize > 8) {
-                    settings.appFontSize -= 1
-                }
-            }
+            action: zoomOutAction
         }
         MenuSeparator {
 
         }
         MenuItem {
-            id: viewMenuDay
-            text: qsTr("&Day (ctrl-shift-D)")
-            onTriggered: {
-                alternateViewLoader.source = "DayViewGrid.qml"
-            }
+            action: dayViewAction
         }
         MenuItem {
-            id: viewMenuWeek
-            text: qsTr("&Week (ctrl-shift-W)")
-            onTriggered: {
-                alternateViewLoader.source = "WeekViewGrid.qml"
-            }
+            action: weekViewAction
         }
         MenuItem {
-            id: viewMenuYear
-            text: qsTr("&Year (ctrl-shift-Y)")
-            onTriggered: {
-                alternateViewLoader.source = "YearViewGrid.qml"
-            }
+            action: yearViewAction
         }
         MenuItem {
-            id: viewMenuToDo
-            text: qsTr("&To-do (ctrl-shift-T)")
-            onTriggered: {
-                alternateViewLoader.source = "ToDoView.qml"
-            }
+            action: todoViewAction
         }
     }
     Menu {
         title: qsTr("&Go")
         id: goMenu
         MenuItem {
-            id: goMenuToday
-            text: qsTr("&Today (space)")
-            onTriggered: {
-                app.updateSelectedToToday()
-            }
+            action: todayAction
         }
         MenuItem {
-            id: goMenuSelect
-            text: qsTr("&Jump to date (ctrl-j)")
-            onTriggered: {
-                app.jumpToDate();
-            }
+            action: jumpToDateAction
         }
     }
     Menu {

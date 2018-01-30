@@ -33,65 +33,65 @@ msgstr "%1 分钟"
 msgid "%1 week"
 msgstr "%1 周"
 
-#: qml/CalendarMenu.qml:25
+#: qml/MainMenu.qml:23
 msgid "&Add Item"
 msgstr "新增项目"
 
-#: qml/CalendarMenu.qml:39
-msgid "&Calender Collections (ctrl-shift-C)"
-msgstr "日历集合 (ctrl-shift-C)"
+#: qml/main.qml:143
+msgid "&Calender Collections"
+msgstr "日历集合"
 
-#: qml/CalendarMenu.qml:83
-msgid "&Day (ctrl-shift-D)"
-msgstr "天 (ctrl-shift-D)"
+#: qml/main.qml:150
+msgid "&Day"
+msgstr "天"
 
-#: qml/CalendarMenu.qml:21
+#: qml/MainMenu.qml:19
 msgid "&Edit"
 msgstr "编辑"
 
-#: qml/CalendarMenu.qml:11
+#: qml/MainMenu.qml:11
 msgid "&File"
 msgstr "文件"
 
-#: qml/CalendarMenu.qml:111
+#: qml/MainMenu.qml:79
 msgid "&Go"
 msgstr "走"
 
-#: qml/CalendarMenu.qml:122
-msgid "&Jump to date (ctrl-j)"
-msgstr "跳转到日期 (ctrl-j)"
+#: qml/main.qml:209
+msgid "&Jump to date"
+msgstr "跳转到日期"
 
-#: qml/CalendarMenu.qml:15
-msgid "&Quit (ctrl-q)"
-msgstr "放弃 (ctrl-q)"
+#: qml/main.qml:136
+msgid "&Quit"
+msgstr "放弃"
 
-#: qml/CalendarMenu.qml:133
+#: qml/MainMenu.qml:93
 msgid "&Settings"
 msgstr "设置"
 
-#: qml/CalendarMenu.qml:104
-msgid "&To-do (ctrl-shift-T)"
-msgstr ""
+#: qml/main.qml:171
+msgid "&To-do"
+msgstr "去做"
 
-#: qml/CalendarMenu.qml:115
-msgid "&Today (space)"
-msgstr "今天 (space)"
+#: qml/main.qml:202
+msgid "&Today"
+msgstr "今天"
 
-#: qml/CalendarMenu.qml:129
+#: qml/MainMenu.qml:89
 msgid "&Tools"
 msgstr "工具"
 
-#: qml/CalendarMenu.qml:60
+#: qml/MainMenu.qml:54
 msgid "&View"
 msgstr "视图"
 
-#: qml/CalendarMenu.qml:90
-msgid "&Week (ctrl-shift-W)"
-msgstr "周 (ctrl-shift-W)"
+#: qml/main.qml:157
+msgid "&Week"
+msgstr "周"
 
-#: qml/CalendarMenu.qml:97
-msgid "&Year (ctrl-shift-Y)"
-msgstr "年 (ctrl-shift-Y)"
+#: qml/main.qml:164
+msgid "&Year"
+msgstr "年"
 
 #: qml/RemindersModel.qml:108
 msgid "1 day"
@@ -307,7 +307,7 @@ msgstr "隐藏 (ctrl-s)"
 msgid "Location"
 msgstr "位置"
 
-#: qml/ToDoView.qml:339
+#: qml/ToDoView.qml:334
 msgid "Memos"
 msgstr ""
 
@@ -376,9 +376,9 @@ msgstr "开始时间:"
 msgid "Third %1"
 msgstr "第三％1"
 
-#: qml/ToDoView.qml:301
+#: qml/ToDoView.qml:296
 msgid "To-do"
-msgstr ""
+msgstr "去做"
 
 #: qml/DayViewItem.qml:72
 msgid "Today"
@@ -388,7 +388,7 @@ msgstr "今天"
 msgid "Until Date"
 msgstr "直到日期"
 
-#: qml/WeekViewDayItem.qml:71 qml/WeekViewGrid.qml:107 qml/WeekViewGrid.qml:119
+#: qml/WeekViewDayItem.qml:71 qml/WeekViewGrid.qml:111 qml/WeekViewGrid.qml:123
 #, qt-format
 msgid "Week %1"
 msgstr "星期％1"
@@ -405,10 +405,10 @@ msgstr "年计划者"
 msgid "Yearly"
 msgstr "每年"
 
-#: qml/CalendarMenu.qml:64
-msgid "Zoom &In (ctrl-m)"
-msgstr "放大... (ctrl-m)"
+#: qml/main.qml:191
+msgid "Zoom &In"
+msgstr "放大..."
 
-#: qml/CalendarMenu.qml:71
-msgid "Zoom &Out (ctrl-shift-M)"
-msgstr "缩小... (ctrl-shift-M)"
+#: qml/main.qml:178
+msgid "Zoom &Out"
+msgstr "缩小..."

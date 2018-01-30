@@ -33,65 +33,65 @@ msgstr "%1 минута"
 msgid "%1 week"
 msgstr "%1 неделя"
 
-#: qml/CalendarMenu.qml:25
+#: qml/MainMenu.qml:23
 msgid "&Add Item"
 msgstr "Добавить элемент"
 
-#: qml/CalendarMenu.qml:39
-msgid "&Calender Collections (ctrl-shift-C)"
-msgstr "Коллекции календарей (ctrl-shift-C)"
+#: qml/main.qml:143
+msgid "&Calender Collections"
+msgstr "Коллекции календарей"
 
-#: qml/CalendarMenu.qml:83
-msgid "&Day (ctrl-shift-D)"
-msgstr "День (ctrl-shift-D)"
+#: qml/main.qml:150
+msgid "&Day"
+msgstr "День"
 
-#: qml/CalendarMenu.qml:21
+#: qml/MainMenu.qml:19
 msgid "&Edit"
 msgstr "редактировать"
 
-#: qml/CalendarMenu.qml:11
+#: qml/MainMenu.qml:11
 msgid "&File"
 msgstr "файл"
 
-#: qml/CalendarMenu.qml:111
+#: qml/MainMenu.qml:79
 msgid "&Go"
 msgstr "Идти"
 
-#: qml/CalendarMenu.qml:122
-msgid "&Jump to date (ctrl-j)"
-msgstr "Перейти к дате (ctrl-j)"
+#: qml/main.qml:209
+msgid "&Jump to date"
+msgstr "Перейти к дате"
 
-#: qml/CalendarMenu.qml:15
-msgid "&Quit (ctrl-q)"
-msgstr "уволиться (ctrl-q)"
+#: qml/main.qml:136
+msgid "&Quit"
+msgstr "уволиться"
 
-#: qml/CalendarMenu.qml:133
+#: qml/MainMenu.qml:93
 msgid "&Settings"
 msgstr "настройки"
 
-#: qml/CalendarMenu.qml:104
-msgid "&To-do (ctrl-shift-T)"
-msgstr ""
+#: qml/main.qml:171
+msgid "&To-do"
+msgstr "делать"
 
-#: qml/CalendarMenu.qml:115
-msgid "&Today (space)"
-msgstr "Cегодня (space)"
+#: qml/main.qml:202
+msgid "&Today"
+msgstr "Cегодня"
 
-#: qml/CalendarMenu.qml:129
+#: qml/MainMenu.qml:89
 msgid "&Tools"
 msgstr "инструменты"
 
-#: qml/CalendarMenu.qml:60
+#: qml/MainMenu.qml:54
 msgid "&View"
 msgstr "вид"
 
-#: qml/CalendarMenu.qml:90
-msgid "&Week (ctrl-shift-W)"
-msgstr "Неделю (ctrl-shift-W)"
+#: qml/main.qml:157
+msgid "&Week"
+msgstr "Неделю"
 
-#: qml/CalendarMenu.qml:97
-msgid "&Year (ctrl-shift-Y)"
-msgstr "Год (ctrl-shift-Y)"
+#: qml/main.qml:164
+msgid "&Year"
+msgstr "Год"
 
 #: qml/RemindersModel.qml:108
 msgid "1 day"
@@ -307,7 +307,7 @@ msgstr "Спрятать (ctrl-s)"
 msgid "Location"
 msgstr "Место нахождения"
 
-#: qml/ToDoView.qml:339
+#: qml/ToDoView.qml:334
 msgid "Memos"
 msgstr ""
 
@@ -376,9 +376,9 @@ msgstr "Время начала:"
 msgid "Third %1"
 msgstr "Третий %1"
 
-#: qml/ToDoView.qml:301
+#: qml/ToDoView.qml:296
 msgid "To-do"
-msgstr ""
+msgstr "делать"
 
 #: qml/DayViewItem.qml:72
 msgid "Today"
@@ -388,7 +388,7 @@ msgstr "Cегодня"
 msgid "Until Date"
 msgstr "До даты"
 
-#: qml/WeekViewDayItem.qml:71 qml/WeekViewGrid.qml:107 qml/WeekViewGrid.qml:119
+#: qml/WeekViewDayItem.qml:71 qml/WeekViewGrid.qml:111 qml/WeekViewGrid.qml:123
 #, qt-format
 msgid "Week %1"
 msgstr "Неделю %1"
@@ -405,10 +405,10 @@ msgstr "Планировщик года"
 msgid "Yearly"
 msgstr "каждый год"
 
-#: qml/CalendarMenu.qml:64
-msgid "Zoom &In (ctrl-m)"
-msgstr "Приблизить... (ctrl-m)"
+#: qml/main.qml:191
+msgid "Zoom &In"
+msgstr "Приблизить..."
 
-#: qml/CalendarMenu.qml:71
-msgid "Zoom &Out (ctrl-shift-M)"
-msgstr "Уменьшить... (ctrl-shift-M)"
+#: qml/main.qml:178
+msgid "Zoom &Out"
+msgstr "Уменьшить..."

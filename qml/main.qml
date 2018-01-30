@@ -121,7 +121,7 @@ ApplicationWindow {
         }
     }
 
-    menuBar: CalendarMenu {
+    menuBar: MainMenu {
         id: menu
         model: organizerModel
         settings: settings
@@ -131,39 +131,53 @@ ApplicationWindow {
         dialogLoader.setSource("ZoomCalendar.qml", {"startDate": selectedDate, "selectedDate": selectedDate})
     }
 
-    Shortcut {
-        sequence: StandardKey.Quit
-        onActivated: Qt.quit()
+    Action {
+        id: quitAction
+        text: qsTr("&Quit")
+        shortcut: StandardKey.Quit
+        onTriggered: Qt.quit()
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+c"
-        onActivated: dialogLoader.setSource("CollectionsDialog.qml", {"model": organizerModel})
+    Action {
+        id: collectionsDialogAction
+        text: qsTr("&Calender Collections")
+        shortcut: "Ctrl+Shift+c"
+        onTriggered: dialogLoader.setSource("CollectionsDialog.qml", {"model": organizerModel})
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+d"
-        onActivated: alternateViewLoader.source = "DayViewGrid.qml"
+    Action {
+        id: dayViewAction
+        text: qsTr("&Day")
+        shortcut: "Ctrl+Shift+d"
+        onTriggered: alternateViewLoader.source = "DayViewGrid.qml"
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+w"
-        onActivated: alternateViewLoader.source = "WeekViewGrid.qml"
+    Action {
+        id: weekViewAction
+        text: qsTr("&Week")
+        shortcut: "Ctrl+Shift+w"
+        onTriggered: alternateViewLoader.source = "WeekViewGrid.qml"
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+y"
-        onActivated: alternateViewLoader.source = "YearViewGrid.qml"
+    Action {
+        id: yearViewAction
+        text: qsTr("&Year")
+        shortcut: "Ctrl+Shift+y"
+        onTriggered: alternateViewLoader.source = "YearViewGrid.qml"
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+t"
-        onActivated: alternateViewLoader.source = "ToDoView.qml"
+    Action {
+        id: todoViewAction
+        text: qsTr("&To-do")
+        shortcut: "Ctrl+Shift+t"
+        onTriggered: alternateViewLoader.source = "ToDoView.qml"
     }
 
-    Shortcut {
-        sequence: "Ctrl+Shift+m"
-        onActivated: {
+    Action {
+        id: zoomOutAction
+        text: qsTr("Zoom &Out")
+        shortcut: "Ctrl+Shift+m"
+        onTriggered: {
             console.log (">appFontSize: " + app.appFontSize)
             if (settings.appFontSize > 8) {
                 settings.appFontSize -= 1
@@ -172,18 +186,29 @@ ApplicationWindow {
         }
     }
 
-    Shortcut {
-        sequence: "Ctrl+m"
-        onActivated: {
+    Action {
+        id: zoomInAction
+        text: qsTr("Zoom &In")
+        shortcut: "Ctrl+m"
+        onTriggered: {
             console.log (">appFontSize: " + app.appFontSize)
             settings.appFontSize += 1
             console.log ("<appFontSize: " + app.appFontSize)
         }
     }
 
-    Shortcut {
-        sequence: "Ctrl+j"
-        onActivated: app.jumpToDate()
+    Action {
+        id: todayAction
+        text: qsTr("&Today (space)")
+        shortcut: "Space"
+        onTriggered: updateSelectedToToday()
+    }
+
+    Action {
+        id: jumpToDateAction
+        text: qsTr("&Jump to date")
+        shortcut: "Ctrl+j"
+        onTriggered: jumpToDate()
     }
 
     FocusScope {
@@ -250,9 +275,9 @@ ApplicationWindow {
         }
         Connections {
             target: dialogLoader.item
-//            onSetSelectedDate: {
-//                app.updateSelectedToDate(date);
-//            }
+            onSetSelectedDate: {
+                app.updateSelectedToDate(date);
+            }
         }
     }
 

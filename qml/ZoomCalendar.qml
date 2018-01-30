@@ -22,6 +22,7 @@ FocusScope {
         updated.setDate(newDate.getDate());
         return updated;
     }
+
     function setDateAndClose() {
         datePicker.visible = false;
         zoomCalendar.setSelectedDate(updateDateTimeWithDate(startDate, datePicker.selectedDate));
