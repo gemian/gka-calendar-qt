@@ -10,7 +10,6 @@ Build-Depends:
  intltool,
  cmake,
  extra-cmake-modules,
- pkg-config,
  python3:any,
  qml-module-qtorganizer,
  qml-module-qtquick2,
@@ -29,7 +28,6 @@ Build-Depends:
  qtdeclarative5-dev,
  qtquickcontrols2-5-dev,
  qtpim5-dev,
- libglib2.0-dev,
 
 Package: gka-calendar-qt
 Architecture: any
