@@ -10,6 +10,7 @@ Build-Depends:
  intltool,
  cmake,
  extra-cmake-modules,
+ pkg-config,
  python3:any,
  qml-module-qtorganizer,
  qml-module-qtquick2,
