@@ -309,7 +309,7 @@ msgstr "位置"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "笔记"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

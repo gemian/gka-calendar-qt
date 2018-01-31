@@ -59,11 +59,11 @@ msgstr "&Ir"
 
 #: qml/main.qml:209
 msgid "&Jump to date"
-msgstr ""
+msgstr "&Saltar a la fecha"
 
 #: qml/main.qml:136
 msgid "&Quit"
-msgstr ""
+msgstr "&Dejar"
 
 #: qml/MainMenu.qml:93
 msgid "&Settings"
@@ -75,7 +75,7 @@ msgstr "&Que hacer"
 
 #: qml/main.qml:202
 msgid "&Today"
-msgstr ""
+msgstr "&Hoy"
 
 #: qml/MainMenu.qml:89
 msgid "&Tools"
@@ -309,7 +309,7 @@ msgstr "Ubicación"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Memorándum"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

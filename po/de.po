@@ -309,7 +309,7 @@ msgstr "Ort"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Notizen"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

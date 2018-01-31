@@ -309,7 +309,7 @@ msgstr "Plassering"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Notater"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

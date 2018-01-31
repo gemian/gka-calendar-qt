@@ -309,7 +309,7 @@ msgstr "Τοποθεσία"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Υπομνήματα"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

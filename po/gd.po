@@ -309,7 +309,7 @@ msgstr "Àite"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Cuimhneachain"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"

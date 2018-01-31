@@ -35,63 +35,63 @@ msgstr "%1 неделя"
 
 #: qml/MainMenu.qml:23
 msgid "&Add Item"
-msgstr "Добавить элемент"
+msgstr "&Добавить элемент"
 
 #: qml/main.qml:143
 msgid "&Calender Collections"
-msgstr "Коллекции календарей"
+msgstr "&Коллекции календарей"
 
 #: qml/main.qml:150
 msgid "&Day"
-msgstr "День"
+msgstr "&День"
 
 #: qml/MainMenu.qml:19
 msgid "&Edit"
-msgstr "редактировать"
+msgstr "&Редактировать"
 
 #: qml/MainMenu.qml:11
 msgid "&File"
-msgstr "файл"
+msgstr "&файл"
 
 #: qml/MainMenu.qml:79
 msgid "&Go"
-msgstr "Идти"
+msgstr "&Идти"
 
 #: qml/main.qml:209
 msgid "&Jump to date"
-msgstr "Перейти к дате"
+msgstr "&Перейти к дате"
 
 #: qml/main.qml:136
 msgid "&Quit"
-msgstr "уволиться"
+msgstr "&Уволиться"
 
 #: qml/MainMenu.qml:93
 msgid "&Settings"
-msgstr "настройки"
+msgstr "&Настройки"
 
 #: qml/main.qml:171
 msgid "&To-do"
-msgstr "делать"
+msgstr "&делать"
 
 #: qml/main.qml:202
 msgid "&Today"
-msgstr "Cегодня"
+msgstr "&Cегодня"
 
 #: qml/MainMenu.qml:89
 msgid "&Tools"
-msgstr "инструменты"
+msgstr "&Инструменты"
 
 #: qml/MainMenu.qml:54
 msgid "&View"
-msgstr "вид"
+msgstr "&Вид"
 
 #: qml/main.qml:157
 msgid "&Week"
-msgstr "Неделю"
+msgstr "&Неделю"
 
 #: qml/main.qml:164
 msgid "&Year"
-msgstr "Год"
+msgstr "&Год"
 
 #: qml/RemindersModel.qml:108
 msgid "1 day"
@@ -309,11 +309,11 @@ msgstr "Место нахождения"
 
 #: qml/ToDoView.qml:334
 msgid "Memos"
-msgstr ""
+msgstr "Заметки"
 
 #: qml/EditEventDialog.qml:934
 msgid "Monthly"
-msgstr "ежемесячно"
+msgstr "Ежемесячно"
 
 #: qml/RemindersModel.qml:29 qml/RemindersModel.qml:97
 msgid "No Alarm"
@@ -336,7 +336,7 @@ msgstr "По событию"
 
 #: qml/EditEventDialog.qml:885
 msgid "Once"
-msgstr "однажды"
+msgstr "Однажды"
 
 #: qml/EditEventDialog.qml:797
 msgid "Repeat (ctrl-r)"
@@ -353,7 +353,7 @@ msgstr "Второй %1"
 
 #: qml/SettingsDialog.qml:22
 msgid "Settings"
-msgstr "настройки"
+msgstr "Настройки"
 
 #: qml/CollectionsDialog.qml:249
 msgid "Show (ctrl-s)"
@@ -403,7 +403,7 @@ msgstr "Планировщик года"
 
 #: qml/EditEventDialog.qml:950
 msgid "Yearly"
-msgstr "каждый год"
+msgstr "Каждый год"
 
 #: qml/main.qml:191
 msgid "Zoom &In"
