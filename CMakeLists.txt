@@ -21,7 +21,6 @@ add_definitions(-DPACKAGE_VERSION="0.1" -DPACKAGE_DATA_DIR="${CMAKE_INSTALL_PREF
 add_definitions(-DPACKAGE_QML_DIR="${KDE_INSTALL_QMLDIR}/org/gka/calendar-qt")
 
 add_subdirectory(calendar-list)
-add_subdirectory(i18n)
 add_subdirectory(qml)
 add_subdirectory(files)
 add_subdirectory(po)

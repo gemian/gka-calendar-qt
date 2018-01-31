@@ -17,7 +17,6 @@ qtpim-dev qtorganizer5-eds qml-module-qtorganizer
 # Compile project
 
 ```
-git clone https://github.com/adamboardman/gka-calendar-qt.git
 cd gka-calendar-qt
 mkdir build
 cd build
