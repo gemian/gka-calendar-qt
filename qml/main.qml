@@ -199,7 +199,7 @@ ApplicationWindow {
 
     Action {
         id: todayAction
-        text: qsTr("&Today (space)")
+        text: qsTr("&Today")
         shortcut: "Space"
         onTriggered: updateSelectedToToday()
     }
