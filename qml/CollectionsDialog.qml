@@ -45,7 +45,7 @@ Window {
         console.log("selectCollection"+cal.extendedMetaData("collection-selected"));
     }
 
-    title: qsTr("Calendar Collections");
+    title: i18n.tr("Calendar Collections");
 
     Loader {
         id: subDialogLoader
@@ -80,7 +80,7 @@ Window {
                 rightPadding: collectionsDialog.padding
                 Label {
                     id: questionLabel
-                    text: qsTr("Available Calendar Collections");
+                    text: i18n.tr("Available Calendar Collections");
                     font.pixelSize: app.appFontSize
                     wrapMode: Text.Wrap
                 }
@@ -194,7 +194,7 @@ Window {
                 id: addCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                text: qsTr("Add (ctrl-a)")
+                text: i18n.tr("Add (ctrl-a)")
                 onClicked: {
                     addCollection();
                 }
@@ -212,7 +212,7 @@ Window {
                 id: editCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                text: qsTr("Edit (ctrl-e)")
+                text: i18n.tr("Edit (ctrl-e)")
                 onClicked: {
                     editCollection();
                 }
@@ -229,7 +229,7 @@ Window {
                 id: deleteCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                text: qsTr("Delete (ctrl-d)")
+                text: i18n.tr("Delete (ctrl-d)")
                 onClicked: {
                     deleteCollection();
                 }
@@ -246,7 +246,7 @@ Window {
                 id: selectCollectionButton
                 activeFocusOnTab: true
                 activeFocusOnPress: true
-                text: collections[calendarsListView.currentIndex].extendedMetaData("collection-selected") !== true?qsTr("Show (ctrl-s)"):qsTr("Hide (ctrl-s)")
+                text: collections[calendarsListView.currentIndex].extendedMetaData("collection-selected") !== true?i18n.tr("Show (ctrl-s)"):i18n.tr("Hide (ctrl-s)")
                 onClicked: {
                     selectCollection();
                 }
@@ -261,7 +261,7 @@ Window {
             }
             ZoomButton {
                 id: cancelButton
-                text: qsTr("Cancel (esc)")
+                text: i18n.tr("Cancel (esc)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 onClicked: {

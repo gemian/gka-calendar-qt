@@ -69,7 +69,7 @@ FocusScope {
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignBottom
             font.pointSize: app.appFontSize * 0.8;
-            text: qsTr("Today");
+            text: i18n.tr("Today");
         }
 
         Row {

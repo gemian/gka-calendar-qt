@@ -3,7 +3,7 @@ import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.4
-import CalendarListModel 1.0
+import org.gka.CalendarListModel 1.0
 import "dateExt.js" as DateExt
 
 FocusScope {
@@ -246,7 +246,7 @@ FocusScope {
         Label {
             id: selectedYear
             Layout.leftMargin: app.appFontSize
-            text: qsTr("Year Planner ") + yearGridModel.year
+            text: i18n.tr("Year Planner ") + yearGridModel.year
             font.pixelSize: app.appFontSize
             font.bold: true
             color: "#3498db"

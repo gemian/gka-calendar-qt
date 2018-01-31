@@ -9,7 +9,7 @@
 
 void CalendarListModelPlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("CalendarListModel"));
+    Q_ASSERT(uri == QLatin1String("org.gka.CalendarListModel"));
 
     qmlRegisterType<CalendarItem>(uri, 1, 0, "CalendarItem");
     qmlRegisterType<CalendarDay>(uri, 1, 0, "CalendarDay");

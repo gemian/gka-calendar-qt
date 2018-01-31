@@ -26,10 +26,10 @@ ListModel {
 
     function intervalToString(interval) {
         if (interval < 0)
-            return qsTr("No Alarm")
+            return i18n.tr("No Alarm")
 
         if (interval === 0)
-            return qsTr("On Event")
+            return i18n.tr("On Event")
 
         var result = ""
 
@@ -38,7 +38,7 @@ ListModel {
         if (interval >= 604800) {
             weeks = Math.floor(interval/604800)
             interval = interval % 604800
-            result = qsTr("%1 week", "%1 weeks", weeks).arg(weeks)
+            result = i18n.tr("%1 week", "%1 weeks", weeks).arg(weeks)
         }
 
         // Days
@@ -49,7 +49,7 @@ ListModel {
             if (result.length > 0) {
                 result = " " + result
             }
-            result = qsTr("%1 day", "%1 days", days).arg(days)
+            result = i18n.tr("%1 day", "%1 days", days).arg(days)
         }
 
         // Hours
@@ -60,7 +60,7 @@ ListModel {
             if (result.length > 0) {
                 result = " " + result
             }
-            result = qsTr("%1 hour", "%1 hours", hours).arg(hours)
+            result = i18n.tr("%1 hour", "%1 hours", hours).arg(hours)
 
         }
 
@@ -69,7 +69,7 @@ ListModel {
             if (result.length > 0) {
                 result = " " + result
             }
-            result = qsTr("%1 minute", "%1 minutes", minutes).arg(minutes)
+            result = i18n.tr("%1 minute", "%1 minutes", minutes).arg(minutes)
         }
 
         return result
@@ -94,22 +94,22 @@ ListModel {
     function reset()
     {
         clear()
-        reminderModel.append({ "label": qsTr("No Alarm"), "value": -1 })
+        reminderModel.append({ "label": i18n.tr("No Alarm"), "value": -1 })
         // TRANSLATORS: this refers to when a reminder should be shown as a notification
         // in the indicators. "On Event" means that it will be shown right at the time
         // the event starts, not any time before
-        reminderModel.append({ "label": qsTr("On Event"), "value": 0 })
-        reminderModel.append({ "label": qsTr("5 minutes"), "value": 300 })
-        reminderModel.append({ "label": qsTr("10 minutes"), "value": 600 })
-        reminderModel.append({ "label": qsTr("15 minutes"), "value": 900 })
-        reminderModel.append({ "label": qsTr("30 minutes"), "value": 1800 })
-        reminderModel.append({ "label": qsTr("1 hour"), "value": 3600 })
-        reminderModel.append({ "label": qsTr("2 hours"), "value": 7200 })
-        reminderModel.append({ "label": qsTr("1 day"), "value": 86400 })
-        reminderModel.append({ "label": qsTr("2 days"), "value": 172800 })
-        reminderModel.append({ "label": qsTr("3 days"), "value": 259200 })
-        reminderModel.append({ "label": qsTr("1 week"), "value": 604800 })
-        reminderModel.append({ "label": qsTr("2 weeks"), "value": 1209600 })
+        reminderModel.append({ "label": i18n.tr("On Event"), "value": 0 })
+        reminderModel.append({ "label": i18n.tr("5 minutes"), "value": 300 })
+        reminderModel.append({ "label": i18n.tr("10 minutes"), "value": 600 })
+        reminderModel.append({ "label": i18n.tr("15 minutes"), "value": 900 })
+        reminderModel.append({ "label": i18n.tr("30 minutes"), "value": 1800 })
+        reminderModel.append({ "label": i18n.tr("1 hour"), "value": 3600 })
+        reminderModel.append({ "label": i18n.tr("2 hours"), "value": 7200 })
+        reminderModel.append({ "label": i18n.tr("1 day"), "value": 86400 })
+        reminderModel.append({ "label": i18n.tr("2 days"), "value": 172800 })
+        reminderModel.append({ "label": i18n.tr("3 days"), "value": 259200 })
+        reminderModel.append({ "label": i18n.tr("1 week"), "value": 604800 })
+        reminderModel.append({ "label": i18n.tr("2 weeks"), "value": 1209600 })
     }
 
     Component.onCompleted: {

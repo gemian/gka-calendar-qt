@@ -68,7 +68,7 @@ FocusScope {
             verticalAlignment: Text.AlignBottom
             padding: app.appFontSize/5
             font.pixelSize: app.appFontSize;
-            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1));
+            text: i18n.tr("Week %1").arg(weekStartDate.weekNumber(1));
         }
         Text {
             anchors.fill: parent

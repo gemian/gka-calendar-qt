@@ -8,7 +8,7 @@ MenuBar {
     property var settings;
 
     Menu {
-        title: qsTr("&File")
+        title: i18n.tr("&File")
         id: fileMenu
         MenuItem {
             action: quitAction
@@ -16,18 +16,18 @@ MenuBar {
     }
 
     Menu {
-        title: qsTr("&Edit")
+        title: i18n.tr("&Edit")
         id: editMenu
         MenuItem {
             id: editMenuAdd
-            text: qsTr("&Add Item")
+            text: i18n.tr("&Add Item")
             onTriggered: {
                 dialogLoader.setSource("EditEventDialog.qml", {"startDate":selectedDate, "model":organizerModel});
             }
         }
 //        MenuItem {
 //            id: editMenuEdit
-//            text: qsTr("&Edit Item")
+//            text: i18n.tr("&Edit Item")
 //            onTriggered: {
 //                dialogLoader.setSource("EditEventDialog.qml", {"eventId": yearGridModel.items[daySelectedIndex].items[0].itemId, "model":organizerModel});
 //            }
@@ -38,20 +38,20 @@ MenuBar {
 
 //        MenuItem {
 //            id: editMenuCut
-//            text: qsTr("C&ut")
+//            text: i18n.tr("C&ut")
 //        }
 //        MenuItem {
 //            id: editMenuCopy
-//            text: qsTr("&Copy")
+//            text: i18n.tr("&Copy")
 //        }
 //        MenuItem {
 //            id: editMenuPaste
-//            text: qsTr("&Paste")
+//            text: i18n.tr("&Paste")
 //        }
     }
 
     Menu {
-        title: qsTr("&View")
+        title: i18n.tr("&View")
         id: viewMenu
         MenuItem {
             action: zoomInAction
@@ -76,7 +76,7 @@ MenuBar {
         }
     }
     Menu {
-        title: qsTr("&Go")
+        title: i18n.tr("&Go")
         id: goMenu
         MenuItem {
             action: todayAction
@@ -86,11 +86,11 @@ MenuBar {
         }
     }
     Menu {
-        title: qsTr("&Tools")
+        title: i18n.tr("&Tools")
         id: toolsMenu
         MenuItem {
             id: toolsMenuSettings
-            text: qsTr("&Settings")
+            text: i18n.tr("&Settings")
             onTriggered: {
                 dialogLoader.setSource("SettingsDialog.qml", {"settings": menuBar.settings});
             }

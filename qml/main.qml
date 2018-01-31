@@ -4,6 +4,8 @@ import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 1.4
 import Qt.labs.settings 1.0
+import org.gka.GKAToolkit 1.0
+import org.gka.CalendarListModel 1.0
 import "dateExt.js" as DateExt
 
 ApplicationWindow {
@@ -16,7 +18,7 @@ ApplicationWindow {
     property bool showLunarCalendar
     property real appFontSize
 
-    title: qsTr("Calendar")
+    title: i18n.tr("Calendar")
 
     //Fullscreen on device
     height: {
@@ -133,49 +135,49 @@ ApplicationWindow {
 
     Action {
         id: quitAction
-        text: qsTr("&Quit")
+        text: i18n.tr("&Quit")
         shortcut: StandardKey.Quit
         onTriggered: Qt.quit()
     }
 
     Action {
         id: collectionsDialogAction
-        text: qsTr("&Calender Collections")
+        text: i18n.tr("&Calender Collections")
         shortcut: "Ctrl+Shift+c"
         onTriggered: dialogLoader.setSource("CollectionsDialog.qml", {"model": organizerModel})
     }
 
     Action {
         id: dayViewAction
-        text: qsTr("&Day")
+        text: i18n.tr("&Day")
         shortcut: "Ctrl+Shift+d"
         onTriggered: alternateViewLoader.source = "DayViewGrid.qml"
     }
 
     Action {
         id: weekViewAction
-        text: qsTr("&Week")
+        text: i18n.tr("&Week")
         shortcut: "Ctrl+Shift+w"
         onTriggered: alternateViewLoader.source = "WeekViewGrid.qml"
     }
 
     Action {
         id: yearViewAction
-        text: qsTr("&Year")
+        text: i18n.tr("&Year")
         shortcut: "Ctrl+Shift+y"
         onTriggered: alternateViewLoader.source = "YearViewGrid.qml"
     }
 
     Action {
         id: todoViewAction
-        text: qsTr("&To-do")
+        text: i18n.tr("&To-do")
         shortcut: "Ctrl+Shift+t"
         onTriggered: alternateViewLoader.source = "ToDoView.qml"
     }
 
     Action {
         id: zoomOutAction
-        text: qsTr("Zoom &Out")
+        text: i18n.tr("Zoom &Out")
         shortcut: "Ctrl+Shift+m"
         onTriggered: {
             console.log (">appFontSize: " + app.appFontSize)
@@ -188,7 +190,7 @@ ApplicationWindow {
 
     Action {
         id: zoomInAction
-        text: qsTr("Zoom &In")
+        text: i18n.tr("Zoom &In")
         shortcut: "Ctrl+m"
         onTriggered: {
             console.log (">appFontSize: " + app.appFontSize)
@@ -199,14 +201,14 @@ ApplicationWindow {
 
     Action {
         id: todayAction
-        text: qsTr("&Today")
+        text: i18n.tr("&Today")
         shortcut: "Space"
         onTriggered: updateSelectedToToday()
     }
 
     Action {
         id: jumpToDateAction
-        text: qsTr("&Jump to date")
+        text: i18n.tr("&Jump to date")
         shortcut: "Ctrl+j"
         onTriggered: jumpToDate()
     }

@@ -24,5 +24,5 @@ target_link_libraries(calendar-list-plugin
         ${CMAKE_DL_LIBS}
         )
 
-install(TARGETS calendar-list-plugin LIBRARY DESTINATION ${KDE_INSTALL_QMLDIR}/CalendarListModel)
-install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/CalendarListModel)
+install(TARGETS calendar-list-plugin LIBRARY DESTINATION ${KDE_INSTALL_QMLDIR}/org/gka/CalendarListModel)
+install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/gka/CalendarListModel)

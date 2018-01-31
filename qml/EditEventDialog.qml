@@ -11,7 +11,7 @@ Window {
     id: eventDialog
     visible: true
     modality: Qt.ApplicationModal
-    title: qsTr("Enter event details")
+    title: i18n.tr("Enter event details")
     height: dialogFocusScope.height
     width: dialogFocusScope.width
     x: Screen.width / 2 - width / 2
@@ -472,19 +472,19 @@ Window {
         var out = startDate.toLocaleDateString(Qt.locale(), 'dddd');
         switch(Math.ceil(startDate.getDate() / 7)) {
         case 1:
-            out = qsTr("First %1").arg(out);
+            out = i18n.tr("First %1").arg(out);
             break;
         case 2:
-            out = qsTr("Second %1").arg(out);
+            out = i18n.tr("Second %1").arg(out);
             break;
         case 3:
-            out = qsTr("Third %1").arg(out);
+            out = i18n.tr("Third %1").arg(out);
             break;
         case 4:
-            out = qsTr("Fourth %1").arg(out);
+            out = i18n.tr("Fourth %1").arg(out);
             break;
         case 5:
-            out = qsTr("Fifth %1").arg(out);
+            out = i18n.tr("Fifth %1").arg(out);
             break;
         }
         return out;
@@ -531,7 +531,7 @@ Window {
                         left: parent.left
                         right: parent.right
                     }
-                    placeholderText: qsTr("Event name")
+                    placeholderText: i18n.tr("Event name")
                     font.pixelSize: app.appFontSize
                     KeyNavigation.down: locationField
                 }
@@ -541,13 +541,13 @@ Window {
                         left: parent.left
                         right: parent.right
                     }
-                    placeholderText: qsTr("Location")
+                    placeholderText: i18n.tr("Location")
                     font.pixelSize: app.appFontSize
                     KeyNavigation.down: allDayEventCheckbox
                 }
 
                 ZoomCheckBox {
-                    text: qsTr("All Day Event")
+                    text: i18n.tr("All Day Event")
                     id: allDayEventCheckbox
                     checked: false
                     onCheckedChanged: {
@@ -568,7 +568,7 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Start Time:")
+                        text: i18n.tr("Start Time:")
                         font.pixelSize: app.appFontSize
                     }
                     TextField {
@@ -593,7 +593,7 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("Start Date:")
+                        text: i18n.tr("Start Date:")
                         font.pixelSize: app.appFontSize
                     }
                     TextField {
@@ -638,7 +638,7 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("End Time:")
+                        text: i18n.tr("End Time:")
                         font.pixelSize: app.appFontSize
                     }
                     TextField {
@@ -663,7 +663,7 @@ Window {
 
                     Label {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTr("End Date:")
+                        text: i18n.tr("End Date:")
                         font.pixelSize: app.appFontSize
                     }
                     TextField {
@@ -709,7 +709,7 @@ Window {
 
                     ZoomButton {
                         id: okButton
-                        text: qsTr("OK (ctrl-s)")
+                        text: i18n.tr("OK (ctrl-s)")
                         enabled: internal.collectionId !== null && model && model.collectionIdIsWritable(internal.collectionId)
                         activeFocusOnTab: true
                         activeFocusOnPress: true
@@ -729,7 +729,7 @@ Window {
                     }
                     ZoomButton {
                         id: cancelButton
-                        text: qsTr("Cancel (esc)")
+                        text: i18n.tr("Cancel (esc)")
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         onClicked: {
@@ -760,7 +760,7 @@ Window {
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Description (ctrl-d)")
+                        text: i18n.tr("Description (ctrl-d)")
                         onClicked: {
                             setCheckedButton(0);
                         }
@@ -777,7 +777,7 @@ Window {
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Alarm (ctrl-shift-A)")
+                        text: i18n.tr("Alarm (ctrl-shift-A)")
                         onClicked: {
                             setCheckedButton(1);
                         }
@@ -794,7 +794,7 @@ Window {
                         checkable: true
                         activeFocusOnTab: true
                         activeFocusOnPress: true
-                        text: qsTr("Repeat (ctrl-r)")
+                        text: i18n.tr("Repeat (ctrl-r)")
                         onClicked: {
                             setCheckedButton(2);
                         }
@@ -810,7 +810,7 @@ Window {
                         activeFocusOnTab: true
                         activeFocusOnPress: true
                         checkable: true
-                        text: qsTr("Calendar (ctrl-g)")
+                        text: i18n.tr("Calendar (ctrl-g)")
                         onClicked: {
                             setCheckedButton(3);
                         }
@@ -882,7 +882,7 @@ Window {
                         spacing: eventDialog.padding
                         ZoomButton {
                             id: repeatOnceButton
-                            text: qsTr("Once")
+                            text: i18n.tr("Once")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -898,7 +898,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatDailyButton
-                            text: qsTr("Daily")
+                            text: i18n.tr("Daily")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -914,7 +914,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatWeeklyButton
-                            text: qsTr("Weekly")
+                            text: i18n.tr("Weekly")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -931,7 +931,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatMonthlyButton
-                            text: qsTr("Monthly")
+                            text: i18n.tr("Monthly")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -947,7 +947,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatYearlyButton
-                            text: qsTr("Yearly")
+                            text: i18n.tr("Yearly")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -1029,7 +1029,7 @@ Window {
                         anchors.right: parent.right
                         ZoomButton {
                             id: monthlyRepeatByDate
-                            text: qsTr("By Date")
+                            text: i18n.tr("By Date")
                             checkable: true
                             activeFocusOnTab: true
                             activeFocusOnPress: true
@@ -1052,7 +1052,7 @@ Window {
                         }
                         ZoomButton {
                             id: monthlyRepeatByWeek
-                            text: qsTr("By Week")
+                            text: i18n.tr("By Week")
                             checkable: true
                             activeFocusOnPress: true
                             activeFocusOnTab: true
@@ -1075,7 +1075,7 @@ Window {
                         }
                         ZoomButton {
                             id: monthlyRepeatByWeekLast
-                            text: qsTr("By Week Last")
+                            text: i18n.tr("By Week Last")
                             checkable: true
                             visible: startDate?startDate.isLastWeek():false
                             activeFocusOnPress: true
@@ -1097,7 +1097,7 @@ Window {
                         width: parent.width
                         ZoomButton {
                             id: repeatUntilForeverButton
-                            text: qsTr("Forever")
+                            text: i18n.tr("Forever")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true
@@ -1113,7 +1113,7 @@ Window {
                         }
                         ZoomButton {
                             id: repeatUntilCountButton
-                            text: qsTr("Count Occurrences")
+                            text: i18n.tr("Count Occurrences")
                             activeFocusOnTab: true
                             activeFocusOnPress: true
                             checkable: true

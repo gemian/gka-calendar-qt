@@ -19,7 +19,7 @@ Window {
         settingsDialog.close()
     }
 
-    title: qsTr("Settings");
+    title: i18n.tr("Settings");
 
     Column {
         id: dialogColumn
@@ -30,7 +30,7 @@ Window {
 
         ZoomRadioButton {
             id: showLunarCalendar
-            text: qsTr("Show Lunar Calendar");
+            text: i18n.tr("Show Lunar Calendar");
             activeFocusOnPress: true
             checked: settings.showLunarCalendar === true
             onCheckedChanged: {
@@ -54,7 +54,7 @@ Window {
 
             ZoomButton {
                 id: okButton
-                text: qsTr("OK (ctrl-s)")
+                text: i18n.tr("OK (ctrl-s)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.up: showLunarCalendar
@@ -72,7 +72,7 @@ Window {
 
             ZoomButton {
                 id: cancelButton
-                text: qsTr("Cancel (esc)")
+                text: i18n.tr("Cancel (esc)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.up: showLunarCalendar

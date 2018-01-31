@@ -37,7 +37,7 @@ Window {
 
     }
 
-    title: qsTr("Colour for collection");
+    title: i18n.tr("Colour for collection");
 
     Column {
         id: dialogColumn
@@ -49,12 +49,12 @@ Window {
 
         Label {
             id: questionLabel
-            text: qsTr("Adjust colour");
+            text: i18n.tr("Adjust colour");
         }
 
         TextField {
             id: colourHexField
-            placeholderText: qsTr("Colour hex")
+            placeholderText: i18n.tr("Colour hex")
             KeyNavigation.down: redSlider
             KeyNavigation.right: saveButton
         }
@@ -97,7 +97,7 @@ Window {
 
             ZoomButton {
                 id: saveButton
-                text: qsTr("Save (ctrl-s)")
+                text: i18n.tr("Save (ctrl-s)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.up: blueSlider
@@ -115,7 +115,7 @@ Window {
 
             ZoomButton {
                 id: cancelButton
-                text: qsTr("Cancel")
+                text: i18n.tr("Cancel")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.up: blueSlider

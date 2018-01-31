@@ -26,7 +26,7 @@ Window {
         cancelButton.forceActiveFocus()
     }
 
-    title: event.parentId ? qsTr("Delete Recurring Event") : qsTr("Delete Event");
+    title: event.parentId ? i18n.tr("Delete Recurring Event") : i18n.tr("Delete Event");
 
     Column {
         id: dialogColumn
@@ -42,8 +42,8 @@ Window {
             Label {
                 id: questionLabel
                 text: event.parentId ?
-                          qsTr("Delete single event \"%1\", or all repeating events?").arg(event.displayLabel):
-                          qsTr("Are you sure you want to delete the event \"%1\"?").arg(event.displayLabel);
+                          i18n.tr("Delete single event \"%1\", or all repeating events?").arg(event.displayLabel):
+                          i18n.tr("Are you sure you want to delete the event \"%1\"?").arg(event.displayLabel);
                 font.pixelSize: app.appFontSize
                 wrapMode: Text.Wrap
             }
@@ -56,7 +56,7 @@ Window {
 
             ZoomButton {
                 id: deleteSeriesButton
-                text: qsTr("Delete series (ctrl-s)")
+                text: i18n.tr("Delete series (ctrl-s)")
                 visible: event.parentId !== undefined
                 activeFocusOnTab: true
                 activeFocusOnPress: true
@@ -74,7 +74,7 @@ Window {
 
             ZoomButton {
                 id: deleteIndividualButton
-                text: event.parentId ? qsTr("Delete this (ctrl-d)") : qsTr("Delete (ctrl-d)")
+                text: event.parentId ? i18n.tr("Delete this (ctrl-d)") : i18n.tr("Delete (ctrl-d)")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.right: cancelButton
@@ -91,7 +91,7 @@ Window {
 
             ZoomButton {
                 id: cancelButton
-                text: qsTr("Cancel")
+                text: i18n.tr("Cancel")
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 focus: true

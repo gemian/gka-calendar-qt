@@ -11,7 +11,7 @@ Window {
     id: collectionDialog
     visible: true
     modality: Qt.ApplicationModal
-    title: qsTr("Enter event details")
+    title: i18n.tr("Enter event details")
     height: collectionDialogFocusScope.height
     width: collectionDialogFocusScope.width
     x: Screen.width / 2 - width / 2
@@ -80,7 +80,7 @@ Window {
                 spacing: collectionDialog.spacing
 
                 Label {
-                    text: qsTr("Collection name")
+                    text: i18n.tr("Collection name")
                     font.pixelSize: app.appFontSize
                 }
                 TextField {
@@ -90,14 +90,14 @@ Window {
                         left: parent.left
                         right: parent.right
                     }
-                    placeholderText: qsTr("Collection name")
+                    placeholderText: i18n.tr("Collection name")
                     font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionDescriptionField
                     KeyNavigation.right: saveButton
                 }
 
                 Label {
-                    text: qsTr("Collection description")
+                    text: i18n.tr("Collection description")
                     font.pixelSize: app.appFontSize
                 }
                 TextField {
@@ -107,14 +107,14 @@ Window {
                         left: parent.left
                         right: parent.right
                     }
-                    placeholderText: qsTr("Collection description")
+                    placeholderText: i18n.tr("Collection description")
                     font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionColourField
                     KeyNavigation.right: saveButton
                 }
 
                 Label {
-                    text: qsTr("Collection colour")
+                    text: i18n.tr("Collection colour")
                     font.pixelSize: app.appFontSize
                 }
                 TextField {
@@ -124,14 +124,14 @@ Window {
                         left: parent.left
                         right: parent.right
                     }
-                    placeholderText: qsTr("Collection colour")
+                    placeholderText: i18n.tr("Collection colour")
                     font.pixelSize: app.appFontSize
                     KeyNavigation.down: collectionSelectedCheckbox
                     KeyNavigation.right: saveButton
                 }
 
                 ZoomCheckBox {
-                    text: qsTr("Collection selected")
+                    text: i18n.tr("Collection selected")
                     id: collectionSelectedCheckbox
                     activeFocusOnPress: true
                     onCheckedChanged: {
@@ -140,7 +140,7 @@ Window {
                     KeyNavigation.right: saveButton
                 }
                 ZoomCheckBox {
-                    text: qsTr("Collection default")
+                    text: i18n.tr("Collection default")
                     id: collectionDefaultCheckbox
                     activeFocusOnPress: true
                     onCheckedChanged: {
@@ -157,7 +157,7 @@ Window {
 
                 ZoomButton {
                     id: saveButton
-                    text: qsTr("Save (ctrl-s)")
+                    text: i18n.tr("Save (ctrl-s)")
                     activeFocusOnTab: true
                     activeFocusOnPress: true
                     KeyNavigation.down: cancelButton
@@ -175,7 +175,7 @@ Window {
 
                 ZoomButton {
                     id: cancelButton
-                    text: qsTr("Cancel (esc)")
+                    text: i18n.tr("Cancel (esc)")
                     activeFocusOnTab: true
                     activeFocusOnPress: true
                     KeyNavigation.left: collectionNameField

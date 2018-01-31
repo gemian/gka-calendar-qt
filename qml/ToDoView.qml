@@ -3,7 +3,7 @@ import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
-import CalendarListModel 1.0
+import org.gka.CalendarListModel 1.0
 import "dateExt.js" as DateExt
 
 FocusScope {
@@ -293,7 +293,7 @@ FocusScope {
                 width: (mainView.width/2)-app.appFontSize
                 x: app.appFontSize/2
                 y: app.appFontSize/2
-                text: qsTr("To-do")
+                text: i18n.tr("To-do")
                 font.pixelSize: app.appFontSize * 1.5
                 font.bold: true
             }
@@ -331,7 +331,7 @@ FocusScope {
                 width: (mainView.width/2)-app.appFontSize
                 x: (mainView.width/2)+app.appFontSize/2
                 y: app.appFontSize/2
-                text: qsTr("Memos")
+                text: i18n.tr("Memos")
                 font.pixelSize: app.appFontSize * 1.5
                 font.bold: true
             }

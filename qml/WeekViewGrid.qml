@@ -108,7 +108,7 @@ FocusScope {
 
         Label {
             id: lastWeek
-            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
+            text: i18n.tr("Week %1").arg(weekStartDate.weekNumber(1)>1?weekStartDate.weekNumber(1)-1:52);
             font.pixelSize: app.appFontSize * 3
             font.bold: true
             color: gridView.contentX < internal.initialContentX-internal.contentXactionOn ? "#3498db" : "#bdc3c7"
@@ -120,7 +120,7 @@ FocusScope {
 
         Label {
             id: nextWeek
-            text: qsTr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
+            text: i18n.tr("Week %1").arg(weekStartDate.weekNumber(1)<52?weekStartDate.weekNumber(1)+1:1);
             font.pixelSize: app.appFontSize * 3
             font.bold: true
             color: gridView.contentX > internal.initialContentX+internal.contentXactionOn ? "#3498db" : "#bdc3c7"
