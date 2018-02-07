@@ -174,7 +174,7 @@ Window {
             if (recurrenceRule !== RecurrenceRule.Invalid) {
                 var rule = event.recurrence.recurrenceRules[0];
                 if (rule === null || rule === undefined ){
-                    rule = Qt.createQmlObject("import QtOrganizer 5.0; RecurrenceRule {}", event, "EventRepetition.qml");
+                    rule = Qt.createQmlObject("import QtOrganizer 5.0; RecurrenceRule {}", event, "EditEventDialog.qml");
                 }
                 rule.frequency = recurrenceRule;
                 if (internal.repeatIndex == 2) { //weekly
@@ -490,7 +490,7 @@ Window {
         return out;
     }
 
-    Connections{
+    Connections {
         target: model
         onItemsFetched: {
             if (internal.fetchParentRequestId === requestId) {
