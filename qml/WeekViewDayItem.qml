@@ -242,7 +242,7 @@ FocusScope {
                             left: calendarIndicator.right
                             leftMargin: app.appFontSize/2
                         }
-                        width: parent.width - calendarIndicator.width
+                        width: parent.width - calendarIndicator.width - app.appFontSize/2
                         wrapMode: Text.Wrap
                         text: model.item.displayLabel
                         font.pixelSize: app.appFontSize
