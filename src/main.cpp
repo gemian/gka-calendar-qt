@@ -27,17 +27,9 @@ int main(int argc, char *argv[]) {
 
     //app.setAttribute(Qt::AA_EnableHighDpiScaling);
 
-#ifdef QT_DEBUG
-    std::string mainPath = "../qml/main.qml";
-    struct stat buffer;
-    if (stat (mainPath.c_str(), &buffer) != 0) {
-        mainPath = PACKAGE_QML_DIR;
-        mainPath += "/main.qml";
-    }
-#else
-    std::string mainPath = PACKAGE_QML_DIR;
+    std::string mainPath = calendarAppDirectory();
     mainPath += "/main.qml";
-#endif
     QQmlApplicationEngine engine(mainPath.c_str());
+
     return app.exec();
 }

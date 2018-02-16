@@ -4,4 +4,18 @@
 #define LOCALEDIR               "@CMAKE_INSTALL_FULL_LOCALEDIR@"
 #define PACKAGE                 "@PROJECT_NAME_LOWER@"
 
+inline bool isRunningInstalled() {
+    static bool installed = (QCoreApplication::applicationDirPath() ==
+                             QDir(("@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@")).canonicalPath());
+    return installed;
+}
+
+inline std::string calendarAppDirectory() {
+    if (isRunningInstalled()) {
+        return "@KDE_INSTALL_QMLDIR@/org/gka/calendar-qt";
+    } else {
+        return "@CMAKE_SOURCE_DIR@/qml";
+    }
+}
+
 #endif
