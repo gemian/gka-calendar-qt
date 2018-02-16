@@ -412,4 +412,3 @@ msgstr "जुम इन गर्नुहोस्..."
 #: qml/main.qml:178
 msgid "Zoom &Out"
 msgstr "जुम आउट गर्नुहोस्..."
-

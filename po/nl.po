@@ -79,11 +79,11 @@ msgstr "Vandaag"
 
 #: qml/MainMenu.qml:89
 msgid "&Tools"
-msgstr "Gereedschap"
+msgstr "&Gereedschap"
 
 #: qml/MainMenu.qml:54
 msgid "&View"
-msgstr "Uitzicht"
+msgstr "&Uitzicht"
 
 #: qml/main.qml:157
 msgid "&Week"
