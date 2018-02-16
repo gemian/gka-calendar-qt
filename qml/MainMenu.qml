@@ -19,11 +19,7 @@ MenuBar {
         title: i18n.tr("&Edit")
         id: editMenu
         MenuItem {
-            id: editMenuAdd
-            text: i18n.tr("&Add Item")
-            onTriggered: {
-                dialogLoader.setSource("EditEventDialog.qml", {"startDate":selectedDate, "model":organizerModel});
-            }
+            action: addAction
         }
 //        MenuItem {
 //            id: editMenuEdit
@@ -89,11 +85,7 @@ MenuBar {
         title: i18n.tr("&Tools")
         id: toolsMenu
         MenuItem {
-            id: toolsMenuSettings
-            text: i18n.tr("&Settings")
-            onTriggered: {
-                dialogLoader.setSource("SettingsDialog.qml", {"settings": menuBar.settings});
-            }
+            action: settingsAction
         }
     }
 }

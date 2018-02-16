@@ -141,6 +141,15 @@ ApplicationWindow {
     }
 
     Action {
+        id: addAction
+        text: i18n.tr("&Add Item")
+        shortcut: "Ctrl+Shift+a"
+        onTriggered: {
+            dialogLoader.setSource("EditEventDialog.qml", {"model":organizerModel, "startDate":selectedDate});
+        }
+    }
+
+    Action {
         id: collectionsDialogAction
         text: i18n.tr("&Calender Collections")
         shortcut: "Ctrl+Shift+c"
@@ -211,6 +220,15 @@ ApplicationWindow {
         text: i18n.tr("&Jump to date")
         shortcut: "Ctrl+j"
         onTriggered: jumpToDate()
+    }
+
+    Action {
+        id: settingsAction
+        text: i18n.tr("&Settings")
+        shortcut: "Ctrl+Shift+s"
+        onTriggered: {
+            dialogLoader.setSource("SettingsDialog.qml", {"settings": menuBar.settings});
+        }
     }
 
     FocusScope {
