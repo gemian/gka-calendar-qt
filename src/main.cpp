@@ -15,6 +15,9 @@
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+    app.setOrganizationName("gemian");
+    app.setOrganizationDomain("gemian.thinkglobally.org");
+    app.setApplicationName("calendar");
 
 #ifdef ENABLE_NLS
     setlocale(LC_ALL, "");

@@ -308,7 +308,7 @@ ApplicationWindow {
 
     Component.onCompleted: {
         if (app.appFontSize == 0) {
-            app.appFontSize = defaultLabel.font.pixelSize;
+            settings.appFontSize = app.appFontSize = defaultLabel.font.pixelSize;
         }
 
         print("Screen.pixelDensity: "+Screen.pixelDensity);
