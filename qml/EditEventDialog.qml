@@ -140,6 +140,10 @@ Window {
     function saveEvent(event) {
         console.log("eD:startDateTime: "+eventDialog.startDate);
 
+        if (eventDialog.startDate > eventDialog.endDate) {
+            eventDialog.endDate = eventDialog.startDate.addMinutes(10);
+        }
+
         if (eventDialog.startDate > eventDialog.endDate && !allDayEventCheckbox.checked) {
             console.log("End time can't be before start time");
         } else {
@@ -449,6 +453,7 @@ Window {
         var newDate = Date.fromLocaleTimeString(Qt.locale(), text, Locale.ShortFormat);
         if (!isNaN(newDate)) {
             var oldDate = new Date(dateTime);
+            oldDate.setSeconds(newDate.getSeconds());
             oldDate.setMinutes(newDate.getMinutes());
             oldDate.setHours(newDate.getHours());
             dateTime = oldDate;
