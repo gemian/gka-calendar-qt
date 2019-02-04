@@ -274,21 +274,21 @@ void YearGridModel::addItemsToGrid(QList<QtOrganizer::QOrganizerItem> items) {
 
 
             auto parentIdDetail = item.detail(QtOrganizer::QOrganizerItemDetail::TypeParent);
-            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
+//            qDebug() << "N" << item.displayLabel() << "parentIdDetail:" << parentIdDetail;
             auto parentId = parentIdDetail.value(QtOrganizer::QOrganizerItemParent::FieldParentId);
-            qDebug() << "ParentId:" << parentId;
+//            qDebug() << "ParentId:" << parentId;
             if (parentId.isValid()) {
-                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
+//                qDebug() << "ParentId:" << parentId.value<QtOrganizer::QOrganizerItemId>().toString();
                 event->setParentId(parentId.value<QtOrganizer::QOrganizerItemId>().toString());
             }
 
             do {
                 addEventToDate(event, startDate);
-                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
+//                qDebug() << "SDT: " << startDateTime << "SD: " << startDate << ", ED: " << endDate << ", EOY: " << endOfYear;
                 startDate = startDate.addDays(1);
             } while (startDate < endDate && startDate < endOfYear);
         } else {
-            qDebug() << "ET: " << eventTime << ", I: " << item;
+//            qDebug() << "ET: " << eventTime << ", I: " << item;
         }
     }
 }
@@ -306,7 +306,7 @@ void YearGridModel::removeItemsFromModel(const QList<QtOrganizer::QOrganizerItem
 
 void YearGridModel::addItemsToModel(const QList<QtOrganizer::QOrganizerItemId> &itemIds) {
     QList<QtOrganizer::QOrganizerItem> items = _manager->items(itemIds);
-    qWarning() << "addItemsToModel" << items;
+//    qWarning() << "addItemsToModel" << items;
     addItemsToGrid(items);
 }
 

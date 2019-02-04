@@ -6,6 +6,9 @@
 #include "YearGridModel.h"
 #include "DayItem.h"
 #include "DayGridModel.h"
+#include "WeekDay.h"
+#include "WeekEvent.h"
+#include "WeekGridModel.h"
 
 void CalendarListModelPlugin::registerTypes(const char *uri)
 {
@@ -20,6 +23,9 @@ void CalendarListModelPlugin::registerTypes(const char *uri)
     qmlRegisterType<YearGridModel>(uri, 1, 0, "YearGridModel");
     qmlRegisterType<DayItem>(uri, 1, 0, "DayItem");
     qmlRegisterType<DayGridModel>(uri, 1, 0, "DayGridModel");
+    qmlRegisterType<WeekDay>(uri, 1, 0, "WeekDay");
+    qmlRegisterType<WeekEvent>(uri, 1, 0, "WeekEvent");
+    qmlRegisterType<WeekGridModel>(uri, 1, 0, "WeekGridModel");
 }
 
 void CalendarListModelPlugin::initializeEngine(QQmlEngine *engine, const char *uri)

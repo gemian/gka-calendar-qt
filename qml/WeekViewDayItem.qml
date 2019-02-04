@@ -16,6 +16,7 @@ FocusScope {
     property bool dateOnLeft: true
     property int gridViewIndex: index
     property var itemDate
+    property var weekDay
     property var lunarDate: (itemDate !== undefined) ? Lunar.calendar.solar2lunar(itemDate.getFullYear(), itemDate.getMonth() + 1, itemDate.getDate()) : null
 
     MouseArea {
@@ -114,71 +115,6 @@ FocusScope {
             }
         }
 
-        EventListModel {
-            id: organizerModel
-            objectName: "dayEventListModel"
-            active: true
-            property bool isReady: false
-            property var itemIdToLoad: null
-            property bool editItem: false
-
-            function enabledCollections() {
-                var collectionIds = [];
-                var collections = getCollections()
-                for (var i=0; i < collections.length; ++i) {
-                    var collection = collections[i]
-                    if (collection.extendedMetaData("collection-selected") === true) {
-                        collectionIds.push(collection.collectionId);
-                    }
-                }
-                return collectionIds
-            }
-
-            function applyFilterFinal() {
-                var collectionIds = enabledCollections()
-                collectionFilter.ids = collectionIds
-                filter = Qt.binding(function() { return mainFilter; })
-                isReady = true
-            }
-
-            startPeriod: itemDate.midnight()
-            endPeriod: itemDate.endOfDay()
-
-            sortOrders: [
-                SortOrder{
-                    blankPolicy: SortOrder.BlanksFirst
-                    detail: Detail.EventTime
-                    field: EventTime.FieldStartDateTime
-                    direction: Qt.AscendingOrder
-                }
-            ]
-            onCollectionsChanged: {
-                var collectionIds = enabledCollections()
-                var oldCollections = collectionFilter.ids
-                var needsUpdate = false
-                if (collectionIds.length !== oldCollections.length) {
-                    needsUpdate = true
-                } else {
-                    for(var i=oldCollections.length - 1; i >=0 ; i--) {
-                        if (collectionIds.indexOf(oldCollections[i]) === -1) {
-                            needsUpdate = true
-                            break;
-                        }
-                    }
-                }
-
-                if (needsUpdate) {
-                    collectionFilter.ids = collectionIds
-                    updateIfNecessary()
-                }
-            }
-
-            Component.onCompleted: {
-                //print("CalendarView.OrganiserModel.onCompleted");
-                applyFilterFinal()
-            }
-        }
-
         Column {
             id: dayList
             padding: 2
@@ -193,8 +129,8 @@ FocusScope {
                 id: dayListView
                 width: parent.width
                 height: Math.min(dayRectangle.height - dayListNoItems.height, dayListView.contentHeight)
-                visible: count > 0 && !organizerModel.isLoading
-                model: organizerModel
+                visible: count > 0
+                model: weekDay.itemCount
                 interactive: dayListView.contentHeight > height
 
                 delegate: FocusScope {
@@ -224,7 +160,7 @@ FocusScope {
                         focus: !showHeader && (gridViewIndex === daySelectedIndex) && (dayChildSelectedIndex === index)
 
                         border.color: activeFocus ? "black" : "transparent"
-                        color: model.item && model.item.collectionId ? organizerModel.collection(model.item.collectionId).color : (activeFocus ? "black" : "transparent")
+                        color: weekDay.items[index] && weekDay.items[index].collectionId ? organizerModel.collection(weekDay.items[index].collectionId).color : (activeFocus ? "black" : "transparent")
 
                         // start time event Label
                         Text {
@@ -232,7 +168,7 @@ FocusScope {
                             anchors.centerIn: calendarIndicator
                             color: calendarIndicator.activeFocus ? "white" : "black"
                             font.pixelSize: app.appFontSize;
-                            text: model.item.startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
+                            text: weekDay.items[index].startDateTime.toLocaleTimeString(Qt.locale(), Locale.ShortFormat)
                         }
                     }
 
@@ -244,7 +180,7 @@ FocusScope {
                         }
                         width: parent.width - calendarIndicator.width - app.appFontSize/2
                         wrapMode: Text.Wrap
-                        text: model.item.displayLabel
+                        text: weekDay.items[index].displayLabel
                         font.pixelSize: app.appFontSize
                     }
 
@@ -258,7 +194,7 @@ FocusScope {
                             var diff = parent.width/10
                             if (gridView.contentX > internal.pressedContentX-diff && gridView.contentX < internal.pressedContentX+diff) {
                                 if (daySelectedIndex === gridViewIndex && dayChildSelectedIndex === index) {
-                                    dialogLoader.setSource("EditEventDialog.qml", {"eventObject": model.item, "model":organizerModel});
+                                    dialogLoader.setSource("EditEventDialog.qml", {"eventId": weekDay.items[index].parentId?weekDay.items[index].parentId:weekDay.items[index].itemId, "model":organizerModel});
                                 }
                                 daySelectedIndex = gridViewIndex
                                 dayChildSelectedIndex = index
@@ -358,14 +294,14 @@ FocusScope {
         }
         if (event.key === Qt.Key_Delete || event.key === Qt.Key_Backspace) {
             if (dayChildSelectedIndex >= 0) {
-                dialogLoader.setSource("DeleteDialog.qml", {"event": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
+                dialogLoader.setSource("DeleteDialog.qml", {"event": weekDay.items[dayChildSelectedIndex], "model":organizerModel});
             }
         }
         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return) {
             if (dayChildSelectedIndex == -1) {
                 dialogLoader.setSource("EditEventDialog.qml", {"startDate":itemDate, "model":organizerModel});
             } else {
-                dialogLoader.setSource("EditEventDialog.qml", {"eventObject": organizerModel.items[dayChildSelectedIndex], "model":organizerModel});
+                dialogLoader.setSource("EditEventDialog.qml", {"eventId": weekDay.items[dayChildSelectedIndex].parentId?weekDay.items[dayChildSelectedIndex].parentId:weekDay.items[dayChildSelectedIndex].itemId, "model":organizerModel});
             }
         }
 

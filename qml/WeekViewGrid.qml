@@ -3,6 +3,7 @@ import QtOrganizer 5.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import QtQuick.Controls 2.0
+import org.gka.CalendarListModel 1.0
 import "dateExt.js" as DateExt
 
 FocusScope {
@@ -14,6 +15,16 @@ FocusScope {
     property int dayChildSelectedIndex: 0
     property int childrenCompleted: 0
     focus: true
+
+    WeekGridModel {
+        id: weekGridModel
+        startOfWeek: weekStartDate
+
+        onModelChanged: {
+            print("DayGridModel.onModelChanged")
+        }
+
+    }
 
     function updateGridViewWithDaySelection() {
         gridView.currentIndex = daySelectedIndex
@@ -76,9 +87,10 @@ FocusScope {
             flow: GridView.FlowTopToBottom
             focus: true
 
-            model: 8
+            model: weekGridModel
             delegate: WeekViewDayItem {
-                itemDate: weekStartDate.addDays(index-1)
+                itemDate: (weekGridModel.items[index] !== undefined) ? weekGridModel.items[index].date : ""
+                weekDay: weekGridModel.items[index]
                 showHeader: (index === 0)
                 dateOnLeft: gridView.width>gridView.height?(index < 4):true
             }

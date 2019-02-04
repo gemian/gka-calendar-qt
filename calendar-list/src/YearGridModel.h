@@ -7,7 +7,8 @@
 #include <deque>
 #include "YearItem.h"
 
-static const int DAYS_IN_WEEK = 7;
+#define DAYS_IN_WEEK 7
+
 static const int MONTHS_IN_YEAR = 12;
 static const int WEEK_BLOCKS_SHOWN = 5;
 static const int GRID_WIDTH = WEEK_BLOCKS_SHOWN*DAYS_IN_WEEK+2;

@@ -57,7 +57,7 @@ Window {
             ZoomButton {
                 id: deleteSeriesButton
                 text: i18n.tr("Delete series (ctrl-s)")
-                visible: event.parentId !== undefined
+                visible: event.parentId
                 activeFocusOnTab: true
                 activeFocusOnPress: true
                 KeyNavigation.right: deleteIndividualButton
