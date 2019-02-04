@@ -1319,6 +1319,7 @@ Window {
         Shortcut {
             sequence: "Ctrl+s"
             onActivated: {
+                okButton.forceActiveFocus();
                 saveEvent(eventObject);
                 eventDialog.close()
             }
